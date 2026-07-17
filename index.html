@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#16110d" />
+  <title>천기연 天機緣 — 신녀 연화의 AI 사주 풀이</title>
+  <meta name="description" content="만세력·진태양시 보정·대운·신살까지 — AI 신녀 연화가 풀어주는 정밀 사주 리포트." />
+  <meta property="og:title" content="천기연 — 신녀 연화의 AI 사주 풀이" />
+  <meta property="og:description" content="태어난 시각과 땅까지 읽는 진짜 사주 풀이. 무료로 확인해보세요." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div class="app">
+
+  <!-- 데모 배너: 실서비스 모드(config.js에 토스 키 입력)에서는 자동으로 사라집니다 -->
+  <div class="demo-banner" id="demo-banner">
+    <b>DEMO</b> 이 사이트는 기능 시연용 데모입니다 — 실제 결제·정산이 이루어지지 않으며, 후기는 샘플입니다.
+  </div>
+
+  <!-- ===== 헤더 ===== -->
+  <header class="site-header" id="site-header">
+    <div class="header-inner">
+      <a class="logo" href="#top">
+        <span class="logo-mark">緣</span>
+        <span class="logo-text">천기연<small>天機緣</small></span>
+      </a>
+      <a href="#input-section" class="btn btn-sm btn-seal">무료 사주 보기</a>
+    </div>
+  </header>
+
+  <!-- ===== 히어로 (신당 무드 영상) ===== -->
+  <section class="hero" id="top">
+    <video class="hero-video" autoplay muted loop playsinline poster="assets/shrine-bg.webp">
+      <source src="assets/shrine-ambient.mp4" type="video/mp4" />
+    </video>
+    <div class="hero-veil"></div>
+    <div class="hero-content">
+      <p class="hero-kicker">萬歲曆 · 眞太陽時 · 大運 · 神殺</p>
+      <h1>태어난 시각과 땅까지 읽는<br /><em>진짜 사주 풀이</em></h1>
+      <p class="hero-sub">생년월일시는 기본, 태어난 지역의 경도로 시간을 보정하고<br />10년 대운과 신살까지 — 같은 날 태어나도 결과가 다릅니다.</p>
+      <a href="#input-section" class="btn btn-lg btn-seal">내 사주 무료로 확인하기</a>
+      <div class="hero-stats">
+        <div><strong data-counter="1284302">0</strong><span>누적 분석</span></div>
+        <i></i>
+        <div><strong>4.9<small>/5.0</small></strong><span>만족도</span></div>
+        <i></i>
+        <div><strong>60갑자</strong><span>만세력 산출</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 신뢰 포인트 ===== -->
+  <section class="trust" id="how">
+    <p class="sec-kicker">WHY DIFFERENT</p>
+    <h2 class="sec-title">왜 사람마다<br />결과가 다른가</h2>
+    <div class="trust-list">
+      <div class="trust-item reveal"><span class="trust-icon">曆</span><div><h3>절기 기준 만세력 산출</h3><p>입춘·경칩 등 절기로 연주·월주를 세우고 60갑자로 일주를 산출합니다.</p></div></div>
+      <div class="trust-item reveal"><span class="trust-icon">時</span><div><h3>진태양시 보정</h3><p>태어난 지역의 경도로 시간을 보정합니다. 서울 출생이면 −32분, 시주가 달라질 수 있습니다.</p></div></div>
+      <div class="trust-item reveal"><span class="trust-icon">運</span><div><h3>대운·신살까지 분석</h3><p>성별·생년에 따라 방향이 갈리는 10년 대운과 도화·역마 등 신살을 함께 살핍니다.</p></div></div>
+      <div class="trust-item reveal"><span class="trust-icon">問</span><div><h3>고민 맞춤 풀이</h3><p>지금 당신의 고민과 상황을 받아, 그 질문에 대한 답을 사주에서 찾아드립니다.</p></div></div>
+    </div>
+  </section>
+
+  <!-- ===== 신녀 페르소나 ===== -->
+  <section class="persona" id="persona">
+    <div class="persona-card reveal">
+      <div class="persona-photo"><img src="assets/shaman-portrait.webp" alt="신녀 연화" /></div>
+      <div class="persona-body">
+        <p class="persona-kicker">당신의 사주를 봐줄 사람</p>
+        <h2 class="persona-name">신녀 연화 <small>蓮花</small></h2>
+        <p class="persona-quote">"만세력은 거짓말을 안 하네. 자네가 태어난<br />그 시각, 그 땅의 기운까지 내가 짚어줌세."</p>
+        <p class="persona-desc">정통 명리 해석과 무속 상담의 화법을 학습한 AI 신녀 '연화'가, 당신이 알려준 정보 하나하나를 근거로 팔자를 풀어드립니다.</p>
+        <a href="#input-section" class="btn btn-ghost-light btn-sm">연화에게 사주 보이기</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 입력 위저드 ===== -->
+  <section class="input-section" id="input-section">
+    <p class="sec-kicker">START</p>
+    <h2 class="sec-title">사주 정보 입력</h2>
+    <p class="sec-sub">정확히 알려줄수록 풀이가 깊어집니다</p>
+
+    <form id="saju-form" class="saju-form" autocomplete="off">
+      <div class="wizard-progress">
+        <div class="wp-track"><div class="wp-fill" id="wp-fill"></div></div>
+        <span class="wp-label" id="wp-label">1 / 3 — 기본 정보</span>
+      </div>
+
+      <div class="wiz-step" data-step="1">
+        <div class="form-field">
+          <label for="name">이름</label>
+          <input type="text" id="name" placeholder="홍길동" maxlength="12" required />
+        </div>
+        <div class="form-field">
+          <label>성별</label>
+          <div class="seg-group" role="radiogroup">
+            <label class="seg"><input type="radio" name="gender" value="M" checked /><span>남성</span></label>
+            <label class="seg"><input type="radio" name="gender" value="F" /><span>여성</span></label>
+          </div>
+        </div>
+        <div class="form-field">
+          <label>달력 구분</label>
+          <div class="seg-group" role="radiogroup">
+            <label class="seg"><input type="radio" name="caltype" value="solar" checked /><span>양력</span></label>
+            <label class="seg"><input type="radio" name="caltype" value="lunar" /><span>음력</span></label>
+          </div>
+          <div class="hidden" id="lunar-extra">
+            <label class="check-row" style="margin-top:10px"><input type="checkbox" id="lunar-leap" /><span>윤달에 태어났어요</span></label>
+            <p class="field-hint">음력 생일은 한국천문연구원 기준으로 <b>자동으로 양력 변환</b>해 계산합니다.</p>
+          </div>
+        </div>
+        <div class="form-field">
+          <label id="birth-date-label">생년월일 (양력)</label>
+          <div class="date-row">
+            <select id="birth-year" required></select>
+            <select id="birth-month" required></select>
+            <select id="birth-day" required></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="wiz-step hidden" data-step="2">
+        <div class="form-field">
+          <label>태어난 시간</label>
+          <label class="check-row"><input type="checkbox" id="time-unknown" /><span>시간을 몰라요 (시주 제외 분석)</span></label>
+          <div class="time-row" id="time-row">
+            <select id="birth-hour"></select>
+            <select id="birth-minute"></select>
+          </div>
+          <p class="field-hint">출생증명서·산모수첩의 시각이 가장 정확합니다</p>
+        </div>
+        <div class="form-field">
+          <label for="birth-region">태어난 지역</label>
+          <select id="birth-region"></select>
+          <p class="field-hint">경도 기준 진태양시 보정이 적용됩니다</p>
+        </div>
+      </div>
+
+      <div class="wiz-step hidden" data-step="3">
+        <div class="form-field">
+          <label>요즘 가장 큰 고민 <small>(최대 3개)</small></label>
+          <div class="chip-group" id="concern-chips">
+            <label class="chip"><input type="checkbox" value="marriage" /><span>결혼·배우자</span></label>
+            <label class="chip"><input type="checkbox" value="match" /><span>궁합·운명의 상대</span></label>
+            <label class="chip"><input type="checkbox" value="career" /><span>취업·이직</span></label>
+            <label class="chip"><input type="checkbox" value="money" /><span>재물·수입</span></label>
+            <label class="chip"><input type="checkbox" value="love" /><span>연애</span></label>
+            <label class="chip"><input type="checkbox" value="caution" /><span>조심할 시기</span></label>
+            <label class="chip"><input type="checkbox" value="helper" /><span>귀인·인맥</span></label>
+            <label class="chip"><input type="checkbox" value="health" /><span>건강</span></label>
+            <label class="chip"><input type="checkbox" value="study" /><span>학업·시험</span></label>
+            <label class="chip"><input type="checkbox" value="move" /><span>이사·이동</span></label>
+          </div>
+        </div>
+        <div class="form-field">
+          <label>연애 상태</label>
+          <div class="seg-group" role="radiogroup">
+            <label class="seg"><input type="radio" name="lovestatus" value="solo" checked /><span>솔로</span></label>
+            <label class="seg"><input type="radio" name="lovestatus" value="dating" /><span>연애 중</span></label>
+            <label class="seg"><input type="radio" name="lovestatus" value="married" /><span>기혼</span></label>
+          </div>
+        </div>
+        <div class="form-field">
+          <label for="job-status">현재 하는 일</label>
+          <select id="job-status">
+            <option value="employee">직장인</option>
+            <option value="student">학생</option>
+            <option value="business">자영업·사업</option>
+            <option value="freelancer">프리랜서</option>
+            <option value="seeking">구직·이직 준비</option>
+          </select>
+        </div>
+        <p class="field-hint center">입력한 고민에 대한 연화의 답이 리포트에 담깁니다</p>
+      </div>
+
+      <div class="wiz-nav">
+        <button type="button" class="btn btn-ghost-sm hidden" id="wiz-prev">이전</button>
+        <button type="button" class="btn btn-lg btn-seal btn-grow" id="wiz-next">다음</button>
+        <button type="submit" class="btn btn-lg btn-seal btn-grow hidden" id="wiz-submit">연화에게 사주 보이기</button>
+      </div>
+      <p class="form-note">입력하신 정보는 분석에만 사용되며 서버에 저장되지 않습니다.</p>
+    </form>
+  </section>
+
+  <!-- ===== 로딩 ===== -->
+  <section class="analyzing hidden" id="analyzing">
+    <div class="center">
+      <div class="persona-avatar big"><img src="assets/shaman-portrait.webp" alt="신녀 연화" /></div>
+      <h2 id="analyzing-title">연화가 자네 사주를 보고 있네</h2>
+      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
+      <p class="analyzing-step" id="analyzing-step">촛불을 밝히고 있네…</p>
+    </div>
+  </section>
+
+  <!-- ===== 결과 ===== -->
+  <section class="result hidden" id="result">
+    <div class="result-head center">
+      <p class="sec-kicker">READING</p>
+      <h2 id="result-title">홍길동님의 사주팔자</h2>
+      <p class="result-meta" id="result-meta"></p>
+    </div>
+
+    <div class="persona-bubble-wrap" id="persona-bubble"></div>
+
+    <div class="card">
+      <h3 class="card-title">사주팔자 <small>四柱八字 · 십신</small></h3>
+      <div class="pillars" id="pillars"></div>
+      <p class="pillar-note" id="pillar-note"></p>
+    </div>
+
+    <div class="card">
+      <h3 class="card-title">오행 분포 <small>五行</small></h3>
+      <div class="element-bars" id="element-bars"></div>
+      <p class="element-summary" id="element-summary"></p>
+    </div>
+
+    <div class="card report-card">
+      <div class="report-tag free-tag">무료 풀이</div>
+      <h3 class="card-title" id="daymaster-title">일간 분석</h3>
+      <div class="report-body" id="free-report"></div>
+    </div>
+
+    <!-- 무료 확장 (재능·운세지수·신살·오늘의 한 줄) -->
+    <div id="free-extras"></div>
+
+    <!-- 연화의 예고 (클리프행어) -->
+    <div class="cliffhanger" id="cliffhanger"></div>
+
+    <div class="card">
+      <h3 class="card-title">내 사주 결과 공유하기</h3>
+      <p class="share-sub">링크를 받은 친구도 바로 무료 분석을 받을 수 있어요.</p>
+      <div class="share-buttons">
+        <button class="share-btn kakao" id="share-kakao">카카오톡</button>
+        <button class="share-btn twitter" id="share-x">X</button>
+        <button class="share-btn link" id="share-link">링크 복사</button>
+        <button class="share-btn image" id="share-image">이미지 저장</button>
+      </div>
+    </div>
+
+    <!-- 프리미엄 -->
+    <div class="premium-zone" id="premium-zone">
+      <div class="premium-intro center">
+        <p class="sec-kicker">深層 · PREMIUM</p>
+        <h3 class="sec-title">여기서부터가<br />진짜입니다</h3>
+        <p class="premium-sub">어떤 사람과 결혼하게 될지, 운명의 상대는 어떤 띠인지, 매년 조심해야 할 달과 귀인의 띠까지 — 당신 사주에만 해당하는 풀이가 준비되어 있습니다.</p>
+      </div>
+      <div id="premium-sections"></div>
+
+      <!-- 연화에게 질문 (프리미엄 전용) -->
+      <div class="card qa-card hidden" id="qa-card">
+        <div class="report-tag premium-tag">PREMIUM</div>
+        <h3 class="card-title">問 연화에게 직접 묻기 <small id="qa-quota"></small></h3>
+        <p class="teaser">사주를 앞에 두고 궁금한 것을 물어보세요. 연화가 당신의 팔자를 근거로 답합니다.</p>
+        <div id="qa-history"></div>
+        <div class="qa-input-row" id="qa-input-row">
+          <input type="text" id="qa-input" maxlength="80" placeholder="예) 내년에 이직해도 될까요?" />
+          <button class="btn btn-seal" id="qa-send">묻기</button>
+        </div>
+        <p class="field-hint" id="qa-done-hint" style="display:none">질문 5개를 모두 사용했습니다. 답변은 이 기기에 보관됩니다.</p>
+      </div>
+
+      <!-- 결제 CTA (2단 구성) -->
+      <div class="paywall-cta" id="paywall-cta">
+        <div class="paywall-persona">
+          <div class="persona-avatar"><img src="assets/shaman-portrait.webp" alt="신녀 연화" /></div>
+          <p class="paywall-line">"무료로 봐줄 수 있는 건 여기까지네.<br />복채를 놓고 마저 듣고 가시게."</p>
+        </div>
+        <div class="allpass-wrap">
+          <button type="button" class="tier-card best" data-product="allpass">
+            <span class="tier-badge">BEST · 33% 할인</span>
+            <span class="tier-name">자유이용권 — 모든 기능</span>
+            <span class="tier-price"><del>29,600</del> 19,900<small>원</small></span>
+            <ul>
+              <li><b>심층 풀이 13개 섹션 전체</b> — 배우자·궁합·조심할 시기·귀인 포함</li>
+              <li><b>연화에게 직접 질문 5개</b></li>
+              <li><b>모임 궁합 — 최대 10명 관계 지도</b></li>
+              <li>소원부적 · 결과 영구 소장</li>
+            </ul>
+            <span class="tier-cta">전부 열기</span>
+          </button>
+          <p class="single-label">필요한 것만 골라서 — 단품 결제</p>
+          <div class="single-grid">
+            <button type="button" class="single-item" data-product="report"><b>심층 풀이</b><span>9,900원</span></button>
+            <button type="button" class="single-item" data-product="questions"><b>질문 5개</b><span>7,900원</span></button>
+            <button type="button" class="single-item" data-product="group"><b>모임 궁합</b><span>6,900원</span></button>
+            <button type="button" class="single-item" data-product="wish"><b>소원부적</b><span>4,900원</span></button>
+          </div>
+        </div>
+        <p class="price-timer">오늘의 특가 종료까지 <strong id="deal-timer">23:59:59</strong> · 결제 즉시 열람되는 디지털 콘텐츠입니다</p>
+      </div>
+    </div>
+
+    <!-- 기도올리기 (소원 부적) -->
+    <div class="wish-zone" id="wish-zone">
+      <div class="wish-card reveal">
+        <p class="persona-kicker">祈願 · 기도올리기</p>
+        <h3>연화의 신당에<br />소원 한 줄 올리기</h3>
+        <p class="wish-desc">소원을 적으면 연화의 축원 메시지와 함께, 당신의 이름과 소원이 담긴 <b>디지털 소원부적</b>을 만들어드립니다. 부적 이미지는 저장하여 간직할 수 있습니다.</p>
+        <div id="wish-locked">
+          <input type="text" id="wish-input" maxlength="40" placeholder="예) 올해 안에 꼭 이직에 성공하게 해주세요" />
+          <button class="btn btn-lg btn-gold btn-block" id="wish-btn">소원 올리기 · 4,900원</button>
+        </div>
+        <div id="wish-done" class="hidden">
+          <div class="persona-bubble">
+            <div class="persona-avatar"><img src="assets/shaman-portrait.webp" alt="신녀 연화" /></div>
+            <div class="bubble" id="wish-blessing"></div>
+          </div>
+          <button class="btn btn-lg btn-gold btn-block" id="wish-download">소원부적 이미지 저장하기</button>
+        </div>
+        <p class="wish-note">※ 디지털 콘텐츠 상품입니다. 실제 기도·의식이 수행되는 것은 아니며, 소원의 성취를 보장하지 않습니다. 축원·부적 제공이 개시된 후에는 환불이 불가합니다.</p>
+      </div>
+    </div>
+
+    <!-- 모임 궁합 (최대 10명) -->
+    <div class="group-zone" id="group-zone">
+      <div class="card group-card">
+        <div class="report-tag premium-tag">GROUP</div>
+        <h3 class="card-title">모임 궁합 <small>최대 10명 관계 지도</small></h3>
+        <p class="teaser">친구·동료·가족을 넣어보세요. 누가 누구의 귀인인지, 누가 앙숙인지, 틀어진 두 사람 사이엔 누굴 앉혀야 하는지 — 사주로 관계 지도를 그려드립니다.</p>
+        <div id="group-people"></div>
+        <div class="group-actions">
+          <button type="button" class="btn btn-ghost-sm" id="group-add">＋ 친구 추가</button>
+          <button type="button" class="btn btn-seal btn-grow" id="group-run">관계 분석하기</button>
+        </div>
+        <div id="group-result"></div>
+      </div>
+    </div>
+
+    <button class="btn btn-ghost btn-block" id="retry-btn">다른 사주 보러가기 ↺</button>
+  </section>
+
+  <!-- ===== 후기 ===== -->
+  <section class="reviews" id="reviews">
+    <p class="sec-kicker">REVIEWS</p>
+    <h2 class="sec-title">이용자 후기</h2>
+    <!-- NOTE: 데모용 샘플 후기 — 실서비스에서는 실제 후기로 교체 -->
+    <div class="review-grid">
+      <div class="review-card reveal"><div class="review-stars">★★★★★</div><p>"태어난 지역까지 물어보길래 반신반의했는데, 진태양시 보정하니까 시주가 바뀌더라고요. 이런 것까지 계산해주는 데는 처음."</p><span>김○연 · 30대 · 직장인</span></div>
+      <div class="review-card reveal"><div class="review-stars">★★★★★</div><p>"고민을 입력하면 그거에 대한 답을 콕 집어줘요. 이직 고민 넣었는데 역마살 얘기 나오고… 소름."</p><span>박○준 · 40대 · 자영업</span></div>
+      <div class="review-card reveal"><div class="review-stars">★★★★☆</div><p>"만세력 어플이랑 대조해봤는데 팔자 정확히 일치. 대운 나이도 맞아요. 친구들이랑 공유해서 비교하는 재미."</p><span>이○솔 · 20대 · 대학원생</span></div>
+    </div>
+  </section>
+
+  <!-- ===== FAQ ===== -->
+  <section class="faq" id="faq">
+    <p class="sec-kicker">FAQ</p>
+    <h2 class="sec-title">자주 묻는 질문</h2>
+    <details><summary>사주 계산은 어떤 방식으로 하나요?</summary><p>절기 기준으로 연주·월주를 세우고 60갑자 순환으로 일주를 산출하는 전통 만세력 방식입니다. 태어난 지역의 경도로 진태양시를 보정해 시주를 세웁니다. 시중 만세력과 대조해 확인하실 수 있습니다.</p></details>
+    <details><summary>왜 태어난 지역까지 입력하나요?</summary><p>한국 표준시는 동경 135도 기준이라 실제 태양시와 차이가 있습니다. 예를 들어 서울은 약 −32분 — 이 보정으로 시주(時柱)가 달라지는 분들이 있습니다.</p></details>
+    <details><summary>연화에게 하는 질문은 어떻게 답하나요?</summary><p>당신의 사주팔자·대운·신살 데이터를 근거로 AI가 답변을 생성합니다. 질문 5개는 프리미엄 풀이에 포함되며, 답변은 이 기기에 보관됩니다.</p></details>
+    <details><summary>음력 생일인데 어떻게 입력하나요?</summary><p>달력 구분에서 '음력'을 선택하고 음력 생일을 그대로 입력하면 됩니다. 한국천문연구원(KARI) 기준 데이터로 양력으로 자동 변환해 계산하며, 윤달 출생도 지원합니다. 변환된 양력 날짜는 결과 화면에서 확인할 수 있습니다.</p></details>
+    <details><summary>결제한 리포트는 다시 볼 수 있나요?</summary><p>네. 같은 기기·브라우저에서 동일한 생년월일시로 조회하면 결제하신 리포트가 다시 열립니다.</p></details>
+    <details><summary>환불이 가능한가요?</summary><p>본 서비스는 결제 즉시 열람되는 디지털 콘텐츠입니다. 전자상거래법 제17조에 따라 <b>콘텐츠 제공이 개시(리포트 열람·답변 제공)된 후에는 청약철회가 불가</b>하며, 결제 전 이에 대한 동의를 받고 있습니다. 다만 결제 후 오류로 리포트가 열리지 않거나 질문 답변이 제공되지 않은 경우, 열람 전 철회를 요청하신 경우에는 고객센터를 통해 전액 환불해 드립니다. 무료 풀이로 콘텐츠 품질을 먼저 확인하신 뒤 결제하시기를 권장합니다.</p></details>
+  </section>
+
+  <!-- ===== 푸터 ===== -->
+  <footer class="site-footer">
+    <p class="footer-logo">천기연 天機緣</p>
+    <p>본 서비스의 분석 결과는 명리학 이론에 기반한 참고용 콘텐츠이며, 중요한 의사결정의 유일한 근거로 사용하지 않기를 권장합니다. '신녀 연화'는 실존 인물이 아닌 AI 캐릭터입니다. 기도올리기는 디지털 콘텐츠 상품으로 실제 의식이 수행되지 않습니다.</p>
+    <nav class="footer-links">
+      <a href="terms.html">이용약관</a><span>·</span><a href="privacy.html"><b>개인정보처리방침</b></a><span>·</span><a href="mailto:help@cheongiyeon.example">고객센터</a>
+    </nav>
+    <p class="footer-biz">상호 [상호명] · 대표 [대표자명] · 사업자등록번호 [000-00-00000] · 통신판매업신고 [제0000-지역-0000호] · 문의 help@cheongiyeon.example</p>
+    <p>© 2026 Cheongiyeon. All rights reserved.</p>
+  </footer>
+
+</div><!-- /.app -->
+
+<!-- ===== 하단 고정 결제바 ===== -->
+<div class="paybar hidden" id="paybar">
+  <div class="paybar-inner">
+    <div class="paybar-text"><b>연화의 심층 풀이</b><span>단품 4,900원부터 · 자유이용권 19,900원</span></div>
+    <button class="btn btn-seal" id="paybar-btn">복채 내고 전체 보기</button>
+  </div>
+</div>
+
+<!-- ===== 결제 모달 ===== -->
+<div class="modal-backdrop hidden" id="pay-modal">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pay-title">
+    <button class="modal-close" id="pay-close" aria-label="닫기">✕</button>
+    <div id="pay-step-select">
+      <h3 id="pay-title">연화의 심층 풀이</h3>
+      <p class="modal-sub">복채를 내면 남은 이야기를 마저 들려드리겠네</p>
+      <div class="pay-tiers" id="pay-options" role="radiogroup"></div>
+      <div class="pay-methods" role="radiogroup">
+        <label class="pay-method"><input type="radio" name="paymethod" value="kakao" checked /><span class="pm-icon kakao-pay">pay</span><span>카카오페이</span></label>
+        <label class="pay-method"><input type="radio" name="paymethod" value="toss" /><span class="pm-icon toss-pay">toss</span><span>토스페이</span></label>
+        <label class="pay-method"><input type="radio" name="paymethod" value="card" /><span class="pm-icon card-pay">💳</span><span>신용/체크카드</span></label>
+      </div>
+      <label class="check-row refund-agree"><input type="checkbox" id="refund-agree" /><span>본 상품은 결제 즉시 제공되는 디지털 콘텐츠로, <b>열람(제공 개시) 후에는 청약철회·환불이 불가</b>함을 확인했습니다. 오류로 콘텐츠가 제공되지 않은 경우에는 전액 환불됩니다.</span></label>
+      <button class="btn btn-lg btn-seal btn-block" id="pay-confirm">19,900원 결제하기</button>
+      <p class="pay-note">안전한 결제 · 미제공 시 전액 환불<br /><small class="demo-note">※ 현재 데모 모드 — 실제 결제가 발생하지 않습니다</small></p>
+    </div>
+    <div id="pay-step-processing" class="hidden center">
+      <div class="spinner"></div>
+      <h3>결제를 처리하고 있습니다...</h3>
+      <p class="modal-sub">잠시만 기다려주세요</p>
+    </div>
+    <div id="pay-step-done" class="hidden center">
+      <div class="pay-done-icon">✓</div>
+      <h3>결제가 완료되었습니다</h3>
+      <p class="modal-sub">연화가 남은 이야기를 모두 풀어놓았습니다.</p>
+      <button class="btn btn-lg btn-seal btn-block" id="pay-view">심층 풀이 보러가기</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<!--
+  [실결제 연동 가이드]
+  - 토스페이먼츠: app.js processPayment()의 TODO 위치에 requestPayment(...) 연동.
+    결제 검증은 반드시 서버에서 수행하세요. 정산 계좌(내 통장)는 토스페이먼츠 가입 시 등록.
+  - 사전 준비: 사업자등록 → 통신판매업 신고 → PG 심사 (운세 콘텐츠는 일반 승인 가능 업종)
+  - 카카오톡 공유: developers.kakao.com에서 JS 키 발급 → app.js KAKAO_JS_KEY
+  - 질문 답변 AI: app.js answerViaAI()의 TODO — 백엔드에서 claude-haiku-4-5 호출 (인당 원가 ~40원)
+-->
+<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" crossorigin="anonymous"></script>
+<script src="https://js.tosspayments.com/v1/payment"></script>
+<script src="config.js"></script>
+<script src="lunar.js"></script>
+<script src="saju.js"></script>
+<script src="content.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

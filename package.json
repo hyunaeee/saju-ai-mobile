@@ -1,0 +1,12 @@
+{
+  "name": "cheongiyeon",
+  "version": "1.0.0",
+  "description": "천기연 — AI 사주 풀이 (신녀 연화)",
+  "private": true,
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.70.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
