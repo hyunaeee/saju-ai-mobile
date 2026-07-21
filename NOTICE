@@ -1,0 +1,21 @@
+NOTICE
+======
+
+This project is proprietary (see LICENSE). This file records third-party
+material in the repository, which is NOT covered by that notice.
+
+Lunar calendar engine
+---------------------
+`lunar.js` is a JavaScript port of `korean_lunar_calendar_py`
+(https://github.com/usingsky/korean_lunar_calendar_py), Copyright (c) usingsky,
+released under the MIT License. The lunar/solar conversion tables and
+conversion algorithm originate from that project and remain under its MIT
+terms — including its requirement that the copyright notice and permission
+notice be retained.
+
+The proprietary notice in LICENSE applies to this project's own work — the
+saju interpretation engine, UI, character design, written content and
+branding — and does not assert ownership over the ported material above.
+
+Runtime services (Claude API, Vercel) and any web fonts are used under their
+own terms.
