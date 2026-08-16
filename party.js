@@ -134,37 +134,97 @@ function analyzeParty(rawPeople) {
     bestPair, worstPair };
 }
 
-/* ---------- 관계망 그래프 (SVG) ---------- */
+/* ---------- 관계망 그래프 (방사형 · 역동적 SVG) ----------
+ * 중심 인물을 한가운데 두고, 친밀도가 높은 사람일수록 안쪽에 배치.
+ * 인원이 많아질수록 노드는 작아지고, 신경쓸 만한 관계(특수 인연)만 선으로 강조해
+ * 100명까지도 헝클어지지 않게 그립니다. 은은한 애니메이션으로 살아 있는 느낌.
+ */
 function graphSVG(an) {
   const n = an.members.length;
-  const S = 380, cx = S / 2, cy = S / 2, R = n <= 2 ? 90 : 138, nr = n > 8 ? 22 : 26;
-  const pos = an.members.map((_, i) => {
-    const ang = (-90 + i * 360 / n) * Math.PI / 180;
-    return { x: cx + R * Math.cos(ang), y: cy + R * Math.sin(ang) };
+  const S = 400, cx = S / 2, cy = S / 2;
+  const centerIdx = an.center.idx;
+
+  // 노드 크기: 인원 많을수록 작게
+  const nr = n <= 6 ? 27 : n <= 12 ? 22 : n <= 24 ? 16 : n <= 45 ? 11 : 7;
+  const cr = nr + 6; // 중심 노드
+  const showName = n <= 28;
+  const Rmax = S / 2 - nr - 12, Rmin = Math.max(cr + nr + 14, S * 0.16);
+
+  // 중심과의 친밀도로 반경 결정 (강할수록 안쪽), 각도는 황금각으로 유기적 분산
+  const others = an.members.filter(m => m.idx !== centerIdx);
+  const centerScore = {};
+  an.pairs.forEach(p => {
+    if (p.ai === centerIdx) centerScore[p.bi] = p.score;
+    if (p.bi === centerIdx) centerScore[p.ai] = p.score;
+  });
+  const scores = others.map(m => centerScore[m.idx] ?? 40);
+  const smin = Math.min(...scores, 40), smax = Math.max(...scores, 60);
+  const GA = Math.PI * (3 - Math.sqrt(5)); // 황금각
+  const pos = {};
+  pos[centerIdx] = { x: cx, y: cy };
+  others.forEach((m, k) => {
+    const t = (centerScore[m.idx] ?? 40 - smin) / Math.max(1, smax - smin);
+    const r = Rmax - (Rmax - Rmin) * Math.max(0, Math.min(1, (( (centerScore[m.idx] ?? 40) - smin) / Math.max(1, smax - smin))));
+    const ang = k * GA - Math.PI / 2;
+    pos[m.idx] = { x: cx + r * Math.cos(ang), y: cy + r * Math.sin(ang) };
   });
 
-  // 엣지 (약한 건 흐리게, 특수 관계는 진하게 위로)
-  const strong = ["spouse", "lifelong", "season", "benefactor", "helpEach", "overcome"];
-  const edges = an.pairs.slice().sort((a, b) => a.score - b.score).map(p => {
-    const A = pos[p.ai], B = pos[p.bi], meta = REL[p.type];
-    const w = 1 + (p.score / 100) * 4.5;
-    const op = p.type === "neutral" ? 0.18 : Math.max(0.3, Math.min(0.85, p.score / 110));
-    const dash = (p.type === "enemy") ? ` stroke-dasharray="5 4"` : "";
-    return `<line x1="${A.x.toFixed(1)}" y1="${A.y.toFixed(1)}" x2="${B.x.toFixed(1)}" y2="${B.y.toFixed(1)}" stroke="${meta.color}" stroke-width="${w.toFixed(1)}" stroke-opacity="${op.toFixed(2)}" stroke-linecap="round"${dash}/>`;
+  // 중심으로 향하는 스포크 (모두)
+  const spokes = others.map(m => {
+    const P = pos[m.idx], meta = REL[relToCenter(an, centerIdx, m.idx)] || REL.neutral;
+    const sc = centerScore[m.idx] ?? 40;
+    const w = (0.6 + (sc / 100) * 2.4) * (nr / 22);
+    const op = Math.max(0.12, Math.min(0.6, sc / 130));
+    return `<line x1="${cx}" y1="${cy}" x2="${P.x.toFixed(1)}" y2="${P.y.toFixed(1)}" stroke="${meta.color}" stroke-width="${w.toFixed(2)}" stroke-opacity="${op.toFixed(2)}" stroke-linecap="round"/>`;
   }).join("");
 
-  const nodes = an.members.map((m, i) => {
-    const isCenter = m.idx === an.center.idx;
+  // 특수 관계(부부·악연·극복·귀인)는 곡선 아크로 강조 + 흐르는 애니메이션
+  const NOTABLE = { spouse: 1, enemy: 1, overcome: 1, benefactor: 1 };
+  const arcs = an.pairs.filter(p => NOTABLE[p.type] && p.ai !== centerIdx && p.bi !== centerIdx)
+    .sort((a, b) => b.score - a.score).slice(0, 40).map((p, i) => {
+      const A = pos[p.ai], B = pos[p.bi], meta = REL[p.type];
+      const mx = (A.x + B.x) / 2, my = (A.y + B.y) / 2;
+      // 중심에서 바깥으로 살짝 휘어지게
+      const dx = mx - cx, dy = my - cy, dl = Math.hypot(dx, dy) || 1;
+      const bow = 0.28, qx = mx + (dx / dl) * dl * bow, qy = my + (dy / dl) * dl * bow;
+      const dash = p.type === "enemy" ? ` stroke-dasharray="6 5"` : "";
+      const w = (1 + (p.score / 100) * 2) * (nr / 22);
+      return `<path d="M${A.x.toFixed(1)} ${A.y.toFixed(1)} Q${qx.toFixed(1)} ${qy.toFixed(1)} ${B.x.toFixed(1)} ${B.y.toFixed(1)}" fill="none" stroke="${meta.color}" stroke-width="${w.toFixed(2)}" stroke-opacity="0.55" stroke-linecap="round"${dash}>
+        <animate attributeName="stroke-opacity" values="0.3;0.7;0.3" dur="${(3 + (i % 4) * 0.6).toFixed(1)}s" repeatCount="indefinite"/></path>`;
+    }).join("");
+
+  // 노드
+  function nodeG(m) {
+    const P = pos[m.idx], isC = m.idx === centerIdx, r = isC ? cr : nr;
+    const domColor = isC ? "#b8860b" : (REL[relToCenter(an, centerIdx, m.idx)] || REL.neutral).color;
     const nm = m.name.length > 4 ? m.name.slice(0, 3) + "…" : m.name;
-    return `<g>
-      ${isCenter ? `<circle cx="${pos[i].x.toFixed(1)}" cy="${pos[i].y.toFixed(1)}" r="${nr + 5}" fill="none" stroke="#b8860b" stroke-width="2.5"/>` : ""}
-      <circle cx="${pos[i].x.toFixed(1)}" cy="${pos[i].y.toFixed(1)}" r="${nr}" fill="${isCenter ? "#fbeee0" : "#fffefb"}" stroke="${isCenter ? "#b8860b" : "#d6cdb8"}" stroke-width="1.5"/>
-      <text x="${pos[i].x.toFixed(1)}" y="${(pos[i].y + 1).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="${nr > 24 ? 12 : 11}" font-weight="700" fill="#221d15" font-family="'Noto Sans KR',sans-serif">${nm}</text>
-      ${isCenter ? `<text x="${pos[i].x.toFixed(1)}" y="${(pos[i].y + nr + 12).toFixed(1)}" text-anchor="middle" font-size="9" fill="#b8860b" font-weight="700">중심</text>` : ""}
-    </g>`;
-  }).join("");
+    const delay = ((m.idx * 137) % 100) / 100 * 4;
+    const label = (showName || isC)
+      ? `<text x="${P.x.toFixed(1)}" y="${(P.y + 0.5).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="${isC ? 13 : Math.max(8, nr - 10)}" font-weight="700" fill="#221d15" font-family="'Noto Sans KR',sans-serif">${nm}</text>`
+      : "";
+    const halo = isC
+      ? `<circle cx="${P.x}" cy="${P.y}" r="${r}" fill="none" stroke="#b8860b" stroke-width="2">
+           <animate attributeName="r" values="${r};${r + 9};${r}" dur="2.4s" repeatCount="indefinite"/>
+           <animate attributeName="stroke-opacity" values="0.7;0;0.7" dur="2.4s" repeatCount="indefinite"/></circle>` : "";
+    const centerTag = isC ? `<text x="${P.x.toFixed(1)}" y="${(P.y + r + 13).toFixed(1)}" text-anchor="middle" font-size="10" fill="#b8860b" font-weight="700">중심</text>` : "";
+    return `<g class="pnode" style="animation-delay:${delay.toFixed(2)}s">
+      ${halo}
+      <circle cx="${P.x.toFixed(1)}" cy="${P.y.toFixed(1)}" r="${r}" fill="${isC ? "#fbeee0" : "#fffefb"}" stroke="${domColor}" stroke-width="${isC ? 2.5 : 1.5}"/>
+      ${label}${centerTag}</g>`;
+  }
+  // 중심을 마지막에(맨 위) 그림
+  const nodesHtml = others.map(nodeG).join("") + nodeG(an.members[centerIdx]);
 
-  return `<svg viewBox="0 0 ${S} ${S}" class="party-graph" xmlns="http://www.w3.org/2000/svg">${edges}${nodes}</svg>`;
+  return `<svg viewBox="0 0 ${S} ${S}" class="party-graph" xmlns="http://www.w3.org/2000/svg">
+    <defs><radialGradient id="pgbg" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#fff8ee"/><stop offset="100%" stop-color="#f4ede0"/></radialGradient></defs>
+    <circle cx="${cx}" cy="${cy}" r="${S / 2 - 4}" fill="url(#pgbg)"/>
+    <g class="pspokes">${spokes}</g>${arcs}${nodesHtml}</svg>`;
+}
+/* 중심과의 관계 유형 */
+function relToCenter(an, ci, mi) {
+  const p = an.pairs.find(x => (x.ai === ci && x.bi === mi) || (x.ai === mi && x.bi === ci));
+  return p ? p.type : "neutral";
 }
 
 /* ---------- 결과 렌더 ---------- */
@@ -189,15 +249,20 @@ function renderResults(an) {
   const oc = an.byType.overcome[0];
   if (oc) chips.push(`<div class="rk"><b>🔥 운명을 극복한 인연</b><p><b>${oc.a} · ${oc.b}</b> — 부딪혀도 끝내 서로를 살리는 사이입니다.</p></div>`);
 
-  // 관계 유형별 목록
-  const groups = REL_ORDER.filter(t => an.byType[t].length).map(t => {
+  // 관계 유형별 목록 (인원 많으면 중립은 생략하고 각 유형 상위만 표시)
+  const big = n > 14;
+  const CAP = big ? 8 : 40;
+  const shownTypes = REL_ORDER.filter(t => an.byType[t].length && !(big && t === "neutral"));
+  const groups = shownTypes.map(t => {
     const meta = REL[t];
-    const items = an.byType[t].map(p =>
+    const all = an.byType[t].slice().sort((x, y) => y.score - x.score);
+    const items = all.slice(0, CAP).map(p =>
       `<div class="pair"><span class="pn">${p.a} <em>·</em> ${p.b}</span><span class="ps">${p.score}점</span>
         <p>${p.dirNote || meta.desc}</p></div>`).join("");
+    const more = all.length > CAP ? `<p class="more">외 ${all.length - CAP}쌍 더 있어요</p>` : "";
     return `<div class="rel-group">
-      <h4 style="color:${meta.color}">${meta.icon} ${meta.label} <small>${an.byType[t].length}쌍</small></h4>
-      ${items}</div>`;
+      <h4 style="color:${meta.color}">${meta.icon} ${meta.label} <small>${all.length}쌍</small></h4>
+      ${items}${more}</div>`;
   }).join("");
 
   box.innerHTML = `
@@ -230,8 +295,9 @@ function validMember(m) {
 function dedupe(list) {
   const seen = new Set(); const out = [];
   for (const m of list) { const k = `${m.name}_${m.y}_${m.m}_${m.d}`; if (!seen.has(k)) { seen.add(k); out.push(m); } }
-  return out.slice(0, 12);
+  return out.slice(0, MAX_PEOPLE);
 }
+const MAX_PEOPLE = 100;
 
 async function serverAvailable() {
   if (serverMode !== null) return serverMode;
@@ -344,7 +410,7 @@ window.addEventListener("hashchange", () => location.reload());
 
 /* ---------- 이벤트 ---------- */
 $("#pm-add").addEventListener("click", () => {
-  if ($$("#pm-rows .pm-row").length >= 12) { toast("최대 12명까지 넣을 수 있어요"); return; }
+  if ($$("#pm-rows .pm-row").length >= MAX_PEOPLE) { toast(`최대 ${MAX_PEOPLE}명까지 넣을 수 있어요`); return; }
   $("#pm-rows").insertAdjacentHTML("beforeend", memberRowHTML());
 });
 $("#pm-rows").addEventListener("click", (e) => {

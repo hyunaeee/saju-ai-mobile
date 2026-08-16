@@ -15,7 +15,7 @@ const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL
 const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN || "";
 const HAS_KV = !!(KV_URL && KV_TOKEN);
 const TTL = 60 * 60 * 24 * 45; // 45일
-const MAX = 12;
+const MAX = 100;
 
 async function kv(cmd) {
   const r = await fetch(KV_URL, {

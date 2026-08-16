@@ -97,6 +97,13 @@
     .pc-title small { color:var(--faint); font-size:11px; font-weight:400; margin-left:6px; }
     .graph-wrap { width:100%; }
     .party-graph { width:100%; height:auto; display:block; }
+    .party-graph .pnode { opacity:0; transform-box:fill-box; transform-origin:center; animation:nodeIn .5s ease forwards, floaty 6s ease-in-out infinite; }
+    @keyframes nodeIn { from { opacity:0; transform:scale(.4); } to { opacity:1; transform:scale(1); } }
+    @keyframes floaty { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-2.5px); } }
+    .party-graph .pspokes line { opacity:0; animation:spokeIn .8s ease forwards .3s; }
+    @keyframes spokeIn { to { opacity:1; } }
+    @media (prefers-reduced-motion:reduce) { .party-graph .pnode { animation:nodeIn .4s ease forwards; } }
+    .rel-group .more { font-size:11.5px; color:var(--faint); text-align:center; padding:6px; }
     .legend { display:flex; flex-wrap:wrap; gap:8px 12px; margin-top:12px; justify-content:center; }
     .legend .lg { font-size:11px; color:var(--dim); display:inline-flex; align-items:center; gap:4px; }
     .legend .lg i { width:10px; height:3px; border-radius:2px; display:inline-block; }
@@ -153,7 +160,7 @@
       <input type="text" id="party-name" maxlength="20" placeholder="예) 대학 동기, 우리 가족, ○○팀" />
     </div>
     <div class="fld">
-      <label>사람들 <small style="color:var(--faint);font-weight:400">(이름 · 생일 · 최대 12명)</small></label>
+      <label>사람들 <small style="color:var(--faint);font-weight:400">(이름 · 생일 · 최대 100명)</small></label>
       <div id="pm-rows"></div>
       <div class="row-actions">
         <button type="button" class="btn btn-ghost btn-sm" id="pm-add">＋ 사람 추가</button>
