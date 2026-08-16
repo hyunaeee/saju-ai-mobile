@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#16110d" />
+  <title>우리 모임 관계 지도 — 천기연 天機緣</title>
+  <meta name="description" content="친구들 생일만 넣으면 사주로 보는 우리 사이! 누가 귀인인지, 전생의 부부·악연·형제자매인지, 모임의 중심이 누구인지 관계망 지도로 확인하세요." />
+  <meta property="og:title" content="우리 모임 관계 지도 🔮 — 사주로 보는 우리 사이" />
+  <meta property="og:description" content="너도 생일 넣어봐! 누가 나랑 전생에 부부였는지, 누가 내 귀인인지 자동으로 나와." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --paper:#faf7f1; --paper-deep:#f1ece2; --card:#fffefb; --line:#e9e2d4;
+      --hair:rgba(38,32,24,.08); --ink:#221d15; --dim:#6f675a; --faint:#a09786;
+      --seal:#a83a26; --seal-dark:#8c2f1e; --seal-bg:#f9ece7;
+      --dark:#16110d; --dark-2:#241b14; --dark-text:#f3ece1; --dark-dim:#b9ab99; --amber:#d9a08c; --gold:#b8860b;
+      --serif:"Noto Serif KR",serif; --sans:"Noto Sans KR",sans-serif; --max:520px;
+      --sh1:0 1px 2px rgba(34,29,21,.04),0 4px 16px rgba(34,29,21,.05);
+      --sh2:0 2px 6px rgba(34,29,21,.06),0 12px 32px rgba(34,29,21,.10);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:var(--sans); background:#e6dfd1; color:var(--ink); line-height:1.7; font-size:15px; -webkit-font-smoothing:antialiased; }
+    .app { max-width:var(--max); margin:0 auto; background:var(--paper); min-height:100vh; box-shadow:0 0 40px rgba(34,29,21,.18); padding-bottom:60px; overflow-x:hidden; }
+    .hidden { display:none !important; }
+    a { color:inherit; text-decoration:none; }
+
+    /* 헤더 */
+    .hd { position:sticky; top:0; z-index:20; background:rgba(250,247,241,.92); backdrop-filter:blur(14px); border-bottom:1px solid var(--hair); }
+    .hd-in { display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 18px; }
+    .logo { display:flex; align-items:center; gap:9px; }
+    .logo-mark { width:30px; height:30px; border-radius:7px; display:grid; place-items:center; font-family:var(--serif); font-weight:700; font-size:16px; color:#fff; background:var(--seal); box-shadow:0 2px 8px rgba(168,58,38,.35); }
+    .logo-text { font-family:var(--serif); font-weight:700; font-size:16px; }
+    .logo-text small { color:var(--faint); font-size:10px; margin-left:4px; font-weight:400; }
+    .hd a.mine { font-size:12.5px; color:var(--seal); font-weight:700; }
+
+    /* 히어로 */
+    .hero { position:relative; padding:36px 22px 30px; text-align:center; overflow:hidden;
+      background:var(--dark-2) url("assets/shrine-bg.webp") center/cover no-repeat; color:var(--dark-text); }
+    .hero::before { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(22,17,13,.55),rgba(22,17,13,.9)); }
+    .hero > * { position:relative; }
+    .hero .kick { font-family:var(--serif); font-size:12px; letter-spacing:.3em; color:var(--amber); margin-bottom:12px; }
+    .hero h1 { font-family:var(--serif); font-weight:900; font-size:25px; line-height:1.45; margin-bottom:12px; text-shadow:0 2px 20px rgba(0,0,0,.5); }
+    .hero h1 em { color:var(--amber); }
+    .hero p { font-size:13px; color:rgba(243,236,225,.82); line-height:1.8; }
+
+    section { padding:26px 20px; }
+    .lead { text-align:center; color:var(--dim); font-size:13.5px; margin-bottom:18px; }
+
+    /* 폼 */
+    .fld { margin-bottom:15px; }
+    .fld > label { display:block; font-size:12.5px; color:var(--dim); font-weight:600; margin-bottom:7px; }
+    input[type=text], input[type=date] { width:100%; padding:13px 13px; border-radius:11px; font-size:16px; font-family:var(--sans); background:var(--paper); border:1.5px solid transparent; color:var(--ink); outline:none; }
+    input:focus { border-color:var(--seal); background:#fff; }
+    #pm-rows { display:grid; gap:8px; }
+    .pm-row { display:grid; grid-template-columns:1fr 1.35fr 34px; gap:8px; align-items:center; }
+    .pm-row input { min-width:0; }
+    .pm-del { width:34px; height:34px; border-radius:50%; border:0; cursor:pointer; background:var(--paper-deep); color:var(--faint); font-size:12px; }
+    .pm-del:hover { background:var(--seal-bg); color:var(--seal); }
+    .row-actions { display:flex; gap:10px; margin-top:14px; }
+
+    .btn { border:0; cursor:pointer; font-family:var(--sans); border-radius:12px; font-weight:700; text-align:center; transition:transform .15s, background .15s, box-shadow .15s; -webkit-tap-highlight-color:transparent; }
+    .btn:active { transform:scale(.98); }
+    .btn-seal { background:var(--seal); color:#fff; box-shadow:0 6px 18px rgba(168,58,38,.28); }
+    .btn-seal:hover { background:var(--seal-dark); }
+    .btn-gold { background:linear-gradient(150deg,#caa04a,var(--gold)); color:#fff; box-shadow:0 6px 18px rgba(185,138,47,.3); }
+    .btn-ghost { background:transparent; color:var(--dim); border:1px solid var(--line); }
+    .btn-lg { padding:15px 24px; font-size:15.5px; }
+    .btn-sm { padding:11px 16px; font-size:13.5px; }
+    .btn-block { display:block; width:100%; }
+    .grow { flex:1; }
+
+    /* 공유 */
+    .share-row { margin-top:20px; }
+    .share-hint { font-size:12.5px; color:var(--dim); text-align:center; margin:10px 0 12px; line-height:1.7; }
+    .share-btns { display:grid; grid-template-columns:1fr 1fr; gap:9px; }
+    .share-btns .btn { padding:14px; font-size:14px; }
+
+    /* 참여 화면 */
+    .join-head { text-align:center; margin-bottom:18px; }
+    .join-head h2 { font-family:var(--serif); font-size:22px; font-weight:900; }
+    .join-head .cnt { font-size:12.5px; color:var(--seal); font-weight:700; margin-top:4px; }
+    .names { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:12px 0 4px; }
+    .tagname { background:var(--seal-bg); color:var(--seal); font-size:12.5px; font-weight:700; border-radius:100px; padding:5px 13px; }
+    .muted { color:var(--faint); font-size:12.5px; }
+    .join-card { background:var(--card); border:1px solid var(--hair); border-radius:16px; padding:18px; box-shadow:var(--sh1); margin-top:16px; }
+    .join-card h3 { font-family:var(--serif); font-size:16px; margin-bottom:12px; }
+    .join-in { display:grid; grid-template-columns:1fr 1.35fr; gap:8px; margin-bottom:10px; }
+
+    /* 결과 카드 */
+    .party-card { background:var(--card); border:1px solid var(--hair); border-radius:18px; padding:20px 16px; margin-bottom:16px; box-shadow:var(--sh1); }
+    .pc-title { font-family:var(--serif); font-size:16.5px; font-weight:700; margin-bottom:14px; }
+    .pc-title small { color:var(--faint); font-size:11px; font-weight:400; margin-left:6px; }
+    .graph-wrap { width:100%; }
+    .party-graph { width:100%; height:auto; display:block; }
+    .legend { display:flex; flex-wrap:wrap; gap:8px 12px; margin-top:12px; justify-content:center; }
+    .legend .lg { font-size:11px; color:var(--dim); display:inline-flex; align-items:center; gap:4px; }
+    .legend .lg i { width:10px; height:3px; border-radius:2px; display:inline-block; }
+
+    .rk-grid { display:grid; gap:10px; }
+    .rk { background:var(--paper); border-radius:12px; padding:13px 15px; border-left:3px solid var(--seal); }
+    .rk.bad { border-left-color:#8a6d3b; background:#f7f1e3; }
+    .rk b { font-size:13.5px; }
+    .rk p { font-size:12.5px; color:var(--dim); line-height:1.65; margin-top:3px; }
+    .rk p b { color:var(--ink); font-size:12.5px; }
+
+    .rel-group { margin-bottom:18px; }
+    .rel-group:last-child { margin-bottom:0; }
+    .rel-group h4 { font-family:var(--serif); font-size:14.5px; margin-bottom:9px; }
+    .rel-group h4 small { color:var(--faint); font-size:11px; font-weight:400; margin-left:4px; }
+    .pair { background:var(--paper); border-radius:11px; padding:11px 14px; margin-bottom:7px; position:relative; }
+    .pair .pn { font-size:13.5px; font-weight:700; }
+    .pair .pn em { color:var(--faint); font-style:normal; margin:0 4px; }
+    .pair .ps { position:absolute; top:11px; right:14px; font-family:var(--serif); font-size:13px; color:var(--seal); }
+    .pair p { font-size:12px; color:var(--dim); line-height:1.6; margin-top:4px; padding-right:36px; }
+
+    /* CTA */
+    .cross { margin:8px 20px 0; background:var(--dark-2); border-radius:18px; padding:22px; text-align:center; color:var(--dark-text); box-shadow:var(--sh2); }
+    .cross h3 { font-family:var(--serif); font-size:18px; font-weight:900; margin-bottom:8px; }
+    .cross p { font-size:12.5px; color:var(--dark-dim); margin-bottom:16px; line-height:1.7; }
+
+    .foot { padding:30px 22px 40px; text-align:center; color:var(--faint); font-size:11px; line-height:1.8; }
+    .foot a { color:var(--dim); }
+
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:80; width:max-content; max-width:calc(100vw-40px); background:var(--ink); color:#fff; border-radius:100px; padding:12px 22px; font-size:13px; box-shadow:0 10px 30px rgba(34,29,21,.35); animation:ti .2s ease; }
+    @keyframes ti { from { transform:translate(-50%,10px); opacity:0; } to { transform:translate(-50%,0); opacity:1; } }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="hd">
+    <div class="hd-in">
+      <a class="logo" href="index.html"><span class="logo-mark">緣</span><span class="logo-text">천기연<small>天機緣</small></span></a>
+      <a class="mine" href="index.html">내 사주 보기 →</a>
+    </div>
+  </header>
+
+  <section class="hero">
+    <p class="kick">緣 · 모임 관계 지도</p>
+    <h1>친구들 생일만 넣으면<br /><em>우리 사이가 보인다</em></h1>
+    <p>누가 내 귀인인지, 누가 전생의 부부·형제자매인지,<br />이 모임의 중심이 누구인지 — 사주로 그려주는 관계망 지도</p>
+  </section>
+
+  <!-- 생성 화면 -->
+  <section id="view-create" class="hidden">
+    <p class="lead">모임 이름과 사람들을 넣고 <b>관계 분석</b>을 눌러보세요.<br />링크를 뿌리면 친구가 직접 생일을 넣어 합류할 수 있어요.</p>
+    <div class="fld">
+      <label>모임 이름</label>
+      <input type="text" id="party-name" maxlength="20" placeholder="예) 대학 동기, 우리 가족, ○○팀" />
+    </div>
+    <div class="fld">
+      <label>사람들 <small style="color:var(--faint);font-weight:400">(이름 · 생일 · 최대 12명)</small></label>
+      <div id="pm-rows"></div>
+      <div class="row-actions">
+        <button type="button" class="btn btn-ghost btn-sm" id="pm-add">＋ 사람 추가</button>
+        <button type="button" class="btn btn-seal btn-lg grow" id="create-run">관계 분석하기 🔮</button>
+      </div>
+    </div>
+
+    <div class="share-row hidden" id="share-row">
+      <p class="share-hint" id="share-hint"></p>
+      <div class="share-btns">
+        <button class="btn btn-gold" id="share-kakao">친구에게 공유</button>
+        <button class="btn btn-ghost" id="share-copy" style="border-color:var(--seal);color:var(--seal)">링크 복사</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- 참여 화면 -->
+  <section id="view-join" class="hidden">
+    <div class="join-head">
+      <h2 id="join-title">우리 모임</h2>
+      <p class="cnt" id="join-count"></p>
+      <div class="names" id="join-names"></div>
+    </div>
+
+    <div class="join-card">
+      <h3>나도 넣기</h3>
+      <div class="join-in">
+        <input type="text" id="join-name" maxlength="8" placeholder="내 이름" />
+        <input type="date" id="join-date" min="1930-01-01" max="2026-12-31" />
+      </div>
+      <button class="btn btn-seal btn-block btn-lg" id="join-add">이 모임에 합류하기</button>
+      <div class="share-row hidden" id="join-share" style="margin-top:14px">
+        <p class="share-hint">새 링크가 만들어졌어요. 아래 버튼으로 단톡방에 다시 공유하면 다음 친구가 이어서 넣을 수 있어요.</p>
+        <button class="btn btn-gold btn-block" id="join-copy">새 링크 복사해서 공유</button>
+      </div>
+    </div>
+  </section>
+
+  <div id="party-result" class="hidden" style="padding:0 20px;"></div>
+
+  <div class="cross">
+    <h3>나만의 사주도 궁금하다면?</h3>
+    <p>태어난 시각과 지역까지 읽는 정통 사주 풀이 — 무료로 시작하세요.</p>
+    <a class="btn btn-gold btn-block btn-lg" href="index.html">내 사주 무료로 보기</a>
+  </div>
+
+  <footer class="foot">
+    관계 분석은 명리학(일주 기반)에 근거한 재미·참고용 콘텐츠입니다.<br />
+    입력한 생일은 관계 분석에만 사용됩니다. · <a href="index.html">천기연 홈</a> · <a href="privacy.html">개인정보처리방침</a>
+  </footer>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script src="config.js"></script>
+<script src="saju.js"></script>
+<script src="party.js"></script>
+</body>
+</html>

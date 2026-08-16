@@ -157,8 +157,15 @@ section { padding: 56px 22px; }
 }
 .hero h1 em { color: var(--amber); }
 .hero-sub { color: rgba(243, 236, 225, .78); font-size: 13.5px; margin-bottom: 26px; line-height: 1.85; }
+.hero-party-link {
+  display: inline-block; margin-top: 16px; font-size: 13px; color: var(--amber);
+  border: 1px solid rgba(217, 160, 140, .4); border-radius: 100px; padding: 9px 18px;
+  background: rgba(255, 255, 255, .05); backdrop-filter: blur(4px); transition: background .15s;
+}
+.hero-party-link:hover { background: rgba(255, 255, 255, .12); }
+.hero-party-link b { color: var(--dark-text); }
 .hero-stats {
-  display: flex; justify-content: center; align-items: center; gap: 22px; margin-top: 36px;
+  display: flex; justify-content: center; align-items: center; gap: 22px; margin-top: 30px;
 }
 .hero-stats i { width: 1px; height: 26px; background: rgba(243, 236, 225, .22); }
 .hero-stats div { display: flex; flex-direction: column; }
