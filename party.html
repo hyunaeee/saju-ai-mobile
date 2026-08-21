@@ -84,6 +84,12 @@
     .join-head { text-align:center; margin-bottom:18px; }
     .join-head h2 { font-family:var(--serif); font-size:22px; font-weight:900; }
     .join-head .cnt { font-size:12.5px; color:var(--seal); font-weight:700; margin-top:4px; }
+    .refresh-btn { background:none; border:0; cursor:pointer; font-size:13px; padding:2px 4px; vertical-align:middle; }
+    .empty-card { background:var(--card); border:1px dashed var(--line); border-radius:16px; padding:30px 20px; text-align:center; margin-bottom:16px; }
+    .empty-emoji { font-size:34px; margin-bottom:10px; }
+    .empty-card p { font-size:14px; color:var(--dim); line-height:1.7; }
+    .empty-card .empty-sub { font-size:12.5px; color:var(--faint); margin-top:8px; }
+    .empty-card b { color:var(--ink); }
     .names { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:12px 0 4px; }
     .tagname { background:var(--seal-bg); color:var(--seal); font-size:12.5px; font-weight:700; border-radius:100px; padding:5px 13px; }
     .muted { color:var(--faint); font-size:12.5px; }
@@ -154,37 +160,39 @@
 
   <!-- 생성 화면 -->
   <section id="view-create" class="hidden">
-    <p class="lead">모임 이름과 사람들을 넣고 <b>관계 분석</b>을 눌러보세요.<br />링크를 뿌리면 친구가 직접 생일을 넣어 합류할 수 있어요.</p>
+    <p class="lead"><b>먼저 내 정보를 넣고 모임을 만드세요.</b><br />링크 하나만 뿌리면 친구들이 각자 생일을 넣고, 결과는 모두가 실시간으로 봅니다.</p>
     <div class="fld">
       <label>모임 이름</label>
       <input type="text" id="party-name" maxlength="20" placeholder="예) 대학 동기, 우리 가족, ○○팀" />
     </div>
     <div class="fld">
-      <label>사람들 <small style="color:var(--faint);font-weight:400">(이름 · 생일 · 최대 100명)</small></label>
+      <label>참여자 <small style="color:var(--faint);font-weight:400">(맨 위에 내 정보 · 친구는 나중에 링크로 · 최대 100명)</small></label>
       <div id="pm-rows"></div>
       <div class="row-actions">
-        <button type="button" class="btn btn-ghost btn-sm" id="pm-add">＋ 사람 추가</button>
-        <button type="button" class="btn btn-seal btn-lg grow" id="create-run">관계 분석하기 🔮</button>
-      </div>
-    </div>
-
-    <div class="share-row hidden" id="share-row">
-      <p class="share-hint" id="share-hint"></p>
-      <div class="share-btns">
-        <button class="btn btn-gold" id="share-kakao">친구에게 공유</button>
-        <button class="btn btn-ghost" id="share-copy" style="border-color:var(--seal);color:var(--seal)">링크 복사</button>
+        <button type="button" class="btn btn-ghost btn-sm" id="pm-add">＋ 친구 미리 추가</button>
+        <button type="button" class="btn btn-seal btn-lg grow" id="create-run">모임 만들고 공유하기 🔮</button>
       </div>
     </div>
   </section>
 
-  <!-- 참여 화면 -->
+  <!-- 그룹(참여·결과) 화면 -->
   <section id="view-join" class="hidden">
     <div class="join-head">
       <h2 id="join-title">우리 모임</h2>
-      <p class="cnt" id="join-count"></p>
+      <p class="cnt"><span id="join-count"></span> <button type="button" id="group-refresh" class="refresh-btn" title="새로고침">🔄</button></p>
       <div class="names" id="join-names"></div>
     </div>
 
+    <!-- 공유(고정 링크) -->
+    <div class="share-row" id="group-share">
+      <p class="share-hint" id="group-share-hint"></p>
+      <div class="share-btns">
+        <button class="btn btn-gold" id="gs-kakao">친구 초대 링크 공유</button>
+        <button class="btn btn-ghost" id="gs-copy" style="border-color:var(--seal);color:var(--seal)">링크 복사</button>
+      </div>
+    </div>
+
+    <!-- 나도 넣기 -->
     <div class="join-card">
       <h3>나도 넣기</h3>
       <div class="join-in">
@@ -198,6 +206,15 @@
       </div>
     </div>
   </section>
+
+  <!-- 결과 대기 상태 -->
+  <div id="result-empty" class="hidden" style="padding:6px 20px 0;">
+    <div class="empty-card">
+      <div class="empty-emoji">🔮</div>
+      <p><b>친구가 한 명이라도 합류하면</b><br />여기에 관계 지도가 나타나요.</p>
+      <p class="empty-sub">위 <b>친구 초대 링크</b>를 단톡방에 공유해보세요!</p>
+    </div>
+  </div>
 
   <div id="party-result" class="hidden" style="padding:0 20px;"></div>
 

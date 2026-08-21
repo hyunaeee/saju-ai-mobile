@@ -373,11 +373,43 @@ async function showJoin() {
 
 function refreshJoinView() {
   $("#join-title").textContent = party.name;
-  $("#join-count").textContent = `현재 ${party.members.length}명 참여 중`;
+  const n = party.members.length;
+  $("#join-count").textContent = serverMode ? `현재 ${n}명 참여 중` : `현재 ${n}명`;
   $("#join-names").innerHTML = party.members.map(m => `<span class="tagname">${m.name}</span>`).join("") || `<span class="muted">아직 아무도 없어요 — 첫 번째로 참여해보세요!</span>`;
-  if (party.members.length >= 2) renderResults(analyzeParty(party.members));
-  else $("#party-result").classList.add("hidden");
+
+  // 공유 버튼은 항상 노출(고정 링크) — 호스트가 언제든 다시 뿌릴 수 있게
+  $("#group-share").classList.remove("hidden");
+  $("#group-share-hint").textContent = serverMode
+    ? "이 링크 하나면 끝! 친구들이 각자 생일을 넣으면 이 화면에 자동으로 채워집니다."
+    : "친구가 자기를 추가하면 새 링크가 생겨요. 그 링크를 단톡방에 다시 공유하면 이어집니다.";
+
+  if (n >= 2) {
+    $("#result-empty").classList.add("hidden");
+    renderResults(analyzeParty(party.members));
+  } else {
+    $("#party-result").classList.add("hidden");
+    $("#result-empty").classList.remove("hidden");
+  }
 }
+
+/* 서버 모드: 친구가 합류하면 자동으로 갱신 */
+let pollTimer = null;
+function startPolling() {
+  if (!serverMode || !groupId) return;
+  stopPolling();
+  pollTimer = setInterval(async () => {
+    if (document.hidden) return;
+    try {
+      const d = await srv("get", { id: groupId });
+      if (d && d.ok && d.group && d.group.members.length !== party.members.length) {
+        party = d.group;
+        refreshJoinView();
+        toast("새 친구가 합류했어요! 지도가 업데이트됐어요");
+      }
+    } catch {}
+  }, 8000);
+}
+function stopPolling() { if (pollTimer) { clearInterval(pollTimer); pollTimer = null; } }
 
 /* ---------- 서버 헬퍼 ---------- */
 async function srv(action, body) {
@@ -395,7 +427,7 @@ async function srv(action, body) {
     // 서버 그룹 참여
     groupId = gid; serverMode = true;
     const d = await srv("get", { id: gid });
-    if (d && d.ok && d.group) { party = d.group; showJoin(); return; }
+    if (d && d.ok && d.group) { party = d.group; showJoin(); startPolling(); return; }
     toast("모임을 찾을 수 없어요. 새로 만들어볼까요?");
   } else if (hash) {
     // URL 링크 체인 참여
@@ -421,31 +453,43 @@ $("#pm-rows").addEventListener("click", (e) => {
 });
 
 $("#create-run").addEventListener("click", async () => {
-  const people = readRows();
-  if (people.length < 2) { toast("이름과 생일을 2명 이상 입력해주세요"); return; }
+  const people = dedupe(readRows());
+  if (people.length < 1) { toast("먼저 내 이름과 생일을 넣어주세요"); return; }
   if (new Set(people.map(p => p.name)).size !== people.length) { toast("이름이 겹치지 않게 입력해주세요"); return; }
   const nm = $("#party-name").value.trim() || "우리 모임";
-  party = { name: nm, members: dedupe(people) };
+  party = { name: nm, members: people };
 
-  renderResults(analyzeParty(party.members));
-  $("#share-row").classList.remove("hidden");
-  $("#party-result").scrollIntoView({ behavior: "smooth", block: "start" });
+  const btn = $("#create-run"); btn.disabled = true; btn.textContent = "만드는 중…";
 
-  // 공유 준비: 서버 있으면 그룹 생성해 짧은 링크
   if (await serverAvailable()) {
     const d = await srv("create", { party: party.name, members: party.members });
-    if (d && d.ok) { groupId = d.id; }
+    if (d && d.ok) {
+      groupId = d.id; serverMode = true;
+      history.replaceState(null, "", `${location.pathname}?g=${groupId}`);
+    }
+  } else {
+    history.replaceState(null, "", `${location.pathname}#d=${encodeParty(party)}`);
   }
-  $("#share-hint").textContent = serverMode
-    ? "링크를 받은 친구가 본인 생일을 넣으면 자동으로 이 지도에 추가돼요."
-    : "링크를 받은 친구가 본인을 추가하면 새 링크가 만들어져요. 그 링크를 다시 단톡방에 공유하면 계속 이어집니다.";
+
+  btn.disabled = false; btn.textContent = "관계 분석하기 🔮";
+  showJoin();
+  startPolling();
+  $("#view-join").scrollIntoView({ behavior: "smooth", block: "start" });
 });
 
-$("#share-copy").addEventListener("click", copyShare);
-$("#share-kakao").addEventListener("click", () => {
+/* 공유 버튼(그룹 화면) */
+function doShare() {
   const link = shareLink();
   if (navigator.share) navigator.share({ title: "우리 모임 관계 지도 🔮", text: `${party.name} — 사주로 보는 우리 사이! 너도 생일 넣어봐`, url: link }).catch(() => {});
   else copyShare();
+}
+$("#gs-kakao").addEventListener("click", doShare);
+$("#gs-copy").addEventListener("click", copyShare);
+$("#group-refresh").addEventListener("click", async () => {
+  if (serverMode && groupId) {
+    const d = await srv("get", { id: groupId });
+    if (d && d.ok && d.group) { party = d.group; refreshJoinView(); toast("최신 상태로 새로고침했어요"); }
+  } else { refreshJoinView(); }
 });
 
 /* 참여 화면: 나도 추가 */

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#07070f" />
+  <title>오늘의 하늘 — 천기연 天機緣</title>
+  <meta name="description" content="실제 태양계의 현재 궤도를 3D로 보며, 지금 하늘의 별자리 기운과 내 사주가 만나 오늘·올해의 운세를 읽습니다." />
+  <meta property="og:title" content="오늘의 하늘 🪐 — 실시간 태양계로 보는 내 운세" />
+  <meta property="og:description" content="지금 목성이 어느 별자리에 있는지 아세요? 실제 행성 위치 + 내 사주로 오늘의 운세를 읽어드립니다." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --space:#07070f; --space-2:#101018; --panel:#14141f; --line:rgba(210,200,255,.1);
+      --txt:#e8e6f2; --dim:#a5a1bd; --faint:#6e6a88;
+      --amber:#e8b76a; --gold:#cdbd90; --seal:#c65a41;
+      --serif:"Noto Serif KR",serif; --sans:"Noto Sans KR",sans-serif; --max:520px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:var(--sans); background:#04040a; color:var(--txt); line-height:1.75; font-size:15px; -webkit-font-smoothing:antialiased; }
+    .app { max-width:var(--max); margin:0 auto; background:var(--space); min-height:100vh; box-shadow:0 0 60px rgba(0,0,0,.8); overflow-x:hidden; }
+    .hidden { display:none !important; }
+    a { color:inherit; text-decoration:none; }
+
+    .hd { position:sticky; top:0; z-index:20; background:rgba(7,7,15,.85); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+    .hd-in { display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 18px; }
+    .logo { display:flex; align-items:center; gap:9px; }
+    .logo-mark { width:30px; height:30px; border-radius:7px; display:grid; place-items:center; font-family:var(--serif); font-weight:700; font-size:16px; color:#fff; background:var(--seal); }
+    .logo-text { font-family:var(--serif); font-weight:700; font-size:16px; }
+    .logo-text small { color:var(--faint); font-size:10px; margin-left:4px; font-weight:400; }
+    .hd a.mine { font-size:12.5px; color:var(--amber); font-weight:700; }
+
+    .hero { text-align:center; padding:28px 22px 8px; }
+    .hero .kick { font-family:var(--serif); font-size:11.5px; letter-spacing:.34em; color:var(--amber); margin-bottom:10px; }
+    .hero h1 { font-family:var(--serif); font-weight:900; font-size:24px; line-height:1.45; }
+    .hero h1 em { color:var(--amber); font-style:normal; }
+    .hero p { font-size:12.5px; color:var(--dim); margin-top:8px; }
+
+    /* 3D 캔버스 */
+    #space { position:relative; width:100%; height:420px; margin-top:14px; }
+    #space canvas { display:block; }
+    .space-tip { position:absolute; left:0; right:0; bottom:8px; text-align:center; font-size:11px; color:var(--faint); pointer-events:none; }
+    .speed-wrap { display:flex; align-items:center; gap:10px; padding:10px 22px 0; font-size:12px; color:var(--dim); }
+    .speed-wrap input { flex:1; accent-color:var(--amber); }
+    #speed-label { min-width:64px; text-align:right; font-variant-numeric:tabular-nums; color:var(--amber); }
+
+    section { padding:24px 20px; }
+    .cos-card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:20px 18px; margin-bottom:14px; }
+    .cos-card h3 { font-family:var(--serif); font-size:16px; font-weight:700; margin-bottom:12px; color:#f2edda; }
+    .cos-card p { font-size:13.5px; color:var(--dim); line-height:1.85; margin-bottom:10px; }
+    .cos-card p:last-child { margin-bottom:0; }
+    .cos-card b { color:var(--txt); }
+    .cos-more { display:block; margin-top:12px; text-align:center; font-size:13px; font-weight:700; color:var(--amber); border:1px solid rgba(232,183,106,.35); border-radius:100px; padding:11px; }
+    .cos-more:hover { background:rgba(232,183,106,.08); }
+
+    #sky-date { font-family:var(--serif); text-align:center; font-size:14px; color:var(--gold); letter-spacing:.06em; margin-bottom:14px; }
+    .sky-row { display:grid; grid-template-columns:30px 1fr auto; gap:4px 10px; align-items:center; padding:9px 0; border-bottom:1px dashed rgba(210,200,255,.08); }
+    .sky-row:last-child { border-bottom:0; }
+    .sr-ic { font-size:17px; text-align:center; }
+    .sr-name { font-size:13.5px; font-weight:700; }
+    .sr-name small { display:block; font-size:10.5px; color:var(--faint); font-weight:400; }
+    .sr-sign { font-size:13px; color:var(--amber); font-weight:700; text-align:right; }
+    .sr-key { grid-column:3; font-size:10.5px; color:var(--faint); text-align:right; }
+    #sky-summary { margin-top:14px; padding-top:14px; border-top:1px solid var(--line); font-size:13.5px; color:var(--dim); line-height:1.85; }
+    #sky-summary b { color:var(--amber); }
+
+    /* 입력 */
+    .frm { display:grid; gap:10px; }
+    .frm-row { display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:8px; }
+    .frm-row2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    select, input[type=text] { width:100%; padding:12px; border-radius:11px; font-size:15px; font-family:var(--sans); background:var(--space-2); border:1.5px solid rgba(210,200,255,.14); color:var(--txt); outline:none; appearance:none; }
+    select:focus { border-color:var(--amber); }
+    .seg { display:flex; gap:8px; }
+    .seg label { flex:1; }
+    .seg input { display:none; }
+    .seg span { display:block; text-align:center; padding:11px 0; border-radius:11px; font-size:13.5px; cursor:pointer; background:var(--space-2); border:1.5px solid rgba(210,200,255,.14); color:var(--dim); }
+    .seg input:checked + span { border-color:var(--amber); color:var(--amber); font-weight:700; }
+    .btn-run { border:0; cursor:pointer; font-family:var(--sans); border-radius:12px; font-weight:700; padding:15px; font-size:15.5px; background:linear-gradient(150deg,#e8c07a,var(--amber)); color:#221600; box-shadow:0 6px 20px rgba(232,183,106,.25); }
+    .btn-run:active { transform:scale(.98); }
+    .frm-note { font-size:11px; color:var(--faint); text-align:center; }
+
+    .foot { padding:26px 22px 40px; text-align:center; color:var(--faint); font-size:11px; line-height:1.8; }
+    .foot a { color:var(--dim); }
+
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:80; width:max-content; max-width:calc(100vw - 40px); background:#26262e; color:#fff; border-radius:100px; padding:12px 22px; font-size:13px; box-shadow:0 10px 30px rgba(0,0,0,.5); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="hd">
+    <div class="hd-in">
+      <a class="logo" href="index.html"><span class="logo-mark">緣</span><span class="logo-text">천기연<small>天機緣</small></span></a>
+      <a class="mine" href="index.html">내 사주 보기 →</a>
+    </div>
+  </header>
+
+  <div class="hero">
+    <p class="kick">宇宙 · 오늘의 하늘</p>
+    <h1>지금 이 순간의 태양계,<br /><em>그 아래 당신의 운</em></h1>
+    <p>실제 행성들의 현재 궤도 위치입니다 — 드래그로 돌려보세요.</p>
+  </div>
+
+  <div id="space"><p class="space-tip">드래그 회전 · 휠/핀치 줌</p></div>
+  <div class="speed-wrap">
+    <span>시간 흐름</span>
+    <input type="range" id="speed" min="0" max="3" step="0.1" value="0" />
+    <span id="speed-label">1일/초</span>
+  </div>
+
+  <!-- 오늘의 하늘 -->
+  <section>
+    <div class="cos-card">
+      <p id="sky-date"></p>
+      <div id="sky-rows"></div>
+      <p id="sky-summary"></p>
+    </div>
+  </section>
+
+  <!-- 내 정보 → 결합 분석 -->
+  <section style="padding-top:0">
+    <div class="cos-card">
+      <h3>🌏 이 하늘 아래, 나의 운세</h3>
+      <p style="margin-bottom:14px">태어난 날을 알려주시면 — <b>별자리(현재 하늘)</b>와 <b>사주(오늘의 일진·올해 세운)</b>를 겹쳐 읽어드립니다.</p>
+      <div class="frm">
+        <div class="frm-row">
+          <select id="c-year"></select><select id="c-month"></select><select id="c-day"></select>
+        </div>
+        <div class="frm-row2">
+          <select id="c-hour"></select>
+          <select id="c-region"></select>
+          <div class="seg">
+            <label><input type="radio" name="cg" id="c-gm" checked /><span>남</span></label>
+            <label><input type="radio" name="cg" id="c-gf" /><span>여</span></label>
+          </div>
+        </div>
+        <button class="btn-run" id="c-run">오늘·올해 운세 읽기 🔭</button>
+        <p class="frm-note">입력은 이 기기에만 저장됩니다 · 메인에서 사주를 봤다면 자동으로 채워져요</p>
+      </div>
+    </div>
+    <div id="my-result" class="hidden"></div>
+  </section>
+
+  <footer class="foot">
+    행성 위치는 NASA/JPL 근사 궤도 요소로 계산한 실제 현재 위치입니다(±1° 수준).<br />
+    행성 텍스처 © <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a> (CC BY 4.0)<br />
+    분석은 점성술·명리학 이론 기반의 참고용 콘텐츠입니다. · <a href="index.html">천기연 홈</a> · <a href="party.html">모임 관계 지도</a>
+  </footer>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="config.js"></script>
+<script src="saju.js"></script>
+<script src="content.js"></script>
+<script src="cosmos.js"></script>
+</body>
+</html>

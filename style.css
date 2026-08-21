@@ -157,6 +157,8 @@ section { padding: 56px 22px; }
 }
 .hero h1 em { color: var(--amber); }
 .hero-sub { color: rgba(243, 236, 225, .78); font-size: 13.5px; margin-bottom: 26px; line-height: 1.85; }
+.hero-links { display: flex; flex-direction: column; gap: 8px; align-items: center; margin-top: 16px; }
+.hero-links .hero-party-link { margin-top: 0; }
 .hero-party-link {
   display: inline-block; margin-top: 16px; font-size: 13px; color: var(--amber);
   border: 1px solid rgba(217, 160, 140, .4); border-radius: 100px; padding: 9px 18px;
