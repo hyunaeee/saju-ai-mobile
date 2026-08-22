@@ -23,6 +23,8 @@ const ORBITS = {
   mars:    { a:[1.52371034,0.00001847], e:[0.09339410,0.00007882], I:[1.84969142,-0.00813131], L:[-4.55343205,19140.30268499], w:[-23.94362959,0.44441088], O:[49.55953891,-0.29257343] },
   jupiter: { a:[5.20288700,-0.00011607], e:[0.04838624,-0.00013253], I:[1.30439695,-0.00183714], L:[34.39644051,3034.74612775], w:[14.72847983,0.21252668], O:[100.47390909,0.20469106] },
   saturn:  { a:[9.53667594,-0.00125060], e:[0.05386179,-0.00050991], I:[2.48599187,0.00193609], L:[49.95424423,1222.49362201], w:[92.59887831,-0.41897216], O:[113.66242448,-0.28867794] },
+  uranus:  { a:[19.18916464,-0.00196176], e:[0.04725744,-0.00004397], I:[0.77263783,-0.00242939], L:[313.23810451,428.48202785], w:[170.95427630,0.40805281], O:[74.01692503,0.04240589] },
+  neptune: { a:[30.06992276,0.00026291], e:[0.00859048,0.00005105], I:[1.77004347,0.00035372], L:[-55.12002969,218.45945325], w:[44.96476227,-0.32241464], O:[131.78422574,-0.00508664] },
 };
 
 function toJD(date) { return date.getTime() / 86400000 + 2440587.5; }
@@ -112,14 +114,18 @@ const PLANETS_META = {
   mars:    { kor: "화성", icon: "♂", theme: "추진·경쟁", color: 0xc0563b, size: 1.4, orbit: 25 },
   jupiter: { kor: "목성", icon: "♃", theme: "행운·확장", color: 0xd8a56a, size: 3.6, orbit: 33 },
   saturn:  { kor: "토성", icon: "♄", theme: "책임·시련", color: 0xcbb787, size: 3.0, orbit: 42 },
+  uranus:  { kor: "천왕성", icon: "♅", theme: "변화·각성", color: 0xa9dfe9, size: 2.4, orbit: 50 },
+  neptune: { kor: "해왕성", icon: "♆", theme: "꿈·직관", color: 0x4a6fd6, size: 2.3, orbit: 57 },
 };
 /* 실제 공전주기(년) — 애니메이션 속도 비율에 사용 */
-const PERIODS = { mercury: 0.241, venus: 0.615, earth: 1, mars: 1.881, jupiter: 11.86, saturn: 29.46 };
+const PERIODS = { mercury: 0.241, venus: 0.615, earth: 1, mars: 1.881, jupiter: 11.86, saturn: 29.46, uranus: 84.01, neptune: 164.8 };
+/* 황도 12궁 링 반지름 (해왕성 궤도 바깥) */
+const ZODIAC_R = 68;
 
 /* ================= 현재 하늘 스냅샷 ================= */
 function skySnapshot(date) {
   const jd = toJD(date);
-  const list = ["sun", "moon", "mercury", "venus", "mars", "jupiter", "saturn"].map(p => {
+  const list = ["sun", "moon", "mercury", "venus", "mars", "jupiter", "saturn", "uranus", "neptune"].map(p => {
     const lon = geoLongitude(p, jd);
     return { p, lon, sign: signOf(lon), idx: signIdx(lon) };
   });
@@ -154,7 +160,7 @@ function renderSkyNow() {
 
 /* ================= Three.js 태양계 ================= */
 let renderer, scene, camera, planetMeshes = {}, rafId = null;
-let camRot = { theta: 0.0, phi: 1.05, dist: 95 }, dragging = false, lastPt = null;
+let camRot = { theta: 0.0, phi: 1.05, dist: 112 }, dragging = false, lastPt = null;
 
 function buildScene() {
   const wrap = $("#space");
@@ -208,7 +214,7 @@ function buildScene() {
   scene.add(new THREE.AmbientLight(0x8888a8, 1.15)); // 텍스처가 잘 보이도록 밝게
 
   // 황도 12궁 링 + 기호
-  const zr = 58;
+  const zr = ZODIAC_R;
   const ringGeo = new THREE.RingGeometry(zr - 0.25, zr + 0.25, 128);
   const ring = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: 0x8a7a55, side: THREE.DoubleSide, transparent: true, opacity: 0.55 }));
   ring.rotation.x = -Math.PI / 2;
@@ -229,7 +235,7 @@ function buildScene() {
 
   // 행성 + 궤도 (실제 현재 heliocentric 각도에 배치)
   const jd = sky.jd;
-  ["mercury", "venus", "earth", "mars", "jupiter", "saturn"].forEach(p => {
+  ["mercury", "venus", "earth", "mars", "jupiter", "saturn", "uranus", "neptune"].forEach(p => {
     const meta = PLANETS_META[p];
     // 궤도선
     const og = new THREE.BufferGeometry();
@@ -245,10 +251,12 @@ function buildScene() {
     const lon = Math.atan2(h.y, h.x); // heliocentric 황경
     const TEX_FILE = {
       mercury: "2k_mercury.jpg", venus: "2k_venus_atmosphere.jpg", earth: "2k_earth_daymap.jpg",
-      mars: "2k_mars.jpg", jupiter: "2k_jupiter.jpg", saturn: "2k_saturn.jpg",
+      mars: "2k_mars.jpg", jupiter: "2k_jupiter.jpg", saturn: "2k_saturn.jpg", neptune: "2k_neptune.jpg",
     };
+    // 천왕성은 실제로도 거의 무늬가 없어 절차적(청록 그라데이션+희미한 띠) 텍스처 사용
+    const mapTex = p === "uranus" ? makeUranusTexture() : TEX(TEX_FILE[p]);
     const mesh = new THREE.Mesh(new THREE.SphereGeometry(meta.size, 40, 40),
-      new THREE.MeshStandardMaterial({ map: TEX(TEX_FILE[p]), roughness: 0.92, metalness: 0 }));
+      new THREE.MeshStandardMaterial({ map: mapTex, roughness: 0.92, metalness: 0 }));
     mesh.rotation.z = 0.1; // 살짝 기울인 자전축
     mesh.userData = { p, angle: lon, r: meta.orbit, spin: 0.004 / Math.max(0.4, meta.size / 2) };
     mesh.position.set(meta.orbit * Math.cos(lon), 0, -meta.orbit * Math.sin(lon));
@@ -276,6 +284,13 @@ function buildScene() {
       rg.rotation.x = -Math.PI / 2 + 0.45;
       mesh.add(rg);
     }
+    if (p === "uranus") {
+      // 천왕성의 희미한 고리 — 자전축이 98° 누워 있어 고리가 거의 세로로 섭니다
+      const ug = new THREE.RingGeometry(meta.size + 0.9, meta.size + 1.7, 80, 1);
+      const ur = new THREE.Mesh(ug, new THREE.MeshBasicMaterial({ color: 0xbfe6ee, side: THREE.DoubleSide, transparent: true, opacity: 0.32, depthWrite: false }));
+      ur.rotation.x = -Math.PI / 2 + 1.72;
+      mesh.add(ur);
+    }
     if (p === "earth") {
       const mk = textSprite("나", "#7fb2ff", 40);
       mk.scale.set(3, 3, 1); mk.position.set(0, -meta.size - 2.0, 0);
@@ -298,7 +313,7 @@ function buildScene() {
   el.addEventListener("touchstart", e => down(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
   el.addEventListener("touchmove", e => move(e.touches[0].clientX, e.touches[0].clientY), { passive: true });
   el.addEventListener("touchend", () => dragging = false);
-  el.addEventListener("wheel", e => { camRot.dist = Math.max(45, Math.min(190, camRot.dist + e.deltaY * 0.06)); }, { passive: true });
+  el.addEventListener("wheel", e => { camRot.dist = Math.max(50, Math.min(230, camRot.dist + e.deltaY * 0.06)); }, { passive: true });
 
   // 크기 추적: 백그라운드 탭에서 초기화돼 0px였다가 표시되는 경우까지 자동 복구
   const fit = () => {
@@ -329,6 +344,23 @@ function makeSunTexture() {
     const bright = Math.random() > 0.5;
     g.fillStyle = bright ? `rgba(255,${200 + Math.random() * 40 | 0},120,0.16)` : `rgba(200,90,20,0.14)`;
     g.beginPath(); g.arc(x, y, r, 0, Math.PI * 2); g.fill();
+  }
+  const t = new THREE.CanvasTexture(c);
+  t.wrapS = THREE.RepeatWrapping;
+  return t;
+}
+
+/* 천왕성 절차적 텍스처 — 옅은 청록 바탕에 희미한 위도 띠 */
+function makeUranusTexture() {
+  const c = document.createElement("canvas"); c.width = 512; c.height = 256;
+  const g = c.getContext("2d");
+  const base = g.createLinearGradient(0, 0, 0, 256);
+  base.addColorStop(0, "#b9e7ee"); base.addColorStop(0.5, "#a3dbe6"); base.addColorStop(1, "#8fcfdc");
+  g.fillStyle = base; g.fillRect(0, 0, 512, 256);
+  for (let i = 0; i < 14; i++) {
+    const y = 20 + i * 16 + (Math.random() * 6 - 3), h = 3 + Math.random() * 5;
+    g.fillStyle = `rgba(255,255,255,${(0.05 + Math.random() * 0.08).toFixed(3)})`;
+    g.fillRect(0, y, 512, h);
   }
   const t = new THREE.CanvasTexture(c);
   t.wrapS = THREE.RepeatWrapping;
@@ -409,6 +441,11 @@ function renderMyFortune(input) {
   if (sat.idx === myIdx) astLines.push(`동시에 <b>토성이 당신의 별자리를 통과 중</b> — 약 2년 반의 담금질 구간입니다. 이 시기의 노력은 유난히 오래 남습니다.`);
   else if (sat.sign.el === mySign.el) astLines.push(`토성이 같은 원소를 지나 책임의 무게가 다소 실리지만, 그만큼 기초를 다지기 좋은 때입니다.`);
   if (mar.sign.el === mySign.el) astLines.push(`화성까지 같은 ${AST_EL[mySign.el].kor} 기운이라 에너지가 오르는 시기 — 몸을 쓰는 시작에 좋습니다.`);
+  // 외행성(세대 행성) — 내 별자리를 직접 지날 때만 언급 (7년·14년에 한 번 오는 드문 시기)
+  const ura = sky.list.find(x => x.p === "uranus");
+  const nep = sky.list.find(x => x.p === "neptune");
+  if (ura && ura.idx === myIdx) astLines.push(`<b>천왕성이 당신의 별자리를 지나는 중</b>입니다 — 84년 주기 중 약 7년만 머무는 '각성의 구간'. 익숙한 틀이 흔들리고 새 길이 열리는 시기이니, 변화를 두려워하지 마세요.`);
+  if (nep && nep.idx === myIdx) astLines.push(`<b>해왕성이 당신의 별자리에 머물고 있습니다</b> — 165년 주기 중 약 14년의 '꿈과 직관의 구간'. 영감은 풍부해지지만 현실 판단이 흐려지기 쉬우니 큰 결정은 근거를 한 번 더 확인하세요.`);
 
   // ---- 사주 파트: 오늘 일진 ----
   const tdp = dayPillar(today.getFullYear(), today.getMonth() + 1, today.getDate());
@@ -454,7 +491,7 @@ function renderMyFortune(input) {
 let myHalo = null;
 function highlightMySign(idx) {
   if (myHalo) { scene.remove(myHalo); myHalo = null; }
-  const zr = 58, ang = (idx * 30 + 15) * DEG;
+  const zr = ZODIAC_R, ang = (idx * 30 + 15) * DEG;
   const spr = textSprite("★ 내 별자리", "#ffd27f", 30);
   spr.position.set((zr + 7) * Math.cos(ang), 2.5, -(zr + 7) * Math.sin(ang));
   spr.scale.set(9, 4.5, 1);
