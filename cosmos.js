@@ -479,7 +479,7 @@ function renderMyFortune(input) {
     <div class="cos-card">
       <h3>🐎 사주로 본 올해 — 2026 병오년</h3>
       <p>${yearLine}</p>
-      <a class="cos-more" href="index.html">배우자·재물·대운까지 — 전체 심층 풀이 보러 가기 →</a>
+      <a class="cos-more" href="saju.html">배우자·재물·대운까지 — 전체 심층 풀이 보러 가기 →</a>
     </div>`;
   $("#my-result").classList.remove("hidden");
   $("#my-result").scrollIntoView({ behavior: "smooth", block: "start" });

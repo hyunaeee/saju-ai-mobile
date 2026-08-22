@@ -4,375 +4,311 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#16110d" />
-  <title>천기연 天機緣 — 신녀 연화의 AI 사주 풀이</title>
-  <meta name="description" content="만세력·진태양시 보정·대운·신살까지 — AI 신녀 연화가 풀어주는 정밀 사주 리포트." />
-  <meta property="og:title" content="천기연 — 신녀 연화의 AI 사주 풀이" />
-  <meta property="og:description" content="태어난 시각과 땅까지 읽는 진짜 사주 풀이. 무료로 확인해보세요." />
+  <title>천기연 天機緣 — 운명을 읽는 세 가지 길</title>
+  <meta name="description" content="정통 만세력 사주 풀이, 친구들과 보는 모임 관계 지도, 실시간 태양계로 읽는 오늘의 하늘 — 천기연은 나의 운·우리의 인연·오늘의 기운을 한곳에서 읽는 운명 플랫폼입니다." />
+  <meta property="og:title" content="천기연 天機緣 — 나의 운 · 우리의 인연 · 오늘의 하늘" />
+  <meta property="og:description" content="신녀 연화의 정밀 사주, 친구 생일만 모으면 그려지는 관계 지도, 실제 행성 위치로 보는 오늘의 운세까지." />
   <meta property="og:type" content="website" />
+  <script>
+    /* 예전 공유 링크(루트 ?b=…) · 결제 복귀(?pay=…)는 사주 페이지로 그대로 넘깁니다 */
+    (function () { var q = location.search; if (/[?&](b|pay)=/.test(q)) location.replace("saju.html" + q + location.hash); })();
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@300;400;600;700;900&family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="nav.css" />
+  <style>
+    :root {
+      --paper:#faf7f1; --paper-deep:#f1ece2; --card:#fffefb; --line:#e9e2d4; --hairline:rgba(38,32,24,.08);
+      --ink:#221d15; --ink-dim:#6f675a; --ink-faint:#a09786;
+      --seal:#a83a26; --seal-dark:#8c2f1e; --seal-bg:#f9ece7;
+      --dark:#16110d; --dark-2:#241b14; --dark-text:#f3ece1; --dark-dim:#b9ab99;
+      --amber:#d9a08c; --gold:#b98a2f; --space:#07070f; --space-amber:#e8b76a;
+      --serif:"Noto Serif KR",serif; --sans:"Noto Sans KR",sans-serif; --max:520px;
+      --shadow-1:0 1px 2px rgba(34,29,21,.04),0 4px 16px rgba(34,29,21,.05);
+      --shadow-2:0 2px 6px rgba(34,29,21,.06),0 12px 32px rgba(34,29,21,.10);
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html { scroll-behavior:smooth; }
+    body { font-family:var(--sans); background:#e6dfd1; color:var(--ink); line-height:1.75; font-size:15px; -webkit-font-smoothing:antialiased; }
+    .app { max-width:var(--max); margin:0 auto; background:var(--paper); min-height:100vh; box-shadow:0 0 40px rgba(34,29,21,.18); overflow-x:hidden; }
+    a { color:inherit; text-decoration:none; }
+    em { font-style:normal; }
+    .hidden { display:none !important; }
+
+    .demo-banner { background:#2b2119; color:#f3e7d3; font-size:11.5px; text-align:center; padding:7px 14px; line-height:1.5; }
+    .demo-banner b { color:#ffd88a; margin-right:6px; letter-spacing:.1em; }
+
+    /* 헤더 */
+    .hd { position:sticky; top:0; z-index:20; background:rgba(250,247,241,.9); backdrop-filter:blur(14px); border-bottom:1px solid var(--line); }
+    .hd-in { display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 18px; }
+    .logo { display:flex; align-items:center; gap:9px; }
+    .logo-mark { width:30px; height:30px; border-radius:7px; display:grid; place-items:center; font-family:var(--serif); font-weight:700; font-size:16px; color:#fff; background:var(--seal); }
+    .logo-text { font-family:var(--serif); font-weight:700; font-size:16px; }
+    .logo-text small { color:var(--ink-faint); font-size:10px; margin-left:4px; font-weight:400; }
+    .hd .go { font-size:12.5px; font-weight:700; color:#fff; background:var(--seal); border-radius:100px; padding:8px 14px; }
+
+    /* 히어로 */
+    .hero { position:relative; min-height:470px; display:flex; align-items:flex-end; color:var(--dark-text); background:var(--dark); overflow:hidden; }
+    .hero-video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.85; }
+    .hero-veil { position:absolute; inset:0; background:linear-gradient(180deg,rgba(22,17,13,.25) 0%,rgba(22,17,13,.55) 45%,rgba(22,17,13,.96) 100%); }
+    .hero-content { position:relative; padding:60px 24px 34px; width:100%; }
+    .hero-kicker { font-family:var(--serif); font-size:11.5px; letter-spacing:.36em; color:var(--amber); margin-bottom:12px; }
+    .hero h1 { font-family:var(--serif); font-weight:900; font-size:29px; line-height:1.4; letter-spacing:-.01em; }
+    .hero h1 em { color:#f1c89a; }
+    .hero-sub { margin-top:12px; font-size:13.5px; color:var(--dark-dim); line-height:1.8; }
+    .hero-cta { display:flex; gap:8px; margin-top:22px; }
+    .btn { display:inline-flex; align-items:center; justify-content:center; gap:6px; border:0; cursor:pointer; font-family:var(--sans); font-weight:700; border-radius:12px; padding:14px 16px; font-size:14.5px; transition:transform .15s, box-shadow .15s; -webkit-tap-highlight-color:transparent; }
+    .btn:active { transform:scale(.98); }
+    .btn-seal { background:var(--seal); color:#fff; box-shadow:0 8px 22px rgba(168,58,38,.35); flex:1.3; }
+    .btn-ghost { background:rgba(255,255,255,.08); color:var(--dark-text); border:1px solid rgba(255,255,255,.22); flex:1; }
+    .btn-block { width:100%; }
+    .hero-trio { display:flex; gap:10px; margin-top:22px; padding-top:18px; border-top:1px solid rgba(255,255,255,.12); }
+    .hero-trio a { flex:1; text-align:center; font-size:11.5px; color:var(--dark-dim); line-height:1.5; }
+    .hero-trio a b { display:block; font-family:var(--serif); font-size:15px; color:var(--dark-text); margin-bottom:2px; }
+
+    section { padding:34px 20px; }
+    .sec-kicker { font-family:var(--serif); font-size:11px; letter-spacing:.3em; color:var(--seal); margin-bottom:8px; }
+    .sec-title { font-family:var(--serif); font-weight:700; font-size:21px; line-height:1.4; margin-bottom:6px; }
+    .sec-sub { font-size:13px; color:var(--ink-dim); margin-bottom:18px; }
+
+    /* 오늘의 기운 */
+    .today { padding-top:22px; }
+    .today-card { position:relative; background:var(--card); border:1px solid var(--line); border-radius:18px; padding:18px 18px 16px; box-shadow:var(--shadow-1); display:grid; grid-template-columns:auto 1fr; gap:16px; align-items:center; overflow:hidden; }
+    .today-card::before { content:"日"; position:absolute; right:-6px; top:-22px; font-family:var(--serif); font-size:110px; color:var(--paper-deep); font-weight:900; line-height:1; pointer-events:none; }
+    .today-seal { position:relative; width:68px; height:68px; border-radius:14px; background:var(--seal); color:#fff; display:grid; place-items:center; font-family:var(--serif); font-weight:900; font-size:26px; line-height:1; box-shadow:0 8px 18px rgba(168,58,38,.3); letter-spacing:.05em; }
+    .today-seal small { font-size:9.5px; font-weight:400; letter-spacing:.2em; opacity:.85; margin-top:3px; }
+    .today-body { position:relative; min-width:0; }
+    .today-date { font-size:11.5px; color:var(--ink-faint); letter-spacing:.04em; }
+    .today-name { font-family:var(--serif); font-weight:700; font-size:17px; margin-top:2px; }
+    .today-name b { color:var(--seal); }
+    .today-line { font-size:13px; color:var(--ink-dim); margin-top:6px; line-height:1.7; }
+    .today-link { display:inline-block; margin-top:8px; font-size:12px; font-weight:700; color:var(--seal); }
+
+    /* 서비스 카드 */
+    .svc { display:grid; gap:14px; }
+    .svc-card { position:relative; display:block; border-radius:20px; overflow:hidden; border:1px solid var(--line); box-shadow:var(--shadow-2); background:var(--card); min-height:196px; transition:transform .2s; }
+    .svc-card:active { transform:scale(.985); }
+    .svc-in { position:relative; z-index:2; padding:22px 20px 20px; max-width:66%; }
+    .svc-saju .svc-in { max-width:60%; }
+    .svc-tag { display:inline-flex; align-items:center; gap:5px; font-size:10.5px; font-weight:700; letter-spacing:.12em; padding:4px 9px; border-radius:100px; border:1px solid currentColor; margin-bottom:10px; }
+    .svc-card h3 { font-family:var(--serif); font-weight:900; font-size:20px; line-height:1.35; }
+    .svc-card h3 small { display:block; font-family:var(--sans); font-weight:500; font-size:11.5px; letter-spacing:.08em; opacity:.7; margin-bottom:4px; }
+    .svc-card p { font-size:13px; line-height:1.75; margin-top:8px; opacity:.86; }
+    .svc-chips { display:flex; flex-wrap:wrap; gap:5px; margin-top:12px; }
+    .svc-chips span { font-size:10.5px; padding:3px 8px; border-radius:100px; background:rgba(0,0,0,.05); }
+    .svc-go { display:inline-flex; align-items:center; gap:6px; margin-top:14px; font-size:13px; font-weight:700; border-radius:100px; padding:9px 14px; }
+    /* 1. 연화 사주 — 어두운 신당 + 초상 */
+    .svc-saju { background:linear-gradient(100deg,#1a130e 0%,#2a1d14 55%,#3a281a 100%); color:var(--dark-text); border-color:#3a2c20; }
+    .svc-saju .svc-tag { color:#f1c89a; }
+    .svc-saju .svc-chips span { background:rgba(255,255,255,.09); color:#e9dccb; }
+    .svc-saju .svc-go { background:var(--seal); color:#fff; }
+    .svc-saju .portrait { position:absolute; right:-6px; top:0; bottom:0; width:46%; background:url("assets/shaman-portrait.webp") 60% 18%/cover no-repeat; -webkit-mask-image:linear-gradient(90deg,transparent 0%,#000 32%); mask-image:linear-gradient(90deg,transparent 0%,#000 32%); opacity:.92; }
+    /* 2. 모임 관계 — 한지 + 미니 관계 그래프 */
+    .svc-party { background:linear-gradient(100deg,var(--card),#f6efe2); color:var(--ink); }
+    .svc-party .svc-tag { color:var(--gold); }
+    .svc-party .svc-go { background:var(--ink); color:#fff; }
+    .svc-party .mini-graph { position:absolute; right:2px; top:50%; transform:translateY(-50%); width:140px; height:140px; opacity:.85; }
+    .mini-graph .mg-node { transform-box:fill-box; transform-origin:center; animation:mgPulse 3.2s ease-in-out infinite; }
+    .mini-graph .mg-node:nth-child(2){animation-delay:.5s}.mini-graph .mg-node:nth-child(3){animation-delay:1s}.mini-graph .mg-node:nth-child(4){animation-delay:1.5s}.mini-graph .mg-node:nth-child(5){animation-delay:2s}.mini-graph .mg-node:nth-child(6){animation-delay:2.5s}
+    @keyframes mgPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.18)} }
+    .mini-graph .mg-halo { transform-box:fill-box; transform-origin:center; animation:mgHalo 3.2s ease-in-out infinite; }
+    @keyframes mgHalo { 0%,100%{transform:scale(1);opacity:.45} 50%{transform:scale(1.25);opacity:.1} }
+    .mini-graph .mg-link { stroke-dasharray:4 3; animation:mgFlow 2.4s linear infinite; }
+    @keyframes mgFlow { to { stroke-dashoffset:-14 } }
+    /* 3. 오늘의 하늘 — 우주 + CSS 궤도 */
+    .svc-cosmos { background:radial-gradient(120% 90% at 90% 50%,#1b1a3a 0%,#0b0b19 45%,#07070f 100%); color:#e8e6f2; border-color:#1c1c2e; }
+    .svc-cosmos .svc-tag { color:var(--space-amber); }
+    .svc-cosmos .svc-chips span { background:rgba(255,255,255,.08); color:#cfcbe6; }
+    .svc-cosmos .svc-go { background:var(--space-amber); color:#221600; }
+    .orbits { position:absolute; right:-36px; top:50%; transform:translateY(-50%); width:210px; height:210px; }
+    .orbits .ring { position:absolute; inset:0; border-radius:50%; border:1px solid rgba(210,200,255,.16); animation:spin linear infinite; }
+    .orbits .ring i { position:absolute; top:-4px; left:50%; width:8px; height:8px; margin-left:-4px; border-radius:50%; box-shadow:0 0 10px currentColor; }
+    .orbits .r1 { inset:78px; animation-duration:6s; } .orbits .r1 i { background:#d6c9ad; color:#d6c9ad; width:6px; height:6px; top:-3px; }
+    .orbits .r2 { inset:58px; animation-duration:10s; } .orbits .r2 i { background:#e9d2b4; color:#e9d2b4; }
+    .orbits .r3 { inset:38px; animation-duration:15s; } .orbits .r3 i { background:#5aa0ff; color:#5aa0ff; }
+    .orbits .r4 { inset:20px; animation-duration:24s; } .orbits .r4 i { background:#e06a45; color:#e06a45; width:6px; height:6px; top:-3px; }
+    .orbits .r5 { inset:2px; animation-duration:40s; } .orbits .r5 i { background:#f0c68a; color:#f0c68a; width:11px; height:11px; top:-5px; margin-left:-5px; }
+    .orbits .sun { position:absolute; left:50%; top:50%; width:18px; height:18px; margin:-9px 0 0 -9px; border-radius:50%; background:radial-gradient(circle,#fff3c4,#ffb347 60%,#ff7b00); box-shadow:0 0 26px 6px rgba(255,180,80,.45); }
+    @keyframes spin { to { transform:rotate(360deg); } }
+
+    /* 왜 천기연 */
+    .why { background:var(--paper-deep); }
+    .why-list { display:grid; gap:10px; }
+    .why-item { display:flex; gap:14px; align-items:flex-start; background:var(--card); border:1px solid var(--line); border-radius:14px; padding:14px 16px; }
+    .why-icon { flex:0 0 40px; width:40px; height:40px; border-radius:10px; background:var(--seal-bg); color:var(--seal); display:grid; place-items:center; font-family:var(--serif); font-weight:700; font-size:19px; }
+    .why-item h4 { font-size:14px; font-weight:700; margin-bottom:2px; }
+    .why-item p { font-size:12.5px; color:var(--ink-dim); line-height:1.7; }
+
+    /* 공유 */
+    .share { text-align:center; }
+    .share-box { background:var(--dark); color:var(--dark-text); border-radius:20px; padding:26px 20px 22px; }
+    .share-box h3 { font-family:var(--serif); font-size:19px; font-weight:700; line-height:1.4; }
+    .share-box p { font-size:12.5px; color:var(--dark-dim); margin:8px 0 16px; }
+    .share-row { display:flex; gap:8px; }
+    .share-row .btn { flex:1; font-size:13.5px; padding:12px; }
+    .btn-paper { background:var(--dark-text); color:var(--ink); }
+
+    /* 푸터 */
+    .site-footer { padding:30px 22px 40px; text-align:center; color:var(--ink-faint); font-size:11px; line-height:1.8; border-top:1px solid var(--line); }
+    .footer-logo { font-family:var(--serif); font-weight:700; font-size:14px; color:var(--ink-dim); margin-bottom:8px; }
+    .footer-links { margin:10px 0 8px; font-size:12px; color:var(--ink-dim); }
+    .footer-links a { margin:0 4px; }
+    .footer-links b { color:var(--ink); }
+    .footer-biz { font-size:10.5px; }
+
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:80; width:max-content; max-width:calc(100vw - 40px); background:#26262e; color:#fff; border-radius:100px; padding:12px 22px; font-size:13px; box-shadow:0 10px 30px rgba(0,0,0,.4); }
+
+    @media (max-width:380px) {
+      .hero h1 { font-size:25px; }
+      .svc-in { max-width:72%; }
+      .svc-saju .svc-in { max-width:64%; }
+      .svc-card h3 { font-size:18px; }
+      .svc-party .mini-graph { width:112px; height:112px; right:-6px; opacity:.5; }
+      .orbits { width:180px; height:180px; right:-64px; opacity:.75; }
+    }
+  </style>
 </head>
 <body>
 <div class="app">
 
-  <!-- 데모 배너: 실서비스 모드(config.js에 토스 키 입력)에서는 자동으로 사라집니다 -->
-  <div class="demo-banner" id="demo-banner">
-    <b>DEMO</b> 이 사이트는 기능 시연용 데모입니다 — 실제 결제·정산이 이루어지지 않으며, 후기는 샘플입니다.
-  </div>
+  <div class="demo-banner hidden" id="demo-banner"><b>DEMO</b>이 사이트는 기능 시연용 데모입니다 — 실제 결제·정산이 이루어지지 않습니다.</div>
 
   <!-- ===== 헤더 ===== -->
-  <header class="site-header" id="site-header">
-    <div class="header-inner">
-      <a class="logo" href="#top">
-        <span class="logo-mark">緣</span>
-        <span class="logo-text">천기연<small>天機緣</small></span>
-      </a>
-      <a href="#input-section" class="btn btn-sm btn-seal">무료 사주 보기</a>
+  <header class="hd">
+    <div class="hd-in">
+      <a class="logo" href="index.html"><span class="logo-mark">緣</span><span class="logo-text">천기연<small>天機緣</small></span></a>
+      <a class="go" href="saju.html">무료 사주 보기</a>
     </div>
     <nav class="cnav" aria-label="서비스 전환">
-      <a href="index.html" class="cnav-item active" aria-current="page"><span>🔮</span>연화 사주</a>
+      <a href="index.html" class="cnav-item cnav-home active" aria-current="page" title="천기연 홈"><span>🏠</span><i>홈</i></a>
+      <a href="saju.html" class="cnav-item"><span>🔮</span>연화 사주</a>
       <a href="party.html" class="cnav-item"><span>👥</span>모임 관계</a>
       <a href="cosmos.html" class="cnav-item"><span>🪐</span>오늘의 하늘</a>
     </nav>
   </header>
 
-  <!-- ===== 히어로 (신당 무드 영상) ===== -->
-  <section class="hero" id="top">
+  <!-- ===== 히어로 ===== -->
+  <section class="hero" style="padding:0">
     <video class="hero-video" autoplay muted loop playsinline poster="assets/shrine-bg.webp">
       <source src="assets/shrine-ambient.mp4" type="video/mp4" />
     </video>
     <div class="hero-veil"></div>
     <div class="hero-content">
-      <p class="hero-kicker">萬歲曆 · 眞太陽時 · 大運 · 神殺</p>
-      <h1>태어난 시각과 땅까지 읽는<br /><em>진짜 사주 풀이</em></h1>
-      <p class="hero-sub">생년월일시는 기본, 태어난 지역의 경도로 시간을 보정하고<br />10년 대운과 신살까지 — 같은 날 태어나도 결과가 다릅니다.</p>
-      <a href="#input-section" class="btn btn-lg btn-seal">내 사주 무료로 확인하기</a>
-      <div class="hero-links">
-        <a href="party.html" class="hero-party-link">🔮 친구들과 <b>모임 관계 지도</b> →</a>
-        <a href="cosmos.html" class="hero-party-link">🪐 실시간 태양계로 <b>오늘의 하늘</b> →</a>
+      <p class="hero-kicker">天機緣 · 하늘의 기미와 인연</p>
+      <h1>운명을 읽는<br /><em>세 가지 길</em></h1>
+      <p class="hero-sub">정통 만세력과 실제 천문 데이터로<br />나의 운 · 우리의 인연 · 오늘의 하늘을 한곳에서 읽습니다.</p>
+      <div class="hero-cta">
+        <a class="btn btn-seal" href="saju.html">내 사주 무료로 보기</a>
+        <a class="btn btn-ghost" href="party.html">친구와 관계 지도</a>
       </div>
-      <div class="hero-stats">
-        <div><strong data-counter="1284302">0</strong><span>누적 분석</span></div>
-        <i></i>
-        <div><strong>4.9<small>/5.0</small></strong><span>만족도</span></div>
-        <i></i>
-        <div><strong>60갑자</strong><span>만세력 산출</span></div>
+      <div class="hero-trio">
+        <a href="saju.html"><b>命</b>나의 운<br />사주 풀이</a>
+        <a href="party.html"><b>緣</b>우리의 인연<br />관계 지도</a>
+        <a href="cosmos.html"><b>天</b>오늘의 하늘<br />실시간 태양계</a>
       </div>
     </div>
   </section>
 
-  <!-- ===== 신뢰 포인트 ===== -->
-  <section class="trust" id="how">
-    <p class="sec-kicker">WHY DIFFERENT</p>
-    <h2 class="sec-title">왜 사람마다<br />결과가 다른가</h2>
-    <div class="trust-list">
-      <div class="trust-item reveal"><span class="trust-icon">曆</span><div><h3>절기 기준 만세력 산출</h3><p>입춘·경칩 등 절기로 연주·월주를 세우고 60갑자로 일주를 산출합니다.</p></div></div>
-      <div class="trust-item reveal"><span class="trust-icon">時</span><div><h3>진태양시 보정</h3><p>태어난 지역의 경도로 시간을 보정합니다. 서울 출생이면 −32분, 시주가 달라질 수 있습니다.</p></div></div>
-      <div class="trust-item reveal"><span class="trust-icon">運</span><div><h3>대운·신살까지 분석</h3><p>성별·생년에 따라 방향이 갈리는 10년 대운과 도화·역마 등 신살을 함께 살핍니다.</p></div></div>
-      <div class="trust-item reveal"><span class="trust-icon">問</span><div><h3>고민 맞춤 풀이</h3><p>지금 당신의 고민과 상황을 받아, 그 질문에 대한 답을 사주에서 찾아드립니다.</p></div></div>
-    </div>
-  </section>
-
-  <!-- ===== 신녀 페르소나 ===== -->
-  <section class="persona" id="persona">
-    <div class="persona-card reveal">
-      <div class="persona-photo"><img src="assets/shaman-portrait.webp" alt="신녀 연화" /></div>
-      <div class="persona-body">
-        <p class="persona-kicker">당신의 사주를 봐줄 사람</p>
-        <h2 class="persona-name">신녀 연화 <small>蓮花</small></h2>
-        <p class="persona-quote">"만세력은 거짓말을 안 하네. 자네가 태어난<br />그 시각, 그 땅의 기운까지 내가 짚어줌세."</p>
-        <p class="persona-desc">정통 명리 해석과 무속 상담의 화법을 학습한 AI 신녀 '연화'가, 당신이 알려준 정보 하나하나를 근거로 팔자를 풀어드립니다.</p>
-        <a href="#input-section" class="btn btn-ghost-light btn-sm">연화에게 사주 보이기</a>
+  <!-- ===== 오늘의 기운 ===== -->
+  <section class="today">
+    <div class="today-card">
+      <div class="today-seal" id="today-seal">—<small>日辰</small></div>
+      <div class="today-body">
+        <p class="today-date" id="today-date"></p>
+        <p class="today-name" id="today-name"></p>
+        <p class="today-line" id="today-line"></p>
+        <a class="today-link" href="cosmos.html">오늘의 하늘과 겹쳐 읽기 →</a>
       </div>
     </div>
   </section>
 
-  <!-- ===== 입력 위저드 ===== -->
-  <section class="input-section" id="input-section">
-    <p class="sec-kicker">START</p>
-    <h2 class="sec-title">사주 정보 입력</h2>
-    <p class="sec-sub">정확히 알려줄수록 풀이가 깊어집니다</p>
+  <!-- ===== 서비스 ===== -->
+  <section style="padding-top:6px">
+    <p class="sec-kicker">SERVICES</p>
+    <h2 class="sec-title">무엇이 궁금하세요?</h2>
+    <p class="sec-sub">셋 다 무료로 시작할 수 있어요. 깊이 보고 싶은 것만 골라 복채를 내시면 됩니다.</p>
+    <div class="svc">
 
-    <form id="saju-form" class="saju-form" autocomplete="off">
-      <div class="wizard-progress">
-        <div class="wp-track"><div class="wp-fill" id="wp-fill"></div></div>
-        <span class="wp-label" id="wp-label">1 / 3 — 기본 정보</span>
-      </div>
+      <a class="svc-card svc-saju" href="saju.html">
+        <div class="portrait" aria-hidden="true"></div>
+        <div class="svc-in">
+          <span class="svc-tag">🔮 무료 분석 · 심층 풀이 9,900원~</span>
+          <h3><small>신녀 연화의</small>정통 사주 풀이</h3>
+          <p>태어난 시각과 땅까지 읽습니다. 같은 날 태어나도 결과가 다른 이유 — 진태양시·대운·신살까지.</p>
+          <div class="svc-chips"><span>만세력</span><span>음력 자동변환</span><span>10년 대운</span><span>질문 5개</span></div>
+          <span class="svc-go">무료로 시작 →</span>
+        </div>
+      </a>
 
-      <div class="wiz-step" data-step="1">
-        <div class="form-field">
-          <label for="name">이름</label>
-          <input type="text" id="name" placeholder="홍길동" maxlength="12" required />
+      <a class="svc-card svc-party" href="party.html">
+        <svg class="mini-graph" viewBox="0 0 150 150" aria-hidden="true">
+          <g class="mg-link" fill="none" stroke="#a83a26" stroke-width="1.4" opacity=".55">
+            <path d="M75 75 L36 44"/><path d="M75 75 L116 42"/><path d="M75 75 L124 96"/><path d="M75 75 L58 124"/><path d="M75 75 L24 98"/>
+          </g>
+          <g fill="none" stroke="#b98a2f" stroke-width="1" opacity=".45"><path d="M36 44 L116 42"/><path d="M124 96 L58 124"/><path d="M24 98 L36 44"/></g>
+          <circle class="mg-halo" cx="75" cy="75" r="20" fill="#a83a26" opacity=".35"/>
+          <g class="mg-node"><circle cx="75" cy="75" r="12" fill="#a83a26"/><text x="75" y="79" text-anchor="middle" font-size="10" font-weight="700" fill="#fff" font-family="Noto Serif KR,serif">중심</text></g>
+          <g class="mg-node"><circle cx="36" cy="44" r="9" fill="#3d7a5c"/><text x="36" y="48" text-anchor="middle" font-size="9" fill="#fff">귀인</text></g>
+          <g class="mg-node"><circle cx="116" cy="42" r="9" fill="#2f5d8a"/><text x="116" y="46" text-anchor="middle" font-size="9" fill="#fff">인연</text></g>
+          <g class="mg-node"><circle cx="124" cy="96" r="9" fill="#a8842f"/><text x="124" y="100" text-anchor="middle" font-size="9" fill="#fff">부부</text></g>
+          <g class="mg-node"><circle cx="58" cy="124" r="9" fill="#82868f"/><text x="58" y="128" text-anchor="middle" font-size="9" fill="#fff">앙숙</text></g>
+          <g class="mg-node"><circle cx="24" cy="98" r="9" fill="#6f675a"/><text x="24" y="102" text-anchor="middle" font-size="9" fill="#fff">형제</text></g>
+        </svg>
+        <div class="svc-in">
+          <span class="svc-tag">👥 무료 · 최대 100명</span>
+          <h3><small>친구들과 함께 보는</small>모임 관계 지도</h3>
+          <p>생일만 모으면 누가 귀인이고 누가 전생의 부부인지, 이 모임이 누구를 중심으로 도는지 그래프로 그려집니다.</p>
+          <div class="svc-chips"><span>링크 공유</span><span>실시간 합류</span><span>관계 랭킹</span></div>
+          <span class="svc-go">모임 만들기 →</span>
         </div>
-        <div class="form-field">
-          <label>성별</label>
-          <div class="seg-group" role="radiogroup">
-            <label class="seg"><input type="radio" name="gender" value="M" checked /><span>남성</span></label>
-            <label class="seg"><input type="radio" name="gender" value="F" /><span>여성</span></label>
-          </div>
-        </div>
-        <div class="form-field">
-          <label>달력 구분</label>
-          <div class="seg-group" role="radiogroup">
-            <label class="seg"><input type="radio" name="caltype" value="solar" checked /><span>양력</span></label>
-            <label class="seg"><input type="radio" name="caltype" value="lunar" /><span>음력</span></label>
-          </div>
-          <div class="hidden" id="lunar-extra">
-            <label class="check-row" style="margin-top:10px"><input type="checkbox" id="lunar-leap" /><span>윤달에 태어났어요</span></label>
-            <p class="field-hint">음력 생일은 한국천문연구원 기준으로 <b>자동으로 양력 변환</b>해 계산합니다.</p>
-          </div>
-        </div>
-        <div class="form-field">
-          <label id="birth-date-label">생년월일 (양력)</label>
-          <div class="date-row">
-            <select id="birth-year" required></select>
-            <select id="birth-month" required></select>
-            <select id="birth-day" required></select>
-          </div>
-        </div>
-      </div>
+      </a>
 
-      <div class="wiz-step hidden" data-step="2">
-        <div class="form-field">
-          <label>태어난 시간</label>
-          <label class="check-row"><input type="checkbox" id="time-unknown" /><span>시간을 몰라요 (시주 제외 분석)</span></label>
-          <div class="time-row" id="time-row">
-            <select id="birth-hour"></select>
-            <select id="birth-minute"></select>
-          </div>
-          <p class="field-hint">출생증명서·산모수첩의 시각이 가장 정확합니다</p>
+      <a class="svc-card svc-cosmos" href="cosmos.html">
+        <div class="orbits" aria-hidden="true">
+          <div class="ring r1"><i></i></div><div class="ring r2"><i></i></div><div class="ring r3"><i></i></div><div class="ring r4"><i></i></div><div class="ring r5"><i></i></div>
+          <div class="sun"></div>
         </div>
-        <div class="form-field">
-          <label for="birth-region">태어난 지역</label>
-          <select id="birth-region"></select>
-          <p class="field-hint">경도 기준 진태양시 보정이 적용됩니다</p>
+        <div class="svc-in">
+          <span class="svc-tag">🪐 무료 · 실시간</span>
+          <h3><small>지금 이 순간의 태양계</small>오늘의 하늘</h3>
+          <p>NASA/JPL 궤도로 계산한 실제 행성 위치를 3D로 보고, 별자리 기운과 내 사주를 겹쳐 오늘·올해 운세를 읽습니다.</p>
+          <div class="svc-chips"><span>태양~해왕성</span><span>별자리 × 사주</span><span>오늘의 일진</span></div>
+          <span class="svc-go">지금 하늘 보기 →</span>
         </div>
-      </div>
+      </a>
 
-      <div class="wiz-step hidden" data-step="3">
-        <div class="form-field">
-          <label>요즘 가장 큰 고민 <small>(최대 3개)</small></label>
-          <div class="chip-group" id="concern-chips">
-            <label class="chip"><input type="checkbox" value="marriage" /><span>결혼·배우자</span></label>
-            <label class="chip"><input type="checkbox" value="match" /><span>궁합·운명의 상대</span></label>
-            <label class="chip"><input type="checkbox" value="career" /><span>취업·이직</span></label>
-            <label class="chip"><input type="checkbox" value="money" /><span>재물·수입</span></label>
-            <label class="chip"><input type="checkbox" value="love" /><span>연애</span></label>
-            <label class="chip"><input type="checkbox" value="caution" /><span>조심할 시기</span></label>
-            <label class="chip"><input type="checkbox" value="helper" /><span>귀인·인맥</span></label>
-            <label class="chip"><input type="checkbox" value="health" /><span>건강</span></label>
-            <label class="chip"><input type="checkbox" value="study" /><span>학업·시험</span></label>
-            <label class="chip"><input type="checkbox" value="move" /><span>이사·이동</span></label>
-          </div>
-        </div>
-        <div class="form-field">
-          <label>연애 상태</label>
-          <div class="seg-group" role="radiogroup">
-            <label class="seg"><input type="radio" name="lovestatus" value="solo" checked /><span>솔로</span></label>
-            <label class="seg"><input type="radio" name="lovestatus" value="dating" /><span>연애 중</span></label>
-            <label class="seg"><input type="radio" name="lovestatus" value="married" /><span>기혼</span></label>
-          </div>
-        </div>
-        <div class="form-field">
-          <label for="job-status">현재 하는 일</label>
-          <select id="job-status">
-            <option value="employee">직장인</option>
-            <option value="student">학생</option>
-            <option value="business">자영업·사업</option>
-            <option value="freelancer">프리랜서</option>
-            <option value="seeking">구직·이직 준비</option>
-          </select>
-        </div>
-        <p class="field-hint center">입력한 고민에 대한 연화의 답이 리포트에 담깁니다</p>
-      </div>
-
-      <div class="wiz-nav">
-        <button type="button" class="btn btn-ghost-sm hidden" id="wiz-prev">이전</button>
-        <button type="button" class="btn btn-lg btn-seal btn-grow" id="wiz-next">다음</button>
-        <button type="submit" class="btn btn-lg btn-seal btn-grow hidden" id="wiz-submit">연화에게 사주 보이기</button>
-      </div>
-      <p class="form-note">입력하신 정보는 분석에만 사용되며 서버에 저장되지 않습니다.</p>
-    </form>
-  </section>
-
-  <!-- ===== 로딩 ===== -->
-  <section class="analyzing hidden" id="analyzing">
-    <div class="center">
-      <div class="persona-avatar big"><img src="assets/shaman-portrait.webp" alt="신녀 연화" /></div>
-      <h2 id="analyzing-title">연화가 자네 사주를 보고 있네</h2>
-      <div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div>
-      <p class="analyzing-step" id="analyzing-step">촛불을 밝히고 있네…</p>
     </div>
   </section>
 
-  <!-- ===== 결과 ===== -->
-  <section class="result hidden" id="result">
-    <div class="result-head center">
-      <p class="sec-kicker">READING</p>
-      <h2 id="result-title">홍길동님의 사주팔자</h2>
-      <p class="result-meta" id="result-meta"></p>
-    </div>
-
-    <div class="persona-bubble-wrap" id="persona-bubble"></div>
-
-    <div class="card">
-      <h3 class="card-title">사주팔자 <small>四柱八字 · 십신</small></h3>
-      <div class="pillars" id="pillars"></div>
-      <p class="pillar-note" id="pillar-note"></p>
-    </div>
-
-    <div class="card">
-      <h3 class="card-title">오행 분포 <small>五行</small></h3>
-      <div class="element-bars" id="element-bars"></div>
-      <p class="element-summary" id="element-summary"></p>
-    </div>
-
-    <div class="card report-card">
-      <div class="report-tag free-tag">무료 풀이</div>
-      <h3 class="card-title" id="daymaster-title">일간 분석</h3>
-      <div class="report-body" id="free-report"></div>
-    </div>
-
-    <!-- 무료 확장 (재능·운세지수·신살·오늘의 한 줄) -->
-    <div id="free-extras"></div>
-
-    <!-- 연화의 예고 (클리프행어) -->
-    <div class="cliffhanger" id="cliffhanger"></div>
-
-    <div class="card">
-      <h3 class="card-title">내 사주 결과 공유하기</h3>
-      <p class="share-sub">링크를 받은 친구도 바로 무료 분석을 받을 수 있어요.</p>
-      <div class="share-buttons">
-        <button class="share-btn kakao" id="share-kakao">카카오톡</button>
-        <button class="share-btn twitter" id="share-x">X</button>
-        <button class="share-btn link" id="share-link">링크 복사</button>
-        <button class="share-btn image" id="share-image">이미지 저장</button>
-      </div>
-    </div>
-
-    <!-- 프리미엄 -->
-    <div class="premium-zone" id="premium-zone">
-      <div class="premium-intro center">
-        <p class="sec-kicker">深層 · PREMIUM</p>
-        <h3 class="sec-title">여기서부터가<br />진짜입니다</h3>
-        <p class="premium-sub">어떤 사람과 결혼하게 될지, 운명의 상대는 어떤 띠인지, 매년 조심해야 할 달과 귀인의 띠까지 — 당신 사주에만 해당하는 풀이가 준비되어 있습니다.</p>
-      </div>
-      <div id="premium-sections"></div>
-
-      <!-- 연화에게 질문 (프리미엄 전용) -->
-      <div class="card qa-card hidden" id="qa-card">
-        <div class="report-tag premium-tag">PREMIUM</div>
-        <h3 class="card-title">問 연화에게 직접 묻기 <small id="qa-quota"></small></h3>
-        <p class="teaser">사주를 앞에 두고 궁금한 것을 물어보세요. 연화가 당신의 팔자를 근거로 답합니다.</p>
-        <div id="qa-history"></div>
-        <div class="qa-input-row" id="qa-input-row">
-          <input type="text" id="qa-input" maxlength="80" placeholder="예) 내년에 이직해도 될까요?" />
-          <button class="btn btn-seal" id="qa-send">묻기</button>
-        </div>
-        <p class="field-hint" id="qa-done-hint" style="display:none">질문 5개를 모두 사용했습니다. 답변은 이 기기에 보관됩니다.</p>
-      </div>
-
-      <!-- 결제 CTA (2단 구성) -->
-      <div class="paywall-cta" id="paywall-cta">
-        <div class="paywall-persona">
-          <div class="persona-avatar"><img src="assets/shaman-portrait.webp" alt="신녀 연화" /></div>
-          <p class="paywall-line">"무료로 봐줄 수 있는 건 여기까지네.<br />복채를 놓고 마저 듣고 가시게."</p>
-        </div>
-        <div class="allpass-wrap">
-          <button type="button" class="tier-card best" data-product="allpass">
-            <span class="tier-badge">BEST · 33% 할인</span>
-            <span class="tier-name">자유이용권 — 모든 기능</span>
-            <span class="tier-price"><del>29,600</del> 19,900<small>원</small></span>
-            <ul>
-              <li><b>심층 풀이 13개 섹션 전체</b> — 배우자·궁합·조심할 시기·귀인 포함</li>
-              <li><b>연화에게 직접 질문 5개</b></li>
-              <li><b>모임 궁합 — 최대 10명 관계 지도</b></li>
-              <li>소원부적 · 결과 영구 소장</li>
-            </ul>
-            <span class="tier-cta">전부 열기</span>
-          </button>
-          <p class="single-label">필요한 것만 골라서 — 단품 결제</p>
-          <div class="single-grid">
-            <button type="button" class="single-item" data-product="report"><b>심층 풀이</b><span>9,900원</span></button>
-            <button type="button" class="single-item" data-product="questions"><b>질문 5개</b><span>7,900원</span></button>
-            <button type="button" class="single-item" data-product="group"><b>모임 궁합</b><span>6,900원</span></button>
-            <button type="button" class="single-item" data-product="wish"><b>소원부적</b><span>4,900원</span></button>
-          </div>
-        </div>
-        <p class="price-timer">오늘의 특가 종료까지 <strong id="deal-timer">23:59:59</strong> · 결제 즉시 열람되는 디지털 콘텐츠입니다</p>
-      </div>
-    </div>
-
-    <!-- 기도올리기 (소원 부적) -->
-    <div class="wish-zone" id="wish-zone">
-      <div class="wish-card reveal">
-        <p class="persona-kicker">祈願 · 기도올리기</p>
-        <h3>연화의 신당에<br />소원 한 줄 올리기</h3>
-        <p class="wish-desc">소원을 적으면 연화의 축원 메시지와 함께, 당신의 이름과 소원이 담긴 <b>디지털 소원부적</b>을 만들어드립니다. 부적 이미지는 저장하여 간직할 수 있습니다.</p>
-        <div id="wish-locked">
-          <input type="text" id="wish-input" maxlength="40" placeholder="예) 올해 안에 꼭 이직에 성공하게 해주세요" />
-          <button class="btn btn-lg btn-gold btn-block" id="wish-btn">소원 올리기 · 4,900원</button>
-        </div>
-        <div id="wish-done" class="hidden">
-          <div class="persona-bubble">
-            <div class="persona-avatar"><img src="assets/shaman-portrait.webp" alt="신녀 연화" /></div>
-            <div class="bubble" id="wish-blessing"></div>
-          </div>
-          <button class="btn btn-lg btn-gold btn-block" id="wish-download">소원부적 이미지 저장하기</button>
-        </div>
-        <p class="wish-note">※ 디지털 콘텐츠 상품입니다. 실제 기도·의식이 수행되는 것은 아니며, 소원의 성취를 보장하지 않습니다. 축원·부적 제공이 개시된 후에는 환불이 불가합니다.</p>
-      </div>
-    </div>
-
-    <!-- 모임 궁합 (최대 10명) -->
-    <div class="group-zone" id="group-zone">
-      <div class="card group-card">
-        <div class="report-tag premium-tag">GROUP</div>
-        <h3 class="card-title">모임 궁합 <small>최대 10명 관계 지도</small></h3>
-        <p class="teaser">친구·동료·가족을 넣어보세요. 누가 누구의 귀인인지, 누가 앙숙인지, 틀어진 두 사람 사이엔 누굴 앉혀야 하는지 — 사주로 관계 지도를 그려드립니다.</p>
-        <div id="group-people"></div>
-        <div class="group-actions">
-          <button type="button" class="btn btn-ghost-sm" id="group-add">＋ 친구 추가</button>
-          <button type="button" class="btn btn-seal btn-grow" id="group-run">관계 분석하기</button>
-        </div>
-        <div id="group-result"></div>
-      </div>
-    </div>
-
-    <button class="btn btn-ghost btn-block" id="retry-btn">다른 사주 보러가기 ↺</button>
-  </section>
-
-  <!-- ===== 후기 ===== -->
-  <section class="reviews" id="reviews">
-    <p class="sec-kicker">REVIEWS</p>
-    <h2 class="sec-title">이용자 후기</h2>
-    <!-- NOTE: 데모용 샘플 후기 — 실서비스에서는 실제 후기로 교체 -->
-    <div class="review-grid">
-      <div class="review-card reveal"><div class="review-stars">★★★★★</div><p>"태어난 지역까지 물어보길래 반신반의했는데, 진태양시 보정하니까 시주가 바뀌더라고요. 이런 것까지 계산해주는 데는 처음."</p><span>김○연 · 30대 · 직장인</span></div>
-      <div class="review-card reveal"><div class="review-stars">★★★★★</div><p>"고민을 입력하면 그거에 대한 답을 콕 집어줘요. 이직 고민 넣었는데 역마살 얘기 나오고… 소름."</p><span>박○준 · 40대 · 자영업</span></div>
-      <div class="review-card reveal"><div class="review-stars">★★★★☆</div><p>"만세력 어플이랑 대조해봤는데 팔자 정확히 일치. 대운 나이도 맞아요. 친구들이랑 공유해서 비교하는 재미."</p><span>이○솔 · 20대 · 대학원생</span></div>
+  <!-- ===== 왜 천기연 ===== -->
+  <section class="why">
+    <p class="sec-kicker">WHY</p>
+    <h2 class="sec-title">근거 있는 풀이만 합니다</h2>
+    <p class="sec-sub">재미로 보되, 계산은 진짜로 — 천기연이 지키는 세 가지.</p>
+    <div class="why-list">
+      <div class="why-item"><span class="why-icon">曆</span><div><h4>절기 기준 만세력 · 한국천문연구원 음양력</h4><p>입춘·경칩 등 절기로 연·월주를 세우고 60갑자로 일주를 산출합니다. 음력 생일은 윤달까지 자동 변환.</p></div></div>
+      <div class="why-item"><span class="why-icon">天</span><div><h4>실제 천문 데이터</h4><p>행성 위치는 NASA/JPL 궤도 요소로 계산한 오늘의 실제 위치(±1°)입니다. 꾸며낸 하늘이 아닙니다.</p></div></div>
+      <div class="why-item"><span class="why-icon">信</span><div><h4>투명한 안내</h4><p>'신녀 연화'는 AI 캐릭터이며, 모든 결과는 명리·점성 이론 기반의 참고용 콘텐츠임을 분명히 밝힙니다. 결제 전 환불 규정을 먼저 보여드립니다.</p></div></div>
     </div>
   </section>
 
-  <!-- ===== FAQ ===== -->
-  <section class="faq" id="faq">
-    <p class="sec-kicker">FAQ</p>
-    <h2 class="sec-title">자주 묻는 질문</h2>
-    <details><summary>사주 계산은 어떤 방식으로 하나요?</summary><p>절기 기준으로 연주·월주를 세우고 60갑자 순환으로 일주를 산출하는 전통 만세력 방식입니다. 태어난 지역의 경도로 진태양시를 보정해 시주를 세웁니다. 시중 만세력과 대조해 확인하실 수 있습니다.</p></details>
-    <details><summary>왜 태어난 지역까지 입력하나요?</summary><p>한국 표준시는 동경 135도 기준이라 실제 태양시와 차이가 있습니다. 예를 들어 서울은 약 −32분 — 이 보정으로 시주(時柱)가 달라지는 분들이 있습니다.</p></details>
-    <details><summary>연화에게 하는 질문은 어떻게 답하나요?</summary><p>당신의 사주팔자·대운·신살 데이터를 근거로 AI가 답변을 생성합니다. 질문 5개는 프리미엄 풀이에 포함되며, 답변은 이 기기에 보관됩니다.</p></details>
-    <details><summary>음력 생일인데 어떻게 입력하나요?</summary><p>달력 구분에서 '음력'을 선택하고 음력 생일을 그대로 입력하면 됩니다. 한국천문연구원(KARI) 기준 데이터로 양력으로 자동 변환해 계산하며, 윤달 출생도 지원합니다. 변환된 양력 날짜는 결과 화면에서 확인할 수 있습니다.</p></details>
-    <details><summary>결제한 리포트는 다시 볼 수 있나요?</summary><p>네. 같은 기기·브라우저에서 동일한 생년월일시로 조회하면 결제하신 리포트가 다시 열립니다.</p></details>
-    <details><summary>환불이 가능한가요?</summary><p>본 서비스는 결제 즉시 열람되는 디지털 콘텐츠입니다. 전자상거래법 제17조에 따라 <b>콘텐츠 제공이 개시(리포트 열람·답변 제공)된 후에는 청약철회가 불가</b>하며, 결제 전 이에 대한 동의를 받고 있습니다. 다만 결제 후 오류로 리포트가 열리지 않거나 질문 답변이 제공되지 않은 경우, 열람 전 철회를 요청하신 경우에는 고객센터를 통해 전액 환불해 드립니다. 무료 풀이로 콘텐츠 품질을 먼저 확인하신 뒤 결제하시기를 권장합니다.</p></details>
+  <!-- ===== 공유 ===== -->
+  <section class="share">
+    <div class="share-box">
+      <h3>친구 생일 하나면<br />모임의 인연이 보입니다</h3>
+      <p>링크를 보내면 친구가 직접 넣고 — 결과는 모두가 함께 봅니다.</p>
+      <div class="share-row">
+        <a class="btn btn-seal" href="party.html">모임 관계 지도 시작</a>
+        <button class="btn btn-paper" id="share-home" type="button">천기연 링크 복사</button>
+      </div>
+    </div>
   </section>
 
   <!-- ===== 푸터 ===== -->
   <footer class="site-footer">
     <p class="footer-logo">천기연 天機緣</p>
-    <p>본 서비스의 분석 결과는 명리학 이론에 기반한 참고용 콘텐츠이며, 중요한 의사결정의 유일한 근거로 사용하지 않기를 권장합니다. '신녀 연화'는 실존 인물이 아닌 AI 캐릭터입니다. 기도올리기는 디지털 콘텐츠 상품으로 실제 의식이 수행되지 않습니다.</p>
+    <p>본 서비스의 분석 결과는 명리학·점성술 이론에 기반한 참고용 콘텐츠이며, 중요한 의사결정의 유일한 근거로 사용하지 않기를 권장합니다. '신녀 연화'는 실존 인물이 아닌 AI 캐릭터입니다. 기도올리기는 디지털 콘텐츠 상품으로 실제 의식이 수행되지 않습니다.</p>
     <nav class="footer-links">
       <a href="terms.html">이용약관</a><span>·</span><a href="privacy.html"><b>개인정보처리방침</b></a><span>·</span><a href="mailto:help@cheongiyeon.example">고객센터</a>
     </nav>
@@ -380,63 +316,58 @@
     <p>© 2026 Cheongiyeon. All rights reserved.</p>
   </footer>
 
-</div><!-- /.app -->
-
-<!-- ===== 하단 고정 결제바 ===== -->
-<div class="paybar hidden" id="paybar">
-  <div class="paybar-inner">
-    <div class="paybar-text"><b>연화의 심층 풀이</b><span>단품 4,900원부터 · 자유이용권 19,900원</span></div>
-    <button class="btn btn-seal" id="paybar-btn">복채 내고 전체 보기</button>
-  </div>
-</div>
-
-<!-- ===== 결제 모달 ===== -->
-<div class="modal-backdrop hidden" id="pay-modal">
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="pay-title">
-    <button class="modal-close" id="pay-close" aria-label="닫기">✕</button>
-    <div id="pay-step-select">
-      <h3 id="pay-title">연화의 심층 풀이</h3>
-      <p class="modal-sub">복채를 내면 남은 이야기를 마저 들려드리겠네</p>
-      <div class="pay-tiers" id="pay-options" role="radiogroup"></div>
-      <div class="pay-methods" role="radiogroup">
-        <label class="pay-method"><input type="radio" name="paymethod" value="kakao" checked /><span class="pm-icon kakao-pay">pay</span><span>카카오페이</span></label>
-        <label class="pay-method"><input type="radio" name="paymethod" value="toss" /><span class="pm-icon toss-pay">toss</span><span>토스페이</span></label>
-        <label class="pay-method"><input type="radio" name="paymethod" value="card" /><span class="pm-icon card-pay">💳</span><span>신용/체크카드</span></label>
-      </div>
-      <label class="check-row refund-agree"><input type="checkbox" id="refund-agree" /><span>본 상품은 결제 즉시 제공되는 디지털 콘텐츠로, <b>열람(제공 개시) 후에는 청약철회·환불이 불가</b>함을 확인했습니다. 오류로 콘텐츠가 제공되지 않은 경우에는 전액 환불됩니다.</span></label>
-      <button class="btn btn-lg btn-seal btn-block" id="pay-confirm">19,900원 결제하기</button>
-      <p class="pay-note">안전한 결제 · 미제공 시 전액 환불<br /><small class="demo-note">※ 현재 데모 모드 — 실제 결제가 발생하지 않습니다</small></p>
-    </div>
-    <div id="pay-step-processing" class="hidden center">
-      <div class="spinner"></div>
-      <h3>결제를 처리하고 있습니다...</h3>
-      <p class="modal-sub">잠시만 기다려주세요</p>
-    </div>
-    <div id="pay-step-done" class="hidden center">
-      <div class="pay-done-icon">✓</div>
-      <h3>결제가 완료되었습니다</h3>
-      <p class="modal-sub">연화가 남은 이야기를 모두 풀어놓았습니다.</p>
-      <button class="btn btn-lg btn-seal btn-block" id="pay-view">심층 풀이 보러가기</button>
-    </div>
-  </div>
 </div>
 
 <div class="toast hidden" id="toast"></div>
 
-<!--
-  [실결제 연동 가이드]
-  - 토스페이먼츠: app.js processPayment()의 TODO 위치에 requestPayment(...) 연동.
-    결제 검증은 반드시 서버에서 수행하세요. 정산 계좌(내 통장)는 토스페이먼츠 가입 시 등록.
-  - 사전 준비: 사업자등록 → 통신판매업 신고 → PG 심사 (운세 콘텐츠는 일반 승인 가능 업종)
-  - 카카오톡 공유: developers.kakao.com에서 JS 키 발급 → app.js KAKAO_JS_KEY
-  - 질문 답변 AI: app.js answerViaAI()의 TODO — 백엔드에서 claude-haiku-4-5 호출 (인당 원가 ~40원)
--->
-<script src="https://t1.kakaocdn.net/kakao_js_sdk/2.7.4/kakao.min.js" crossorigin="anonymous"></script>
-<script src="https://js.tosspayments.com/v1/payment"></script>
 <script src="config.js"></script>
-<script src="lunar.js"></script>
 <script src="saju.js"></script>
-<script src="content.js"></script>
-<script src="app.js"></script>
+<script>
+  (function () {
+    const $ = (s) => document.querySelector(s);
+
+    /* 데모 배너: 실서비스 모드(토스 키 설정 + 데모 호스트 아님)에서만 숨김 */
+    const CFG = window.CHEONGIYEON_CONFIG || {};
+    if (!(CFG.tossClientKey && !CFG.isDemoHost)) $("#demo-banner").classList.remove("hidden");
+
+    /* 오늘의 일진 — saju.js 만세력(60갑자)으로 오늘 일주 산출 */
+    const COLOR = { wood: "푸른", fire: "붉은", earth: "누런", metal: "흰", water: "검은" };
+    const LINES = [
+      "곧게 뻗는 나무의 날 — 시작을 미루지 마세요.",
+      "바람에 휘어도 꺾이지 않는 날 — 유연함이 답입니다.",
+      "해가 정수리에 뜨는 날 — 드러내도 좋습니다.",
+      "촛불 하나의 날 — 가까운 사람에게 마음을 쓰세요.",
+      "큰 산의 날 — 흔들리지 말고 자리를 지키세요.",
+      "기름진 밭의 날 — 뿌린 것을 돌보는 날입니다.",
+      "서늘한 쇠의 날 — 끊을 것은 끊어야 합니다.",
+      "보석의 날 — 세부를 다듬을수록 빛납니다.",
+      "큰 강의 날 — 멀리 보고 흐름을 타세요.",
+      "이슬비의 날 — 조용히 스며드는 것이 이깁니다.",
+    ];
+    try {
+      const now = new Date();
+      const p = dayPillar(now.getFullYear(), now.getMonth() + 1, now.getDate());
+      const s = STEMS[p.stem], b = BRANCHES[p.branch];
+      $("#today-seal").innerHTML = `${s.han}${b.han}<small>日辰</small>`;
+      $("#today-date").textContent = `${now.getFullYear()}년 ${now.getMonth() + 1}월 ${now.getDate()}일 · 오늘의 일진`;
+      $("#today-name").innerHTML = `${s.kor}${b.kor}일 · <b>${COLOR[s.el]} ${b.animal}</b>의 날`;
+      $("#today-line").textContent = LINES[p.stem];
+    } catch (e) {
+      $("#today-date").textContent = "오늘의 일진";
+      $("#today-name").textContent = "천기연";
+    }
+
+    /* 공유 */
+    const toast = (m) => { const t = $("#toast"); t.textContent = m; t.classList.remove("hidden"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.add("hidden"), 2200); };
+    $("#share-home").addEventListener("click", async () => {
+      const url = location.origin + location.pathname.replace(/index\.html$/, "");
+      const data = { title: "천기연 天機緣", text: "나의 운 · 우리의 인연 · 오늘의 하늘 — 천기연", url };
+      try {
+        if (navigator.share) { await navigator.share(data); return; }
+        await navigator.clipboard.writeText(url); toast("링크를 복사했어요");
+      } catch (e) { try { await navigator.clipboard.writeText(url); toast("링크를 복사했어요"); } catch (_) { toast(url); } }
+    });
+  })();
+</script>
 </body>
 </html>
