@@ -260,6 +260,85 @@ const DIR_OF_BRANCH = ["북쪽", "북동쪽", "북동쪽", "동쪽", "남동쪽"
 /* 오행 기운이 차오르는 달 */
 const ELEMENT_MONTHS = { wood: "2~3월", fire: "5~6월", earth: "1·4·7·10월", metal: "8~9월", water: "11~12월" };
 
+/* ---------- 개인화 심화 지표: 신강약 · 용신 · 조후 · 원국 합충 ---------- */
+
+/* 월지 → 계절 (인묘진=봄, 사오미=여름, 신유술=가을, 해자축=겨울) */
+const SEASON_OF_BRANCH = {
+  2: "spring", 3: "spring", 4: "spring",
+  5: "summer", 6: "summer", 7: "summer",
+  8: "autumn", 9: "autumn", 10: "autumn",
+  11: "winter", 0: "winter", 1: "winter",
+};
+
+/* 일간 세력(신강·신약) — 월지(득령)>일지(득지)>기타 가중 합산 */
+function assessStrength(pillars, dayEl) {
+  let sup = 0, tot = 0;
+  const add = (el, w) => { tot += w; if (el === dayEl || GENERATES[el] === dayEl) sup += w; };
+  add(STEMS[pillars.year.stem].el, 1.0);
+  add(BRANCHES[pillars.year.branch].el, 1.0);
+  add(STEMS[pillars.month.stem].el, 1.2);
+  add(BRANCHES[pillars.month.branch].el, 2.6);  // 득령
+  add(BRANCHES[pillars.day.branch].el, 1.6);    // 득지
+  if (pillars.hour) {
+    add(STEMS[pillars.hour.stem].el, 1.0);
+    add(BRANCHES[pillars.hour.branch].el, 1.0);
+  }
+  const ratio = sup / tot;
+  const mEl = BRANCHES[pillars.month.branch].el;
+  const dEl = BRANCHES[pillars.day.branch].el;
+  let category;
+  if (ratio >= 0.62) category = "극신강";
+  else if (ratio >= 0.47) category = "신강";
+  else if (ratio >= 0.33) category = "중화";
+  else if (ratio >= 0.20) category = "신약";
+  else category = "극신약";
+  return {
+    ratio: Math.round(ratio * 100), category,
+    gotMonth: mEl === dayEl || GENERATES[mEl] === dayEl,  // 득령
+    gotDay: dEl === dayEl || GENERATES[dEl] === dayEl,    // 득지
+  };
+}
+
+/* 용신 추정 — 신강이면 흘려보낼 출구(식상·재성·관성), 신약이면 채울 뿌리(인성·비겁),
+ * 중화면 조후(겨울생→화, 여름생→수) 또는 최약 오행 보완 */
+function pickYongsin(counts, dayEl, strengthCat, monthBranch, weakest) {
+  const officerEl = Object.keys(CONTROLS).find(k => CONTROLS[k] === dayEl);
+  const resourceEl = Object.keys(GENERATES).find(k => GENERATES[k] === dayEl);
+  if (strengthCat === "극신강" || strengthCat === "신강") {
+    const cands = [
+      { god: "재성", el: CONTROLS[dayEl] },
+      { god: "식상", el: GENERATES[dayEl] },
+      { god: "관성", el: officerEl },
+    ];
+    const best = cands.reduce((a, b) => (counts[b.el] > counts[a.el] ? b : a));
+    return { el: best.el, god: best.god, method: "억부", reason: "넘치는 일간의 힘을 흘려보내는 출구" };
+  }
+  if (strengthCat === "신약" || strengthCat === "극신약") {
+    const best = counts[dayEl] > counts[resourceEl]
+      ? { god: "비겁", el: dayEl }
+      : { god: "인성", el: resourceEl };
+    return { el: best.el, god: best.god, method: "억부", reason: "모자란 일간의 힘을 채워주는 뿌리" };
+  }
+  if ([11, 0, 1].includes(monthBranch)) return { el: "fire", god: null, method: "조후", reason: "겨울에 태어난 사주를 데우는 온기" };
+  if ([5, 6, 7].includes(monthBranch)) return { el: "water", god: null, method: "조후", reason: "여름에 태어난 사주를 식히는 물" };
+  return { el: weakest, god: null, method: "보완", reason: "판을 고르게 만드는 가장 옅은 기운" };
+}
+
+/* 원국 안 인접 지지끼리의 충·육합·삼합 (ym=연월, md=월일, dh=일시) */
+function findNatalRelations(pillars) {
+  const pairs = [["year", "month", "ym"], ["month", "day", "md"], ["day", "hour", "dh"]];
+  const out = [];
+  for (const [a, b, pos] of pairs) {
+    const pa = pillars[a], pb = pillars[b];
+    if (!pa || !pb) continue;
+    if (chungBranch(pa.branch) === pb.branch) out.push({ kind: "충", pos, branches: [pa.branch, pb.branch] });
+    else if (YUKHAP[pa.branch] === pb.branch) out.push({ kind: "육합", pos, branches: [pa.branch, pb.branch] });
+    else if (pa.branch !== pb.branch && SAMHAP_GROUP[pa.branch] === SAMHAP_GROUP[pb.branch])
+      out.push({ kind: "삼합", pos, branches: [pa.branch, pb.branch] });
+  }
+  return out;
+}
+
 /* ---------- 메인 ----------
  * input: { y, m, d, hour(-1=모름), minute, regionIdx, gender("M"|"F") }
  */
@@ -311,6 +390,12 @@ function calculateSaju(input) {
   const sinsal = findSinsal(pillars);
   const daeun = calcDaeun(y, m, d, gender, yp.stem, mp, dp.stem);
 
+  // 개인화 심화 지표
+  const dayElement = STEMS[dp.stem].el;
+  const strength = assessStrength(pillars, dayElement);
+  const weakestEl = sorted[sorted.length - 1][0];
+  const yongsin = pickYongsin(counts, dayElement, strength.category, mp.branch, weakestEl);
+
   return {
     pillars, counts, total,
     dominant: sorted[0][0],
@@ -320,6 +405,12 @@ function calculateSaju(input) {
     dayYin: STEMS[dp.stem].yin,
     zodiac: BRANCHES[yp.branch].animal,
     tenGods, godCounts, sinsal, daeun,
+    strength, yongsin,
+    missing: Object.keys(counts).filter(k => counts[k] === 0),
+    season: SEASON_OF_BRANCH[mp.branch],
+    natalRelations: findNatalRelations(pillars),
+    iljuIdx: sixtyIndex(dp.stem, dp.branch),
+    hourBranch: hp ? hp.branch : null,
     solarTime: hasTime ? eff : null,
     ganjiText: {
       year:  STEMS[yp.stem].kor + BRANCHES[yp.branch].kor,
@@ -340,7 +431,8 @@ if (typeof module !== "undefined" && module.exports) {
     calculateSaju, tenGodRelation, tenGodOfStem, tenGodOfBranch, tenGodGroup,
     hapStem, YUKHAP, chungBranch, SAMHAP_GROUP, SAMHAP_MEMBERS, CHEONEUL,
     DOHWA, YEOKMA, HWAGAE, MONTH_OF_BRANCH, HOUR_OF_BRANCH, DIR_OF_BRANCH,
-    ELEMENT_MONTHS, dayPillar,
+    ELEMENT_MONTHS, dayPillar, sixtyIndex,
+    SEASON_OF_BRANCH, assessStrength, pickYongsin, findNatalRelations,
   };
   module.exports = _E;
   if (typeof globalThis !== "undefined") Object.assign(globalThis, _E);

@@ -318,7 +318,7 @@ function renderResult() {
   $("#persona-bubble").innerHTML = `
     <div class="persona-bubble">
       <div class="persona-avatar"><img src="assets/shaman-portrait.webp" alt="신녀 연화" /></div>
-      <div class="bubble">${SHAMAN_QUOTES[saju.dayStem]}
+      <div class="bubble">${SHAMAN_QUOTES[saju.dayStem]}${saju.strength && typeof STRENGTH_QUOTE !== "undefined" && STRENGTH_QUOTE[saju.strength.category] ? " " + STRENGTH_QUOTE[saju.strength.category] : ""}
         <span class="who">— 신녀 연화가 ${input.name}님의 ${saju.ganjiText.day}일주를 보고</span>
       </div>
     </div>`;
@@ -450,10 +450,11 @@ function premiumSectionHTML(sec, unlocked, bodyHtml, previewOverride) {
     <p class="teaser">${sec.teaser}</p>${body}</div>`;
 }
 
-function daeunTableHTML(saju, current) {
-  const rows = saju.daeun.list.map(du => {
+/* 공용 렌더 헬퍼 — 대운 표 · 월별 그리드 · 행운 그리드 (클라/서버 응답 공용) */
+function daeunTableHTML(list, current) {
+  const rows = list.map(du => {
     const st = STEMS[du.stem], br = BRANCHES[du.branch];
-    const isCur = du === current;
+    const isCur = du.fromAge === current.fromAge;
     return `<div class="daeun-cell ${isCur ? "current" : ""}">
       <b>${du.fromAge}~${du.toAge}세</b>
       <span class="daeun-ganji"><i class="tx-${st.el}">${st.han}</i><i class="tx-${br.el}">${br.han}</i></span>
@@ -462,6 +463,14 @@ function daeunTableHTML(saju, current) {
   }).join("");
   return `<div class="daeun-grid">${rows}</div>
     <p style="margin-top:14px"><b>지금 당신은 ${current.fromAge}~${current.toAge}세 ${current.tenGod} 대운</b>을 지나고 있습니다. ${DAEUN_BANK[current.tenGod]}</p>`;
+}
+function monthGridHTML(months) {
+  return `<div class="month-grid">${months.map(mo =>
+    `<div class="month-cell"><b>${mo.month}월 <span class="m-score">${"★".repeat(mo.score)}${"☆".repeat(5 - mo.score)}</span></b>${mo.text}</div>`).join("")}</div>`;
+}
+function luckyGridHTML(items) {
+  return `<div class="lucky-grid">${items.map(it =>
+    `<div class="lucky-item"><span class="l-icon">${it.icon}</span><span class="l-label">${it.label}</span><span class="l-value">${it.value}</span></div>`).join("")}</div>`;
 }
 
 function renderPremium() {
@@ -479,8 +488,12 @@ function renderPremium() {
       teaser: `${currentInput.name}님이 고른 고민 ${pr.concerns.length}가지 — 사주에서 찾은 답입니다.`,
     }, unlocked, html));
   }
-  sections.push(premiumSectionHTML(pr.daeunSection, unlocked, daeunTableHTML(currentSaju, pr.daeun.current),
+  sections.push(premiumSectionHTML(pr.daeunSection, unlocked, daeunTableHTML(currentSaju.daeun.list, pr.daeun.current),
     `지금 당신은 ${pr.daeun.current.fromAge}~${pr.daeun.current.toAge}세 ${pr.daeun.current.tenGod} 대운의 한가운데를 지나고 있습니다.`));
+  sections.push(premiumSectionHTML(pr.iljuSection, unlocked));
+  sections.push(premiumSectionHTML(pr.frame, unlocked));
+  sections.push(premiumSectionHTML(pr.godBalance, unlocked));
+  sections.push(premiumSectionHTML(pr.seasonSection, unlocked));
   sections.push(premiumSectionHTML(pr.year2026, unlocked));
   sections.push(premiumSectionHTML(pr.marriage, unlocked));
   sections.push(premiumSectionHTML(pr.match, unlocked));
@@ -492,16 +505,11 @@ function renderPremium() {
   sections.push(premiumSectionHTML(pr.health, unlocked));
   sections.push(premiumSectionHTML(pr.sinsalSection, unlocked));
 
-  const monthsBody = `<div class="month-grid">${pr.months.map(mo =>
-    `<div class="month-cell"><b>${mo.month}월 <span class="m-score">${"★".repeat(mo.score)}${"☆".repeat(5 - mo.score)}</span></b>${mo.text}</div>`
-  ).join("")}</div>`;
+  const monthsBody = monthGridHTML(pr.months);
   sections.push(premiumSectionHTML({ icon: "月", title: "12개월 월별 운세", teaser: "달마다 열리는 문과 닫히는 문이 다릅니다." }, unlocked, monthsBody,
     `1월 — ${pr.months[0].text.split(".")[0]}.`));
 
-  const luckyBody = `<div class="lucky-grid">${pr.lucky.items.map(it =>
-    `<div class="lucky-item"><span class="l-icon">${it.icon}</span>
-      <span class="l-label">${it.label}</span><span class="l-value">${it.value}</span></div>`
-  ).join("")}</div>`;
+  const luckyBody = luckyGridHTML(pr.lucky.items);
   sections.push(premiumSectionHTML({ icon: pr.lucky.icon, title: pr.lucky.title, teaser: pr.lucky.teaser }, unlocked, luckyBody,
     `당신에게 부족한 기운을 채워줄 행운 컬러·방위·숫자가 정해져 있습니다.`));
 
@@ -539,27 +547,12 @@ async function fetchServerReport() {
   }
 }
 
-function daeunTableFromData(list, current) {
-  const rows = list.map(du => {
-    const st = STEMS[du.stem], br = BRANCHES[du.branch];
-    const isCur = du.fromAge === current.fromAge;
-    return `<div class="daeun-cell ${isCur ? "current" : ""}">
-      <b>${du.fromAge}~${du.toAge}세</b>
-      <span class="daeun-ganji"><i class="tx-${st.el}">${st.han}</i><i class="tx-${br.el}">${br.han}</i></span>
-      <span class="daeun-god">${du.tenGod}운${isCur ? " · 현재" : ""}</span></div>`;
-  }).join("");
-  return `<div class="daeun-grid">${rows}</div>
-    <p style="margin-top:14px"><b>지금 당신은 ${current.fromAge}~${current.toAge}세 ${current.tenGod} 대운</b>을 지나고 있습니다. ${DAEUN_BANK[current.tenGod]}</p>`;
-}
-
 function renderServerSections(data) {
   const html = data.sections.map(sec => {
     let body;
-    if (sec.daeun) body = daeunTableFromData(data.daeun.list, data.daeun.current);
-    else if (sec.months) body = `<div class="month-grid">${sec.months.map(mo =>
-      `<div class="month-cell"><b>${mo.month}월 <span class="m-score">${"★".repeat(mo.score)}${"☆".repeat(5 - mo.score)}</span></b>${mo.text}</div>`).join("")}</div>`;
-    else if (sec.lucky) body = `<div class="lucky-grid">${sec.lucky.map(it =>
-      `<div class="lucky-item"><span class="l-icon">${it.icon}</span><span class="l-label">${it.label}</span><span class="l-value">${it.value}</span></div>`).join("")}</div>`;
+    if (sec.daeun) body = daeunTableHTML(data.daeun.list, data.daeun.current);
+    else if (sec.months) body = monthGridHTML(sec.months);
+    else if (sec.lucky) body = luckyGridHTML(sec.lucky);
     else body = sec.html;
     return `<div class="premium-section"><div class="report-tag premium-tag">PREMIUM</div>
       <h3 class="card-title">${sec.icon} ${sec.title}</h3>
@@ -573,13 +566,12 @@ function renderClientUnlocked(pr) {
   const parts = [];
   if (pr.concerns.length) parts.push(sectionUnlocked("問", "당신의 고민에 대한 연화의 답",
     pr.concerns.map(c => `<p><b class="highlight">[${c.label}]</b> ${c.answer}</p>`).join("")));
-  parts.push(sectionUnlocked(pr.daeunSection.icon, pr.daeunSection.title, daeunTableHTML(currentSaju, pr.daeun.current)));
-  [pr.year2026, pr.marriage, pr.match, pr.wealth, pr.love, pr.career, pr.caution, pr.helper, pr.health, pr.sinsalSection]
+  parts.push(sectionUnlocked(pr.daeunSection.icon, pr.daeunSection.title, daeunTableHTML(currentSaju.daeun.list, pr.daeun.current)));
+  [pr.iljuSection, pr.frame, pr.godBalance, pr.seasonSection,
+   pr.year2026, pr.marriage, pr.match, pr.wealth, pr.love, pr.career, pr.caution, pr.helper, pr.health, pr.sinsalSection]
     .forEach(o => parts.push(sectionUnlocked(o.icon, o.title, o.html)));
-  parts.push(sectionUnlocked("月", "12개월 월별 운세", `<div class="month-grid">${pr.months.map(mo =>
-    `<div class="month-cell"><b>${mo.month}월 <span class="m-score">${"★".repeat(mo.score)}${"☆".repeat(5 - mo.score)}</span></b>${mo.text}</div>`).join("")}</div>`));
-  parts.push(sectionUnlocked(pr.lucky.icon, pr.lucky.title, `<div class="lucky-grid">${pr.lucky.items.map(it =>
-    `<div class="lucky-item"><span class="l-icon">${it.icon}</span><span class="l-label">${it.label}</span><span class="l-value">${it.value}</span></div>`).join("")}</div>`));
+  parts.push(sectionUnlocked("月", "12개월 월별 운세", monthGridHTML(pr.months)));
+  parts.push(sectionUnlocked(pr.lucky.icon, pr.lucky.title, luckyGridHTML(pr.lucky.items)));
   $("#premium-sections").innerHTML = parts.join("");
 }
 function sectionUnlocked(icon, title, body) {

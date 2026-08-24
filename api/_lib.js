@@ -4,8 +4,8 @@
 const crypto = require("crypto");
 
 // 사주/콘텐츠 엔진 (순서 중요: saju 먼저 → globalThis 세팅 → content)
-const sajuEngine = require("../saju.js");
-require("../content.js");
+const sajuEngine = require("../js/saju.js");
+require("../js/content.js");
 
 // 서버가 신뢰하는 가격표 (원). 클라이언트가 보낸 금액을 이 값과 대조.
 const PRICES = { report: 9900, questions: 7900, group: 6900, wish: 4900, allpass: 19900 };

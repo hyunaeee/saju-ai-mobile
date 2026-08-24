@@ -195,7 +195,7 @@ section { padding: 56px 22px; }
 .persona { padding: 20px 18px 48px; }
 .persona-card {
   position: relative; border-radius: 22px; overflow: hidden;
-  background: var(--dark-2) url("assets/shrine-bg.webp") center/cover no-repeat;
+  background: var(--dark-2) url("../assets/shrine-bg.webp") center/cover no-repeat;
   box-shadow: var(--shadow-2);
 }
 .persona-card::before {
@@ -574,7 +574,7 @@ section { padding: 56px 22px; }
 .wish-zone { margin-top: 46px; }
 .wish-card {
   position: relative; border-radius: 22px; overflow: hidden;
-  background: var(--dark-2) url("assets/shrine-bg.webp") center/cover no-repeat;
+  background: var(--dark-2) url("../assets/shrine-bg.webp") center/cover no-repeat;
   padding: 34px 24px; color: var(--dark-text); box-shadow: var(--shadow-2);
 }
 .wish-card::before { content: ""; position: absolute; inset: 0; background: rgba(22, 17, 13, .84); }

@@ -36,6 +36,10 @@ module.exports = async (req, res) => {
     const push = (o, key) => sections.push({ key, icon: o.icon, title: o.title, html: o.html });
     // 대운은 표 형태라 데이터로 별도 전달
     sections.push({ key: "daeun", icon: pr.daeunSection.icon, title: pr.daeunSection.title, daeun: true });
+    push(pr.iljuSection, "ilju");
+    push(pr.frame, "frame");
+    push(pr.godBalance, "godBalance");
+    push(pr.seasonSection, "season");
     push(pr.year2026, "year2026");
     push(pr.marriage, "marriage");
     push(pr.match, "match");

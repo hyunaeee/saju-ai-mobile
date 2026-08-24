@@ -1,9 +1,10 @@
 node_modules/
-.env
-.env.local
-.vercel
+.vercel/
 *.log
-assets/*.png
 
-.vercel
+# 환경변수 (예시 파일만 추적)
 .env*
+!.env.example
+
+# 원본 대용량 이미지 (webp만 추적)
+assets/*.png
