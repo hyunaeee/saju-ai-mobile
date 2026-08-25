@@ -36,8 +36,16 @@ const REL = {
     desc: "한쪽이 다른 쪽을 누르는 상극(相剋). 역할이 분명하면 오히려 시너지가 나기도 합니다." },
   neutral:   { icon: "·", label: "무던한 사이", color: "#b0a692",
     desc: "특별한 끌림도 부딪힘도 적은, 담백하고 편한 사이입니다." },
+  mirror:    { icon: "🪞", label: "전생의 도플갱어", color: "#6b7fd7",
+    desc: "일주(日柱)가 완전히 같은 사이 — 60일에 한 번 나오는 조합입니다. 전생에 같은 사람이었나 싶을 만큼 결이 닮아, 서로를 보면 거울을 보는 기분이 듭니다. 장점도 단점도 똑같이 닮아서, 상대가 답답할 때는 사실 내가 그런 것입니다." },
+  tsundere:  { icon: "🌶️", label: "싸우며 정드는 사이", color: "#d35400",
+    desc: "천간(겉기질)은 완전히 같은데 지지(속바닥)는 정면으로 충(沖)하는 조합입니다. 너무 닮아서 더 부딪히고, 부딪혀 봐야 서로를 알아보는 — 만나면 티격태격해도 막상 안 보이면 제일 먼저 생각나는 츤데레 케미입니다." },
+  spark:     { icon: "💘", label: "밀당 케미", color: "#e84393",
+    desc: "한쪽이 다른 쪽의 도화(桃花) 자리에 앉아 있는 사이 — 이유 없이 자꾸 눈길이 가고 신경 쓰이는 조합입니다. 연인이 되든 안 되든, 이 둘이 같이 있으면 모임에 미묘한 텐션이 흐릅니다." },
+  mentor:    { icon: "🧭", label: "전생의 스승과 제자", color: "#16a085",
+    desc: "연장자의 기운이 아랫사람을 살려주는 상생(相生)의 사제지간입니다. 전생에 한 사람이 다른 사람을 가르쳤던 인연으로, 잔소리도 이 사람 것만은 이상하게 새겨듣게 됩니다." },
 };
-const REL_ORDER = ["spouse", "lifelong", "season", "benefactor", "helpEach", "overcome", "sibling", "helpOne", "enemy", "tension", "neutral"];
+const REL_ORDER = ["mirror", "tsundere", "spouse", "lifelong", "season", "spark", "benefactor", "helpEach", "overcome", "sibling", "mentor", "helpOne", "enemy", "tension", "neutral"];
 
 /* ---------- 한 쌍 분석 ---------- */
 function analyzePair(A, B) {
@@ -52,7 +60,16 @@ function analyzePair(A, B) {
   const keAB = CONTROLS[A.el] === B.el;
   const keBA = CONTROLS[B.el] === A.el;
   const sameEl = A.el === B.el;
-  const overcome = chung && (stemHap || yukhap || samhap || shengAB || shengBA);
+  const mirror = A.stem === B.stem && A.branch === B.branch;          // 같은 일주
+  // 겉충속통: 지지는 정면 충인데 천간은 같은 기운(비견) — 똑같아서 더 부딪히고, 그래서 정드는 사이
+  const tsundere = chung && A.stem === B.stem && !mirror;
+  const overcome = chung && !tsundere && (stemHap || yukhap || samhap || shengAB || shengBA);
+  const dohwaOf = (b) => DOHWA[SAMHAP_GROUP[b]];
+  const sparkAB = dohwaOf(A.branch) === B.branch;                     // B가 A의 도화 자리
+  const sparkBA = dohwaOf(B.branch) === A.branch;
+  const spark = sparkAB || sparkBA;
+  const ageGap = Math.abs((A.y || 0) - (B.y || 0));
+  const mentor = !chung && ageGap >= 5 && ((shengAB && !shengBA) || (shengBA && !shengAB)); // 연장자 상생 사제
 
   // 점수(친밀도) 0~100
   let s = 50;
@@ -62,26 +79,33 @@ function analyzePair(A, B) {
   if (gwiinAB || gwiinBA) s += 12;
   if (shengAB) s += 6; if (shengBA) s += 6;
   if (sameEl) s += 8;
+  if (mirror) s += 14;
+  if (spark) s += 9;
   if (chung) s -= 28;
   if (keAB) s -= 6; if (keBA) s -= 6;
+  if (tsundere) s += 24;
   if (overcome) s += 20;
   s += ((A.stem * 3 + B.branch * 5 + A.branch + B.stem) % 7) - 3;
   s = Math.max(8, Math.min(98, s));
 
   let type;
-  if (overcome) type = "overcome";
+  if (mirror) type = "mirror";
+  else if (tsundere) type = "tsundere";
+  else if (overcome) type = "overcome";
   else if (stemHap) type = "spouse";
   else if (yukhap) type = "lifelong";
   else if (samhap) type = "season";
+  else if (spark) type = "spark";
   else if (gwiinAB || gwiinBA) type = "benefactor";
   else if (shengAB && shengBA) type = "helpEach";
   else if (sameEl) type = "sibling";
+  else if (mentor) type = "mentor";
   else if (shengAB || shengBA) type = "helpOne";
   else if (chung) type = "enemy";
   else if (keAB || keBA) type = "tension";
   else type = "neutral";
 
-  // 방향 문구(귀인/밀어주기)
+  // 방향 문구(귀인/밀어주기/도화/사제)
   let dirNote = "";
   if (type === "benefactor") {
     if (gwiinAB && gwiinBA) dirNote = `서로가 서로의 귀인입니다.`;
@@ -89,6 +113,14 @@ function analyzePair(A, B) {
     else dirNote = `${A.name}가 ${B.name}의 귀인입니다.`;
   } else if (type === "helpOne") {
     dirNote = shengAB ? `${A.name}가 ${B.name}의 기운을 밀어줍니다.` : `${B.name}가 ${A.name}의 기운을 밀어줍니다.`;
+  } else if (type === "spark") {
+    dirNote = sparkAB && sparkBA ? `서로가 서로의 도화입니다 — 쌍방 밀당.`
+      : sparkAB ? `${B.name}에게 자꾸 눈길이 가는 쪽은 ${A.name}입니다.`
+      : `${A.name}에게 자꾸 눈길이 가는 쪽은 ${B.name}입니다.`;
+  } else if (type === "mentor") {
+    const elder = (A.y || 0) <= (B.y || 0) ? A : B;
+    const junior = elder === A ? B : A;
+    dirNote = `${elder.name}가 스승, ${junior.name}가 제자의 자리입니다.`;
   }
 
   return { a: A.name, b: B.name, ai: A.idx, bi: B.idx, type, score: s, dirNote,
@@ -200,7 +232,7 @@ function graphSVG(an) {
     const nm = m.name.length > 4 ? m.name.slice(0, 3) + "…" : m.name;
     const delay = ((m.idx * 137) % 100) / 100 * 4;
     const label = (showName || isC)
-      ? `<text x="${P.x.toFixed(1)}" y="${(P.y + 0.5).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="${isC ? 13 : Math.max(8, nr - 10)}" font-weight="700" fill="#221d15" font-family="'Noto Sans KR',sans-serif">${nm}</text>`
+      ? `<text x="${P.x.toFixed(1)}" y="${(P.y + 0.5).toFixed(1)}" text-anchor="middle" dominant-baseline="middle" font-size="${isC ? 13 : Math.max(8, nr - 10)}" font-weight="700" fill="#1d2340" font-family="'Noto Sans KR',sans-serif">${nm}</text>`
       : "";
     const halo = isC
       ? `<circle cx="${P.x}" cy="${P.y}" r="${r}" fill="none" stroke="#b8860b" stroke-width="2">
@@ -209,7 +241,7 @@ function graphSVG(an) {
     const centerTag = isC ? `<text x="${P.x.toFixed(1)}" y="${(P.y + r + 13).toFixed(1)}" text-anchor="middle" font-size="10" fill="#b8860b" font-weight="700">중심</text>` : "";
     return `<g class="pnode" style="animation-delay:${delay.toFixed(2)}s">
       ${halo}
-      <circle cx="${P.x.toFixed(1)}" cy="${P.y.toFixed(1)}" r="${r}" fill="${isC ? "#fbeee0" : "#fffefb"}" stroke="${domColor}" stroke-width="${isC ? 2.5 : 1.5}"/>
+      <circle cx="${P.x.toFixed(1)}" cy="${P.y.toFixed(1)}" r="${r}" fill="${isC ? "#fff4dd" : "#ffffff"}" stroke="${domColor}" stroke-width="${isC ? 2.5 : 1.5}"/>
       ${label}${centerTag}</g>`;
   }
   // 중심을 마지막에(맨 위) 그림
@@ -217,7 +249,7 @@ function graphSVG(an) {
 
   return `<svg viewBox="0 0 ${S} ${S}" class="party-graph" xmlns="http://www.w3.org/2000/svg">
     <defs><radialGradient id="pgbg" cx="50%" cy="50%" r="60%">
-      <stop offset="0%" stop-color="#fff8ee"/><stop offset="100%" stop-color="#f4ede0"/></radialGradient></defs>
+      <stop offset="0%" stop-color="#ffffff"/><stop offset="100%" stop-color="#edf0fc"/></radialGradient></defs>
     <circle cx="${cx}" cy="${cy}" r="${S / 2 - 4}" fill="url(#pgbg)"/>
     <g class="pspokes">${spokes}</g>${arcs}${nodesHtml}</svg>`;
 }
@@ -514,3 +546,6 @@ $("#join-add").addEventListener("click", async () => {
   toast("추가됐어요! 아래 새 링크를 단톡방에 다시 공유해주세요");
 });
 $("#join-copy").addEventListener("click", copyShare);
+
+/* 6탭 네비: 활성 탭이 화면 안에 보이게 */
+document.querySelector(".cnav-item.active")?.scrollIntoView({ inline: "center", block: "nearest" });

@@ -339,6 +339,44 @@ function findNatalRelations(pillars) {
   return out;
 }
 
+/* ---------- 배우자·직업 리포트용 헬퍼 ---------- */
+
+/* 연도만으로 그 해의 간지 (연운·세운용, 입춘 이후 기준) */
+function yearPillarOf(y) {
+  return { stem: ((y - 4) % 10 + 10) % 10, branch: ((y - 4) % 12 + 12) % 12 };
+}
+
+/* 앞으로 n년의 세운: 연도별 간지와 십신 그룹 */
+function seunList(dayStemIdx, fromYear, n) {
+  const out = [];
+  for (let i = 0; i < n; i++) {
+    const y = fromYear + i;
+    const p = yearPillarOf(y);
+    out.push({
+      year: y, stem: p.stem, branch: p.branch,
+      god: tenGodGroup(tenGodOfStem(dayStemIdx, p.stem)),
+      ganji: STEMS[p.stem].kor + BRANCHES[p.branch].kor,
+    });
+  }
+  return out;
+}
+
+/* 배우자성(남=재성, 여=관성)이 놓인 궁: 월>일>시>연 순으로 천간 먼저 탐색 */
+function spouseStarPosition(saju, gender) {
+  const dayEl = saju.dayEl;
+  const starEl = gender === "M" ? CONTROLS[dayEl] : Object.keys(CONTROLS).find(k => CONTROLS[k] === dayEl);
+  const order = ["month", "day", "hour", "year"];
+  for (const key of order) {
+    const p = saju.pillars[key];
+    if (p && key !== "day" && STEMS[p.stem].el === starEl) return { pos: key, via: "stem", starEl };
+  }
+  for (const key of order) {
+    const p = saju.pillars[key];
+    if (p && BRANCHES[p.branch].el === starEl) return { pos: key, via: "branch", starEl };
+  }
+  return { pos: "day", via: "none", starEl };  // 배우자성 미노출 → 배우자궁(일지)으로 봄
+}
+
 /* ---------- 메인 ----------
  * input: { y, m, d, hour(-1=모름), minute, regionIdx, gender("M"|"F") }
  */
@@ -433,6 +471,7 @@ if (typeof module !== "undefined" && module.exports) {
     DOHWA, YEOKMA, HWAGAE, MONTH_OF_BRANCH, HOUR_OF_BRANCH, DIR_OF_BRANCH,
     ELEMENT_MONTHS, dayPillar, sixtyIndex,
     SEASON_OF_BRANCH, assessStrength, pickYongsin, findNatalRelations,
+    yearPillarOf, seunList, spouseStarPosition,
   };
   module.exports = _E;
   if (typeof globalThis !== "undefined") Object.assign(globalThis, _E);

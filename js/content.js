@@ -973,20 +973,33 @@ const NATAL_REL_TEXT = {
 function buildFreeReport(saju) {
   const dm = DAY_MASTER_TEXT[saju.dayStem];
   const kw = dm.keywords.map(k => `<span class="highlight">#${k}</span>`).join(" ");
-  const parts = [`<p>${kw}</p>`].concat(dm.body.map(p => `<p>${p}</p>`));
-
-  // 일주(60갑자) — 같은 일간이라도 일지에 따라 다른 사람
   const il = ILJU_TEXT[saju.iljuIdx];
-  if (il) parts.push(`<p><b class="highlight">${il.ganji}일주 — ${il.title}.</b> ${il.free}</p>`);
+  const tg = topGodEntry(saju);
+  const st = saju.strength;
+
+  // 한눈에 보기 — 긴 본문에 앞서 핵심을 표로
+  const sum = `<div class="sum-box">
+    <p class="sum-title">한눈에 보기</p>
+    <div class="sum-row"><span class="sum-k">일간</span><span class="sum-v">${dm.title}</span></div>
+    ${il ? `<div class="sum-row"><span class="sum-k">일주</span><span class="sum-v"><b>${il.ganji}일주</b> · ${il.title}</span></div>` : ""}
+    <div class="sum-row"><span class="sum-k">저울</span><span class="sum-v"><b>${tg.name} ${tg.count}개</b> · ${tg.label}</span></div>
+    ${st ? `<div class="sum-row"><span class="sum-k">그릇</span><span class="sum-v"><b>${st.category}</b> · 세력 지수 ${st.ratio} <i>— 용신은 심층에서</i></span></div>` : ""}
+  </div>`;
+
+  const parts = [sum, `<p>${kw}</p>`].concat(dm.body.map(p => `<p>${p}</p>`));
+
+  // 일주(60갑자) — 같은 일간이라도 일지에 따라 다른 사람 (노트 카드)
+  if (il) parts.push(`<div class="ilju-note">
+    <span class="ilju-badge">${il.ganji}<small>일주</small></span>
+    <div><b>${il.title}</b><p>${il.free}</p></div>
+  </div>`);
 
   // 십신 분포에서 가장 도드라진 축 1개 (과다 우선, 없음 차선)
-  const gd = godBalanceHighlight(saju);
-  if (gd) parts.push(`<p>${gd}</p>`);
+  if (tg.extreme) parts.push(`<p>당신의 십신 저울에서 가장 도드라진 축은 <b class="highlight">${tg.name} ${tg.count}개 — '${tg.label}'</b>입니다. ${tg.text} 나머지 네 축의 저울은 심층 풀이에서 전부 보여드립니다.</p>`);
 
   // 계절 × 일간 세력 요약 → 심층 예고
-  if (saju.strength) {
-    parts.push(`<p>${SEASON_KOR[saju.season]}에 태어난 ${ELEMENTS[saju.dayEl].kor}(${ELEMENTS[saju.dayEl].han}) 일간 — 일간 세력 지수 ${saju.strength.ratio}, <b>${saju.strength.category}</b>의 그릇입니다. 이 그릇의 모양과 당신에게 가장 필요한 기운(용신)이 무엇인지는 심층 풀이에서 이어집니다.</p>`);
-  }
+  if (st) parts.push(`<p>${SEASON_KOR[saju.season]}에 태어난 ${ELEMENTS[saju.dayEl].kor}(${ELEMENTS[saju.dayEl].han}) 일간 — <b>${st.category}</b>의 그릇입니다. 이 그릇의 모양과 당신에게 가장 필요한 기운(용신)은 심층 풀이에서 이어집니다.</p>`);
+
   return { title: dm.title, html: parts.join("") };
 }
 
@@ -1001,16 +1014,15 @@ function godLevelKey(count) {
   return count === 0 ? "none" : count === 1 ? "seed" : count === 2 ? "developed" : "excess";
 }
 
-/* 무료 리포트용: 십신 분포에서 가장 극단적인 축 1개만 골라 보여주는 훅 */
-function godBalanceHighlight(saju) {
+/* 십신 분포에서 가장 도드라진 축 (과다 → 없음 → 최다 순) */
+function topGodEntry(saju) {
   const entries = Object.entries(saju.godCounts);
   const excess = entries.filter(([, c]) => c >= 3).sort((a, b) => b[1] - a[1])[0];
   const none = entries.find(([, c]) => c === 0);
-  const pick = excess || none;
-  if (!pick) return "";
-  const t = GOD_DIST_TEXT[pick[0]] && GOD_DIST_TEXT[pick[0]][godLevelKey(pick[1])];
-  if (!t) return "";
-  return `당신의 십신 저울에서 가장 도드라진 축은 <b>${pick[0]} ${pick[1]}개 — '${t.label}'</b>입니다. ${t.text} 나머지 네 축의 저울은 심층 풀이에서 전부 보여드립니다.`;
+  const pick = excess || none || entries.slice().sort((a, b) => b[1] - a[1])[0];
+  const t = GOD_DIST_TEXT[pick[0]][godLevelKey(pick[1])];
+  const mode = excess ? "excess" : none ? "none" : "top";
+  return { name: pick[0], count: pick[1], label: t.label, text: t.text, extreme: mode !== "top", mode };
 }
 
 function buildPremiumReport(saju, input) {
@@ -1061,31 +1073,59 @@ function buildPremiumReport(saju, input) {
   /* ----- 개인화 심화 섹션: 일주 · 그릇(신강약·용신) · 십신 저울 · 조후 ----- */
   const il = ILJU_TEXT[saju.iljuIdx];
   const POS_KOR = { ym: "연지·월지", md: "월지·일지", dh: "일지·시지" };
-  let iljuHtml = il ? `<p><b>${il.ganji}일주 — ${il.title}.</b> ${il.deep}</p>` : "";
+  const firstSent = (s) => { const t = s.replace(/<[^>]+>/g, ""); const i = t.indexOf("다."); return i > 0 && i < 120 ? t.slice(0, i + 2) : t.slice(0, 80) + "…"; };
+
+  // 일주 심층: 헤드 카드 + 본문, 시진·합충은 라벨 행으로
+  let iljuHtml = il ? `<div class="ilju-head">
+    <span class="ilju-ganji">${saju.ganjiText.day}</span>
+    <div><b>${il.ganji}일주</b><small>${il.title}</small></div>
+  </div><p>${il.deep}</p>` : "";
+  const kvRows = [];
   if (saju.hourBranch != null && HOUR_BRANCH_TEXT[saju.hourBranch] !== undefined) {
-    iljuHtml += `<p><b>${BRANCHES[saju.hourBranch].kor}시생(${HOUR_OF_BRANCH[saju.hourBranch]})</b> — ${HOUR_BRANCH_TEXT[saju.hourBranch]}</p>`;
+    kvRows.push(`<div class="kv-row"><span class="kv-k">時</span><div><b>${BRANCHES[saju.hourBranch].kor}시생 · ${HOUR_OF_BRANCH[saju.hourBranch]}</b><p>${HOUR_BRANCH_TEXT[saju.hourBranch]}</p></div></div>`);
   }
   for (const r of (saju.natalRelations || [])) {
     const t = NATAL_REL_TEXT[`${r.kind}_${r.pos}`];
-    if (t) iljuHtml += `<p><b>${POS_KOR[r.pos]} ${r.kind}(${BRANCHES[r.branches[0]].kor}${r.kind === "충" ? "↔" : "·"}${BRANCHES[r.branches[1]].kor})</b> — ${t}</p>`;
+    const mark = r.kind === "충" ? "沖" : r.kind === "육합" ? "合" : "三";
+    if (t) kvRows.push(`<div class="kv-row"><span class="kv-k">${mark}</span><div><b>${POS_KOR[r.pos]} ${r.kind} (${BRANCHES[r.branches[0]].kor}${r.kind === "충" ? "↔" : "·"}${BRANCHES[r.branches[1]].kor})</b><p>${t}</p></div></div>`);
   }
   if (!(saju.natalRelations || []).length) {
-    iljuHtml += `<p>원국의 지지들은 서로 크게 부딪히지 않고 각자의 자리를 지키는 배열입니다. 안에서 요동이 적은 만큼 변화의 계기는 대운·세운이 바깥에서 가져오니, 당신에게는 대운의 흐름을 읽는 일이 남들보다 더 요긴합니다.</p>`;
+    kvRows.push(`<div class="kv-row"><span class="kv-k">安</span><div><b>원국이 고요한 배열</b><p>지지끼리 크게 부딪히지 않고 각자의 자리를 지킵니다. 안에서 요동이 적은 만큼 변화의 계기는 대운·세운이 바깥에서 가져오니, 당신에게는 대운의 흐름을 읽는 일이 남들보다 더 요긴합니다.</p></div></div>`);
   }
+  if (kvRows.length) iljuHtml += `<div class="kv-list">${kvRows.join("")}</div>`;
 
+  // 타고난 그릇: 세력 미터 + 용신 카드 + 없는 오행 행
   const st = saju.strength;
   const yEl = ELEMENTS[saju.yongsin.el];
-  let frameHtml = `<p>${STRENGTH_TEXT[st.category]}</p>`;
+  let frameHtml = `<div class="meter-wrap">
+    <div class="meter-scale"><span>극신약</span><span>중화</span><span>극신강</span></div>
+    <div class="meter-track"><i class="meter-marker" style="left:${Math.min(96, Math.max(4, st.ratio))}%"></i></div>
+    <p class="meter-read"><b>${st.category}</b> · 세력 지수 ${st.ratio}${st.gotMonth ? " · 득령(得令)" : ""}${st.gotDay ? " · 득지(得地)" : ""}</p>
+  </div>`;
+  frameHtml += `<p>${STRENGTH_TEXT[st.category]}</p>`;
+  frameHtml += `<div class="yong-card">
+    <span class="yong-el el-${saju.yongsin.el}">${yEl.han}</span>
+    <div><b>용신(用神) — ${yEl.kor}(${yEl.han})</b><small>${saju.yongsin.reason} · ${saju.yongsin.method}</small></div>
+  </div>`;
   frameHtml += `<p>${st.gotMonth
-    ? "태어난 달의 기운이 일간을 받쳐주는 득령(得令)의 구조라 기본 체급이 탄탄합니다."
-    : "태어난 달의 기운이 일간과 결이 달라, 밖에서 스스로 힘을 길러온 사주입니다."} 그래서 당신에게 가장 필요한 기운 — 용신(用神)은 <b>${yEl.kor}(${yEl.han})</b>입니다. ${saju.yongsin.reason} 역할이지요. ${YONGSIN_TEXT[saju.yongsin.el]}</p>`;
-  frameHtml += (saju.missing || []).map(el => `<p><b>사주에 없는 ${ELEMENTS[el].kor}(${ELEMENTS[el].han})</b> — ${MISSING_EL_TEXT[el]}</p>`).join("");
+    ? "태어난 달의 기운이 일간을 받쳐주는 득령의 구조라 기본 체급이 탄탄합니다."
+    : "태어난 달의 기운이 일간과 결이 달라, 밖에서 스스로 힘을 길러온 사주입니다."} ${YONGSIN_TEXT[saju.yongsin.el]}</p>`;
+  if ((saju.missing || []).length) {
+    frameHtml += `<div class="kv-list">` + saju.missing.map(el =>
+      `<div class="kv-row"><span class="kv-k">無</span><div><b>사주에 없는 ${ELEMENTS[el].kor}(${ELEMENTS[el].han})</b><p>${MISSING_EL_TEXT[el]}</p></div></div>`).join("") + `</div>`;
+  }
 
+  // 십신 저울: 게이지 행 5개
   const gc = saju.godCounts;
-  const godHtml = Object.entries(gc).map(([g, c]) => {
+  const godHtml = `<div class="god-scale">` + Object.entries(gc).map(([g, c]) => {
     const t = GOD_DIST_TEXT[g][godLevelKey(c)];
-    return `<p><b>${g} ${c}개 · ${t.label}</b> — ${t.text}</p>`;
-  }).join("");
+    const shown = Math.min(c, 4);
+    const dots = "●".repeat(shown) + "○".repeat(4 - shown);
+    return `<div class="god-row">
+      <div class="god-head"><span class="god-name">${g}</span><span class="god-dots">${dots}</span><span class="god-cnt">${c}개</span><span class="god-tag">${t.label}</span></div>
+      <p class="god-text">${t.text}</p>
+    </div>`;
+  }).join("") + `</div>`;
 
   const seasonHtml = `<p>${SEASON_TEXT[saju.dayEl][saju.season]}</p>`;
 
@@ -1093,16 +1133,21 @@ function buildPremiumReport(saju, input) {
     iljuSection: {
       icon: "柱", title: `일주 심층 — ${saju.ganjiText.day}일주`,
       teaser: il ? `60갑자 가운데 당신의 자리는 ${il.ganji}일주, '${il.title}'입니다.` : "당신의 일주를 깊이 읽습니다.",
+      preview: il ? `${il.ganji}일주 — ${il.title}. ${firstSent(il.deep)}` : undefined,
       html: iljuHtml,
     },
     frame: {
       icon: "器", title: "타고난 그릇 — 신강·신약과 용신",
       teaser: `일간 세력 지수 ${st.ratio} — 당신은 ${st.category}의 그릇입니다. 그릇의 모양에 따라 운을 쓰는 법이 다릅니다.`,
+      preview: firstSent(STRENGTH_TEXT[st.category]),
       html: frameHtml,
     },
     godBalance: {
       icon: "衡", title: "십신 저울 — 내 안의 다섯 힘",
       teaser: `비겁 ${gc["비겁"]} · 식상 ${gc["식상"]} · 재성 ${gc["재성"]} · 관성 ${gc["관성"]} · 인성 ${gc["인성"]} — 이 숫자의 조합이 당신 성격의 지도입니다.`,
+      preview: (() => { const tg = topGodEntry(saju); return tg.mode === "none"
+        ? `다섯 저울 가운데 눈에 띄게 비어 있는 축은 ${tg.name} — '${tg.label}'입니다.`
+        : `다섯 저울 가운데 가장 무거운 축은 ${tg.name}(${tg.count}개) — '${tg.label}'입니다.`; })(),
       html: godHtml,
     },
     seasonSection: {

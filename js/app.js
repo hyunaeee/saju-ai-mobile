@@ -253,6 +253,8 @@ const ANALYZE_STEPS = [
 function runAnalysis(input) {
   currentInput = input;
   currentSaju = calculateSaju(input);
+  // 다른 서비스(오늘의 하늘·배우자·직업)에서 자동으로 채워 쓰도록 저장
+  try { localStorage.setItem("cheongiyeon_last_input", JSON.stringify(input)); } catch (e) {}
 
   $("#input-section").classList.add("hidden");
   $("#result").classList.add("hidden");
@@ -436,7 +438,7 @@ function premiumSectionHTML(sec, unlocked, bodyHtml, previewOverride) {
   if (unlocked) {
     body = `<div class="report-body">${inner}</div>`;
   } else {
-    const preview = previewOverride ?? previewSentence(inner);
+    const preview = previewOverride ?? sec.preview ?? previewSentence(inner);
     body = `<div class="locked-body">
          <p class="preview-line">${preview}</p>
          <div class="locked-content report-body">${inner}</div>
@@ -647,12 +649,25 @@ function openPayModal(product = "allpass") {
   // 이미 보유한 상품이면 자유이용권으로 대체
   if (product !== "allpass" && owns(product)) product = "allpass";
   const options = product === "allpass" ? ["allpass"] : [product, "allpass"];
-  $("#pay-options").innerHTML = options.map((key, i) => `
+
+  // 코인 우선: 잔액으로 바로 열거나, 부족하면 충전으로 유도
+  const cp = window.Coins ? Coins.PRICE[product] : null;
+  const coinBox = cp ? `
+    <div class="coin-quick">
+      <div class="cq-l"><b>🪙 ${cp}코인으로 바로 열기</b>
+        <span>내 코인 ${Coins.balance()}개 · 광고 시청으로도 적립됩니다</span></div>
+      <button type="button" id="coin-quick-btn" class="${Coins.balance() >= cp ? "cq-go" : "cq-charge"}">
+        ${Coins.balance() >= cp ? "코인으로 열기" : "코인 충전"}</button>
+    </div>
+    <p class="pay-or">또는 바로 결제</p>` : "";
+
+  $("#pay-options").innerHTML = coinBox + options.map((key, i) => `
     <label class="pay-tier">
       <input type="radio" name="payproduct" value="${key}" ${i === 0 ? "checked" : ""} />
       <div><b>${PRODUCT_NAMES[key]}</b><span>${PRODUCT_DESCS[key]}</span></div>
       <strong>${PRICES[key].toLocaleString("ko-KR")}원</strong>
     </label>`).join("");
+  $("#coin-quick-btn")?.addEventListener("click", () => coinUnlock(product));
   $$('input[name="payproduct"]').forEach(r => r.addEventListener("change", updatePayButton));
   updatePayButton();
   $("#pay-modal").classList.remove("hidden");
@@ -664,6 +679,36 @@ function openPayModal(product = "allpass") {
 function closePayModal() {
   $("#pay-modal").classList.add("hidden");
   document.body.style.overflow = "";
+}
+
+/* ---------- 코인으로 잠금 해제 ---------- */
+function coinUnlock(product) {
+  const price = Coins.PRICE[product];
+  const done = () => {
+    grant(product);
+    closePayModal();
+    renderPremium(); renderQA(owns("questions")); renderWish(); renderGroupResult();
+    showToast(`🪙 ${price}코인으로 열렸습니다`);
+  };
+  if (Coins.balance() < price) {
+    closePayModal();
+    Coins.openShop(`'${PRODUCT_NAMES[product]}' 열람에 🪙 ${price}코인이 필요해요 (지금 ${Coins.balance()}개)`);
+    return;
+  }
+  if (SECURE) {
+    // 서버 지갑(KV) 차감 → 접근 토큰 발급. KV 미설정이면 로컬 지갑으로 폴백.
+    fetch(API("/api/wallet"), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "debit", wid: Coins.walletId(), product, sig: sig(currentInput) }),
+    }).then(r => r.json()).then(d => {
+      if (d.ok) { if (d.token) addToken(d.token); if (typeof d.balance === "number") Coins.setBalance(d.balance); done(); }
+      else if (d.kv === false) { if (Coins.spend(price, PRODUCT_NAMES[product])) done(); }
+      else if (d.error === "insufficient") { if (typeof d.balance === "number") Coins.setBalance(d.balance); closePayModal(); Coins.openShop("코인이 부족합니다 — 충전 후 다시 열어주세요"); }
+      else showToast("코인 결제에 실패했습니다");
+    }).catch(() => { if (Coins.spend(price, PRODUCT_NAMES[product])) done(); });
+  } else {
+    if (Coins.spend(price, PRODUCT_NAMES[product])) done();
+  }
 }
 
 $$(".tier-card, .single-item").forEach(c => c.addEventListener("click", () => openPayModal(c.dataset.product)));
@@ -1048,16 +1093,29 @@ $("#share-image").addEventListener("click", () => {
 
   if (!pending || !paymentKey || !orderId) { cleanUrl(); return true; }
 
-  currentInput = pending.input;
-  runAnalysis(pending.input); // 분석 화면 먼저 보여주고
+  const boughtProduct = pending.product || product || "";
+  const isCoinPack = boughtProduct.startsWith("coin_");
+  if (pending.input) {
+    currentInput = pending.input;
+    runAnalysis(pending.input); // 분석 화면 먼저 보여주고
+  }
 
   fetch(API("/api/confirm"), {
     method: "POST", headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ paymentKey, orderId, amount: Number(amount), product: pending.product || product, sig: sigParam }),
+    body: JSON.stringify({
+      paymentKey, orderId, amount: Number(amount), product: boughtProduct, sig: sigParam,
+      wid: pending.wid || (window.Coins ? Coins.walletId() : undefined),
+    }),
   }).then(r => r.json()).then(d => {
     localStorage.removeItem("cheongiyeon_pending");
     cleanUrl();
-    if (d.ok && d.token) {
+    if (d.ok && isCoinPack) {
+      // 코인 충전 완료: 서버 지갑(KV) 잔액이 오면 동기화, 없으면 로컬 지급
+      const pkg = Coins.PACKAGES.find(p => p.id === boughtProduct);
+      if (typeof d.balance === "number") Coins.setBalance(d.balance);
+      else if (pkg) Coins.grant(pkg.coins, "코인 충전");
+      showToast(`🪙 코인 ${d.coins || (pkg && pkg.coins) || ""}개 충전이 완료되었습니다`);
+    } else if (d.ok && d.token) {
       addToken(d.token);
       (d.products || []).forEach(grant);
       // 결과가 이미 렌더된 뒤일 수 있으므로 잠금 해제 반영
@@ -1086,3 +1144,30 @@ $("#share-image").addEventListener("click", () => {
   };
   setTimeout(() => runAnalysis(input), 400);
 })();
+
+/* ---------- 코인 지갑 초기화 ---------- */
+if (window.Coins) {
+  Coins.renderPill(".header-inner");
+  document.querySelector(".cnav-item.active")?.scrollIntoView({ inline: "center", block: "nearest" });
+  if (SECURE) {
+    // 실서비스: 코인 패키지 결제 → 토스 → /api/confirm 검증 → (KV 있으면) 서버 지갑 적립
+    Coins.buyHook = (pkg) => {
+      localStorage.setItem("cheongiyeon_pending", JSON.stringify({ input: currentInput, product: pkg.id, wid: Coins.walletId() }));
+      const base = location.origin + location.pathname;
+      try {
+        TossPayments(CFG.tossClientKey).requestPayment("카드", {
+          amount: pkg.price,
+          orderId: `cy_${pkg.id}_${Date.now()}_${Math.floor(Math.random() * 1e6)}`,
+          orderName: `천기연 코인 ${pkg.coins}개`,
+          successUrl: `${base}?pay=success&product=${pkg.id}`,
+          failUrl: `${base}?pay=fail`,
+        }).catch(() => showToast("결제가 취소되었습니다"));
+      } catch (e) { showToast("결제창을 여는 중 문제가 발생했습니다"); }
+    };
+    // 서버 지갑 잔액 동기화 (KV 설정 시)
+    fetch(API("/api/wallet"), {
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "get", wid: Coins.walletId() }),
+    }).then(r => r.json()).then(d => { if (d.ok && typeof d.balance === "number") Coins.setBalance(d.balance); }).catch(() => {});
+  }
+}

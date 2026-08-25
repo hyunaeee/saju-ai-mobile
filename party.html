@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#16110d" />
+  <meta name="theme-color" content="#232a52" />
   <title>우리 모임 관계 지도 — 천기연 天機緣</title>
   <meta name="description" content="친구들 생일만 넣으면 사주로 보는 우리 사이! 누가 귀인인지, 전생의 부부·악연·형제자매인지, 모임의 중심이 누구인지 관계망 지도로 확인하세요." />
   <meta property="og:title" content="우리 모임 관계 지도 🔮 — 사주로 보는 우리 사이" />
@@ -11,65 +11,86 @@
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Serif+KR:wght@700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="css/nav.css" />
   <style>
+    /* =====================================================
+       모임 관계 지도 — "홍연(紅緣)" 테마
+       연화 사주(한지·먹·인주)와 완전히 다른 결:
+       쪽빛 잉크 × 붉은 실 × 둥근 Jua 타이틀 × 스티커 버튼
+       ===================================================== */
     :root {
-      --paper:#faf7f1; --paper-deep:#f1ece2; --card:#fffefb; --line:#e9e2d4;
-      --hair:rgba(38,32,24,.08); --ink:#221d15; --dim:#6f675a; --faint:#a09786;
-      --seal:#a83a26; --seal-dark:#8c2f1e; --seal-bg:#f9ece7;
-      --dark:#16110d; --dark-2:#241b14; --dark-text:#f3ece1; --dark-dim:#b9ab99; --amber:#d9a08c; --gold:#b8860b;
-      --serif:"Noto Serif KR",serif; --sans:"Noto Sans KR",sans-serif; --max:520px;
-      --sh1:0 1px 2px rgba(34,29,21,.04),0 4px 16px rgba(34,29,21,.05);
-      --sh2:0 2px 6px rgba(34,29,21,.06),0 12px 32px rgba(34,29,21,.10);
+      --paper:#f7f8ff; --paper-deep:#eef1fb; --card:#ffffff; --line:#e3e6f5;
+      --hair:rgba(38,45,90,.09); --ink:#1d2340; --dim:#5c6285; --faint:#9aa0c0;
+      --indigo:#3d56c5; --indigo-deep:#2c3f9e; --indigo-bg:#e9edff;
+      --thread:#e8536f; --thread-deep:#c93a56; --thread-bg:#ffeef2;
+      --sun:#f5a623; --sun-deep:#d18a12;
+      --night:#232a52; --night-2:#31408f; --night-text:#eef1ff; --night-dim:#aab3e0;
+      --gold:#b8860b;
+      --disp:"Jua",'Noto Sans KR',sans-serif; --serif:"Noto Serif KR",serif; --sans:"Noto Sans KR",sans-serif; --max:520px;
+      --sh1:0 2px 4px rgba(29,35,64,.05),0 8px 22px rgba(29,35,64,.07);
+      --sh2:0 4px 10px rgba(29,35,64,.08),0 16px 38px rgba(29,35,64,.12);
     }
     * { margin:0; padding:0; box-sizing:border-box; }
     html { scroll-behavior:smooth; }
-    body { font-family:var(--sans); background:#e6dfd1; color:var(--ink); line-height:1.7; font-size:15px; -webkit-font-smoothing:antialiased; }
-    .app { max-width:var(--max); margin:0 auto; background:var(--paper); min-height:100vh; box-shadow:0 0 40px rgba(34,29,21,.18); padding-bottom:60px; overflow-x:hidden; }
+    body { font-family:var(--sans); background:#dfe3f2; color:var(--ink); line-height:1.7; font-size:15px; -webkit-font-smoothing:antialiased; }
+    .app { max-width:var(--max); margin:0 auto; background:var(--paper); min-height:100vh; box-shadow:0 0 40px rgba(29,35,64,.2); padding-bottom:60px; overflow-x:hidden; }
     .hidden { display:none !important; }
     a { color:inherit; text-decoration:none; }
 
+    /* 공통 탭바 재채색 (nav.css 변수 오버라이드) */
+    .cnav { --cnav-bg:#ffffff; --cnav-line:#e3e6f5; --cnav-dim:#5c6285; --cnav-active:#3d56c5; --cnav-active-txt:#ffffff; }
+
     /* 헤더 */
-    .hd { position:sticky; top:0; z-index:20; background:rgba(250,247,241,.92); backdrop-filter:blur(14px); border-bottom:1px solid var(--hair); }
+    .hd { position:sticky; top:0; z-index:20; background:rgba(247,248,255,.92); backdrop-filter:blur(14px); border-bottom:1px solid var(--hair); }
     .hd-in { display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 18px; }
     .logo { display:flex; align-items:center; gap:9px; }
-    .logo-mark { width:30px; height:30px; border-radius:7px; display:grid; place-items:center; font-family:var(--serif); font-weight:700; font-size:16px; color:#fff; background:var(--seal); box-shadow:0 2px 8px rgba(168,58,38,.35); }
+    .logo-mark { width:30px; height:30px; border-radius:9px; display:grid; place-items:center; font-family:var(--serif); font-weight:700; font-size:16px; color:#fff; background:var(--thread); box-shadow:0 2px 8px rgba(232,83,111,.4); }
     .logo-text { font-family:var(--serif); font-weight:700; font-size:16px; }
     .logo-text small { color:var(--faint); font-size:10px; margin-left:4px; font-weight:400; }
-    .hd a.mine { font-size:12.5px; color:var(--seal); font-weight:700; }
+    .hd a.mine { font-size:12.5px; color:var(--indigo); font-weight:700; }
 
-    /* 히어로 */
-    .hero { position:relative; padding:36px 22px 30px; text-align:center; overflow:hidden;
-      background:var(--dark-2) url("assets/shrine-bg.webp") center/cover no-repeat; color:var(--dark-text); }
-    .hero::before { content:""; position:absolute; inset:0; background:linear-gradient(180deg,rgba(22,17,13,.55),rgba(22,17,13,.9)); }
-    .hero > * { position:relative; }
-    .hero .kick { font-family:var(--serif); font-size:12px; letter-spacing:.3em; color:var(--amber); margin-bottom:12px; }
-    .hero h1 { font-family:var(--serif); font-weight:900; font-size:25px; line-height:1.45; margin-bottom:12px; text-shadow:0 2px 20px rgba(0,0,0,.5); }
-    .hero h1 em { color:var(--amber); }
-    .hero p { font-size:13px; color:rgba(243,236,225,.82); line-height:1.8; }
+    /* 히어로 — 붉은 실 일러스트 (사진 대신 밝고 가벼운 그림) */
+    .hero { position:relative; padding:32px 22px 0; text-align:center; overflow:hidden;
+      background:linear-gradient(180deg,var(--indigo-bg) 0%,var(--paper) 92%); color:var(--ink); }
+    .hero .kick { font-family:var(--disp); font-size:13px; letter-spacing:.14em; color:var(--thread); margin-bottom:10px; }
+    .hero h1 { font-family:var(--disp); font-weight:400; font-size:27px; line-height:1.42; margin-bottom:10px; }
+    .hero h1 em { color:var(--indigo); font-style:normal; }
+    .hero p { font-size:13px; color:var(--dim); line-height:1.8; }
+    .thread-art { margin:6px auto -6px; max-width:390px; }
+    .thread-art svg { width:100%; height:auto; display:block; }
+    .thread-art .knot { animation:knotBeat 2.6s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+    @keyframes knotBeat { 0%,100%{transform:scale(1)} 12%{transform:scale(1.25)} 24%{transform:scale(1)} }
+    .thread-art .tnode { animation:bob 5s ease-in-out infinite; transform-box:fill-box; transform-origin:center; }
+    .thread-art .tnode.n2 { animation-delay:1.4s; }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+    .thread-art .tline { stroke-dasharray:7 6; animation:threadFlow 3s linear infinite; }
+    @keyframes threadFlow { to { stroke-dashoffset:-26; } }
 
     section { padding:26px 20px; }
     .lead { text-align:center; color:var(--dim); font-size:13.5px; margin-bottom:18px; }
+    .lead b { color:var(--indigo); }
 
     /* 폼 */
     .fld { margin-bottom:15px; }
-    .fld > label { display:block; font-size:12.5px; color:var(--dim); font-weight:600; margin-bottom:7px; }
-    input[type=text], input[type=date] { width:100%; padding:13px 13px; border-radius:11px; font-size:16px; font-family:var(--sans); background:var(--paper); border:1.5px solid transparent; color:var(--ink); outline:none; }
-    input:focus { border-color:var(--seal); background:#fff; }
+    .fld > label { display:block; font-size:12.5px; color:var(--dim); font-weight:700; margin-bottom:7px; }
+    input[type=text], input[type=date] { width:100%; padding:13px 13px; border-radius:13px; font-size:16px; font-family:var(--sans); background:var(--card); border:2px solid var(--line); color:var(--ink); outline:none; transition:border-color .15s; }
+    input:focus { border-color:var(--indigo); }
     #pm-rows { display:grid; gap:8px; }
     .pm-row { display:grid; grid-template-columns:1fr 1.35fr 34px; gap:8px; align-items:center; }
     .pm-row input { min-width:0; }
     .pm-del { width:34px; height:34px; border-radius:50%; border:0; cursor:pointer; background:var(--paper-deep); color:var(--faint); font-size:12px; }
-    .pm-del:hover { background:var(--seal-bg); color:var(--seal); }
+    .pm-del:hover { background:var(--thread-bg); color:var(--thread); }
     .row-actions { display:flex; gap:10px; margin-top:14px; }
 
-    .btn { border:0; cursor:pointer; font-family:var(--sans); border-radius:12px; font-weight:700; text-align:center; transition:transform .15s, background .15s, box-shadow .15s; -webkit-tap-highlight-color:transparent; }
-    .btn:active { transform:scale(.98); }
-    .btn-seal { background:var(--seal); color:#fff; box-shadow:0 6px 18px rgba(168,58,38,.28); }
-    .btn-seal:hover { background:var(--seal-dark); }
-    .btn-gold { background:linear-gradient(150deg,#caa04a,var(--gold)); color:#fff; box-shadow:0 6px 18px rgba(185,138,47,.3); }
-    .btn-ghost { background:transparent; color:var(--dim); border:1px solid var(--line); }
+    /* 버튼 — 눌리는 스티커 */
+    .btn { border:0; cursor:pointer; font-family:var(--sans); border-radius:14px; font-weight:800; text-align:center; transition:transform .12s, box-shadow .12s, background .15s; -webkit-tap-highlight-color:transparent; }
+    .btn-seal { background:var(--indigo); color:#fff; box-shadow:0 4px 0 var(--indigo-deep); }
+    .btn-seal:active { transform:translateY(3px); box-shadow:0 1px 0 var(--indigo-deep); }
+    .btn-gold { background:linear-gradient(160deg,#ffc24f,var(--sun)); color:#4a2c00; box-shadow:0 4px 0 var(--sun-deep); }
+    .btn-gold:active { transform:translateY(3px); box-shadow:0 1px 0 var(--sun-deep); }
+    .btn-ghost { background:var(--card); color:var(--dim); border:2px solid var(--line); }
+    .btn-ghost:active { transform:scale(.97); }
     .btn-lg { padding:15px 24px; font-size:15.5px; }
     .btn-sm { padding:11px 16px; font-size:13.5px; }
     .btn-block { display:block; width:100%; }
@@ -83,25 +104,25 @@
 
     /* 참여 화면 */
     .join-head { text-align:center; margin-bottom:18px; }
-    .join-head h2 { font-family:var(--serif); font-size:22px; font-weight:900; }
-    .join-head .cnt { font-size:12.5px; color:var(--seal); font-weight:700; margin-top:4px; }
+    .join-head h2 { font-family:var(--disp); font-size:24px; font-weight:400; }
+    .join-head .cnt { font-size:12.5px; color:var(--thread); font-weight:700; margin-top:4px; }
     .refresh-btn { background:none; border:0; cursor:pointer; font-size:13px; padding:2px 4px; vertical-align:middle; }
-    .empty-card { background:var(--card); border:1px dashed var(--line); border-radius:16px; padding:30px 20px; text-align:center; margin-bottom:16px; }
+    .empty-card { background:var(--card); border:2px dashed var(--line); border-radius:18px; padding:30px 20px; text-align:center; margin-bottom:16px; }
     .empty-emoji { font-size:34px; margin-bottom:10px; }
     .empty-card p { font-size:14px; color:var(--dim); line-height:1.7; }
     .empty-card .empty-sub { font-size:12.5px; color:var(--faint); margin-top:8px; }
-    .empty-card b { color:var(--ink); }
+    .empty-card b { color:var(--indigo); }
     .names { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin:12px 0 4px; }
-    .tagname { background:var(--seal-bg); color:var(--seal); font-size:12.5px; font-weight:700; border-radius:100px; padding:5px 13px; }
+    .tagname { background:var(--indigo-bg); color:var(--indigo); font-size:12.5px; font-weight:700; border-radius:100px; padding:5px 13px; }
     .muted { color:var(--faint); font-size:12.5px; }
-    .join-card { background:var(--card); border:1px solid var(--hair); border-radius:16px; padding:18px; box-shadow:var(--sh1); margin-top:16px; }
-    .join-card h3 { font-family:var(--serif); font-size:16px; margin-bottom:12px; }
+    .join-card { background:var(--card); border:1px solid var(--line); border-radius:18px; padding:18px; box-shadow:var(--sh1); margin-top:16px; }
+    .join-card h3 { font-family:var(--disp); font-size:17px; font-weight:400; margin-bottom:12px; }
     .join-in { display:grid; grid-template-columns:1fr 1.35fr; gap:8px; margin-bottom:10px; }
 
     /* 결과 카드 */
-    .party-card { background:var(--card); border:1px solid var(--hair); border-radius:18px; padding:20px 16px; margin-bottom:16px; box-shadow:var(--sh1); }
-    .pc-title { font-family:var(--serif); font-size:16.5px; font-weight:700; margin-bottom:14px; }
-    .pc-title small { color:var(--faint); font-size:11px; font-weight:400; margin-left:6px; }
+    .party-card { background:var(--card); border:1px solid var(--line); border-radius:20px; padding:20px 16px; margin-bottom:16px; box-shadow:var(--sh1); }
+    .pc-title { font-family:var(--disp); font-size:17.5px; font-weight:400; margin-bottom:14px; }
+    .pc-title small { color:var(--faint); font-size:11px; font-weight:400; margin-left:6px; font-family:var(--sans); }
     .graph-wrap { width:100%; }
     .party-graph { width:100%; height:auto; display:block; }
     .party-graph .pnode { opacity:0; transform-box:fill-box; transform-origin:center; animation:nodeIn .5s ease forwards, floaty 6s ease-in-out infinite; }
@@ -116,31 +137,31 @@
     .legend .lg i { width:10px; height:3px; border-radius:2px; display:inline-block; }
 
     .rk-grid { display:grid; gap:10px; }
-    .rk { background:var(--paper); border-radius:12px; padding:13px 15px; border-left:3px solid var(--seal); }
-    .rk.bad { border-left-color:#8a6d3b; background:#f7f1e3; }
+    .rk { background:var(--paper-deep); border-radius:14px; padding:13px 15px; border-left:4px solid var(--indigo); }
+    .rk.bad { border-left-color:var(--thread); background:var(--thread-bg); }
     .rk b { font-size:13.5px; }
     .rk p { font-size:12.5px; color:var(--dim); line-height:1.65; margin-top:3px; }
     .rk p b { color:var(--ink); font-size:12.5px; }
 
     .rel-group { margin-bottom:18px; }
     .rel-group:last-child { margin-bottom:0; }
-    .rel-group h4 { font-family:var(--serif); font-size:14.5px; margin-bottom:9px; }
-    .rel-group h4 small { color:var(--faint); font-size:11px; font-weight:400; margin-left:4px; }
-    .pair { background:var(--paper); border-radius:11px; padding:11px 14px; margin-bottom:7px; position:relative; }
+    .rel-group h4 { font-family:var(--disp); font-size:15.5px; font-weight:400; margin-bottom:9px; }
+    .rel-group h4 small { color:var(--faint); font-size:11px; font-weight:400; margin-left:4px; font-family:var(--sans); }
+    .pair { background:var(--paper-deep); border-radius:13px; padding:11px 14px; margin-bottom:7px; position:relative; }
     .pair .pn { font-size:13.5px; font-weight:700; }
-    .pair .pn em { color:var(--faint); font-style:normal; margin:0 4px; }
-    .pair .ps { position:absolute; top:11px; right:14px; font-family:var(--serif); font-size:13px; color:var(--seal); }
+    .pair .pn em { color:var(--thread); font-style:normal; margin:0 4px; }
+    .pair .ps { position:absolute; top:11px; right:14px; font-family:var(--disp); font-size:13.5px; color:var(--thread); }
     .pair p { font-size:12px; color:var(--dim); line-height:1.6; margin-top:4px; padding-right:36px; }
 
-    /* CTA */
-    .cross { margin:8px 20px 0; background:var(--dark-2); border-radius:18px; padding:22px; text-align:center; color:var(--dark-text); box-shadow:var(--sh2); }
-    .cross h3 { font-family:var(--serif); font-size:18px; font-weight:900; margin-bottom:8px; }
-    .cross p { font-size:12.5px; color:var(--dark-dim); margin-bottom:16px; line-height:1.7; }
+    /* CTA — 사주 서비스로 건너가는 카드만 밤하늘색 */
+    .cross { margin:8px 20px 0; background:linear-gradient(165deg,var(--night-2),var(--night)); border-radius:20px; padding:22px; text-align:center; color:var(--night-text); box-shadow:var(--sh2); }
+    .cross h3 { font-family:var(--disp); font-size:19px; font-weight:400; margin-bottom:8px; }
+    .cross p { font-size:12.5px; color:var(--night-dim); margin-bottom:16px; line-height:1.7; }
 
     .foot { padding:30px 22px 40px; text-align:center; color:var(--faint); font-size:11px; line-height:1.8; }
     .foot a { color:var(--dim); }
 
-    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:80; width:max-content; max-width:calc(100vw-40px); background:var(--ink); color:#fff; border-radius:100px; padding:12px 22px; font-size:13px; box-shadow:0 10px 30px rgba(34,29,21,.35); animation:ti .2s ease; }
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:80; width:max-content; max-width:calc(100vw-40px); background:var(--night); color:#fff; border-radius:100px; padding:12px 22px; font-size:13px; box-shadow:0 10px 30px rgba(29,35,64,.4); animation:ti .2s ease; }
     @keyframes ti { from { transform:translate(-50%,10px); opacity:0; } to { transform:translate(-50%,0); opacity:1; } }
   </style>
 </head>
@@ -153,16 +174,39 @@
     </div>
     <nav class="cnav" aria-label="서비스 전환">
       <a href="index.html" class="cnav-item cnav-home" title="천기연 홈"><span>🏠</span><i>홈</i></a>
-      <a href="saju.html" class="cnav-item"><span>🔮</span>연화 사주</a>
-      <a href="party.html" class="cnav-item active" aria-current="page"><span>👥</span>모임 관계</a>
-      <a href="cosmos.html" class="cnav-item"><span>🪐</span>오늘의 하늘</a>
+      <a href="saju.html" class="cnav-item"><span>🔮</span>사주</a>
+      <a href="party.html" class="cnav-item active" aria-current="page"><span>👥</span>모임</a>
+      <a href="cosmos.html" class="cnav-item"><span>🪐</span>하늘</a>
+      <a href="spouse.html" class="cnav-item"><span>💍</span>배우자</a>
+      <a href="career.html" class="cnav-item"><span>💼</span>직업</a>
     </nav>
   </header>
 
   <section class="hero">
-    <p class="kick">緣 · 모임 관계 지도</p>
+    <p class="kick">붉은 실이 이어주는 우리 사이</p>
     <h1>친구들 생일만 넣으면<br /><em>우리 사이가 보인다</em></h1>
     <p>누가 내 귀인인지, 누가 전생의 부부·형제자매인지,<br />이 모임의 중심이 누구인지 — 사주로 그려주는 관계망 지도</p>
+    <div class="thread-art" aria-hidden="true">
+      <svg viewBox="0 0 390 132" xmlns="http://www.w3.org/2000/svg">
+        <path class="tline" d="M84 72 C 145 116, 245 12, 306 58" fill="none" stroke="#e8536f" stroke-width="2.6" stroke-linecap="round"/>
+        <g class="knot">
+          <path d="M195 56 c -5 -6 -14 -1.5 -14 5 c 0 5.5 7 10.5 14 15 c 7 -4.5 14 -9.5 14 -15 c 0 -6.5 -9 -11 -14 -5 z" fill="#e8536f"/>
+        </g>
+        <g class="tnode">
+          <circle cx="84" cy="72" r="25" fill="#ffffff" stroke="#3d56c5" stroke-width="2.6"/>
+          <text x="84" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#1d2340" font-family="'Noto Sans KR',sans-serif">나</text>
+        </g>
+        <g class="tnode n2">
+          <circle cx="306" cy="58" r="25" fill="#ffffff" stroke="#e8536f" stroke-width="2.6"/>
+          <text x="306" y="64" text-anchor="middle" font-size="15" font-weight="700" fill="#1d2340" font-family="'Noto Sans KR',sans-serif">너</text>
+        </g>
+        <circle cx="42" cy="30" r="5" fill="#f5a623" opacity=".8"/>
+        <circle cx="140" cy="20" r="4" fill="#3d7a5c" opacity=".7"/>
+        <circle cx="250" cy="108" r="5" fill="#8e44ad" opacity=".6"/>
+        <circle cx="352" cy="104" r="4" fill="#0e8a8a" opacity=".7"/>
+        <circle cx="366" cy="24" r="3.5" fill="#e8536f" opacity=".6"/>
+      </svg>
+    </div>
   </section>
 
   <!-- 생성 화면 -->

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#17181c" />
+  <title>직업운 리포트 — 천기연 天機緣</title>
+  <meta name="description" content="언제 취업할까, 이직해도 될까? 타고난 적성과 맞는 직업군, 5년 취업·이직 캘린더, 재물 곡선까지 — 사주로 읽는 커리어 정밀 리포트." />
+  <meta property="og:title" content="직업운 리포트 💼 — 내 커리어의 승부처는 언제인가" />
+  <meta property="og:description" content="적성·직업군·이직 타이밍·연봉 곡선까지, 사주 십신과 세운으로 읽는 커리어 지도." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600;700;900&family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/nav.css" />
+  <style>
+    /* =====================================================
+       직업운 — "지면(紙面)" 테마: 신문 인쇄물 × 먹 × 합격 도장 레드
+       ===================================================== */
+    :root {
+      --print:#f4f2ec; --print-2:#ebe8df; --card:#fbfaf6; --rule:#cfccc0;
+      --ink:#17181c; --dim:#5a5b62; --faint:#9c9da6;
+      --stamp:#c22f2f; --stamp-bg:#fbeaea;
+      --navy:#22304d;
+      --serif:"Noto Serif KR",serif; --sans:"Noto Sans KR",sans-serif; --max:520px;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { font-family:var(--sans); background:#d9d6cc; color:var(--ink); line-height:1.78; font-size:15px; -webkit-font-smoothing:antialiased; }
+    .app { max-width:var(--max); margin:0 auto; background:var(--print); min-height:100vh; box-shadow:0 0 40px rgba(23,24,28,.22); padding-bottom:70px; overflow-x:hidden; }
+    .hidden { display:none !important; }
+    a { color:inherit; text-decoration:none; }
+    .cnav { --cnav-bg:#fbfaf6; --cnav-line:#cfccc0; --cnav-dim:#5a5b62; --cnav-active:#17181c; --cnav-active-txt:#f4f2ec; }
+
+    .hd { position:sticky; top:0; z-index:20; background:rgba(244,242,236,.94); backdrop-filter:blur(14px); border-bottom:2px solid var(--ink); }
+    .hd-in { display:flex; align-items:center; justify-content:space-between; height:56px; padding:0 18px; }
+    .logo { display:flex; align-items:center; gap:9px; }
+    .logo-mark { width:30px; height:30px; display:grid; place-items:center; font-family:var(--serif); font-weight:900; font-size:15px; color:var(--print); background:var(--ink); }
+    .logo-text { font-family:var(--serif); font-weight:700; font-size:16px; }
+    .logo-text small { color:var(--faint); font-size:10px; margin-left:4px; font-weight:400; }
+
+    /* 히어로: 신문 1면 */
+    .hero { padding:26px 22px 20px; border-bottom:1px solid var(--rule); }
+    .paper-head { display:flex; align-items:baseline; justify-content:space-between; border-bottom:3px double var(--ink); padding-bottom:8px; margin-bottom:14px; }
+    .paper-head .nm { font-family:var(--serif); font-weight:900; font-size:19px; letter-spacing:.1em; }
+    .paper-head .dt { font-size:10.5px; color:var(--dim); }
+    .hero h1 { font-family:var(--serif); font-weight:900; font-size:27px; line-height:1.42; letter-spacing:-.01em; }
+    .hero h1 em { font-style:normal; box-shadow:inset 0 -12px 0 rgba(194,47,47,.16); }
+    .hero .lede { margin-top:10px; font-size:13px; color:var(--dim); line-height:1.8; }
+    .hero .tags { margin-top:12px; display:flex; gap:6px; flex-wrap:wrap; }
+    .hero .tags span { font-size:11px; border:1px solid var(--rule); padding:3px 9px; color:var(--dim); }
+
+    section { padding:24px 22px; }
+    .form-card { background:var(--card); border:1px solid var(--rule); padding:20px 18px; position:relative; }
+    .form-card::after { content:"人事"; position:absolute; top:12px; right:14px; font-family:var(--serif); font-size:12px;
+      color:var(--stamp); border:1.5px solid var(--stamp); border-radius:4px; padding:2px 7px; transform:rotate(6deg); opacity:.75; }
+    .fc-title { font-family:var(--serif); font-weight:700; font-size:16px; margin-bottom:3px; }
+    .fc-sub { font-size:12px; color:var(--dim); margin-bottom:16px; }
+    .frm { display:grid; gap:10px; }
+    .frm-row { display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:8px; }
+    .frm-row2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
+    select { width:100%; padding:12px 10px; font-size:15px; font-family:var(--sans); background:var(--print);
+      border:1px solid var(--rule); color:var(--ink); outline:none; appearance:none; text-align:center; }
+    select:focus { border-color:var(--ink); }
+    .seg { display:flex; gap:8px; }
+    .seg label { flex:1; }
+    .seg input { display:none; }
+    .seg span { display:block; text-align:center; padding:11px 0; font-size:13.5px; cursor:pointer; background:var(--print); border:1px solid var(--rule); color:var(--dim); }
+    .seg input:checked + span { border-color:var(--ink); color:var(--ink); font-weight:700; background:#fff; }
+    .btn { border:0; cursor:pointer; font-family:var(--sans); font-weight:700; text-align:center; transition:transform .12s; -webkit-tap-highlight-color:transparent; }
+    .btn:active { transform:scale(.985); }
+    .btn-ink { background:var(--ink); color:var(--print); padding:15px; font-size:15px; letter-spacing:.06em; }
+    .frm-note { font-size:11px; color:var(--faint); text-align:center; }
+
+    /* 결과 — 기사 카드 */
+    .art { background:var(--card); border:1px solid var(--rule); padding:18px; margin-top:14px; position:relative; }
+    .art h3 { font-family:var(--serif); font-weight:900; font-size:16.5px; border-bottom:2px solid var(--ink); padding-bottom:8px; margin-bottom:10px; }
+    .art h3 small { font-family:var(--sans); font-weight:400; font-size:11px; color:var(--faint); margin-left:6px; }
+    .art .tz { font-size:12.5px; color:var(--dim); margin-bottom:10px; }
+    .art-body { font-size:14px; line-height:1.9; }
+    .art-body p { margin-bottom:12px; }
+    .art-body p:last-child { margin-bottom:0; }
+    .art-body b { box-shadow:inset 0 -9px 0 rgba(194,47,47,.14); }
+    .job-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+    .job-chips span { font-size:12px; border:1px solid var(--ink); padding:4px 11px; font-weight:700; background:#fff; }
+    .se-grid { display:grid; gap:8px; }
+    .se-row { display:grid; grid-template-columns:auto 1fr; gap:4px 12px; border:1px solid var(--rule); padding:11px 13px; background:#fff; }
+    .se-row.best { border:1.5px solid var(--stamp); background:var(--stamp-bg); }
+    .se-row .se-y b { font-family:var(--serif); font-size:15px; }
+    .se-row .se-y small { display:block; font-size:10.5px; color:var(--dim); }
+    .se-row .se-star { text-align:right; color:var(--stamp); font-size:12px; letter-spacing:1px; }
+    .se-row p { grid-column:1 / -1; font-size:12.5px; color:var(--dim); line-height:1.7; margin:0; }
+    .stamp-mark { position:absolute; top:14px; right:14px; font-family:var(--serif); font-weight:900; color:var(--stamp);
+      border:2.5px solid var(--stamp); border-radius:6px; padding:4px 10px; font-size:13px; transform:rotate(8deg); opacity:0; }
+    .art.unlocked .stamp-mark { opacity:.85; }
+    .locked .art-body { filter:blur(6px); user-select:none; pointer-events:none; opacity:.5; max-height:96px; overflow:hidden; }
+    .locked { position:relative; }
+    .locked .lock-cta { position:absolute; left:0; right:0; bottom:14px; display:flex; justify-content:center; }
+    .lock-cta button { border:0; cursor:pointer; background:var(--ink); color:var(--print); padding:10px 20px; font-size:13px; font-weight:700; font-family:var(--sans); }
+    .detail-tag { float:right; font-size:10.5px; color:var(--stamp); border:1px solid var(--stamp); padding:2px 8px; font-weight:700; margin-top:3px; }
+
+    .unlock-bar { margin-top:18px; background:var(--ink); padding:20px 18px; color:var(--print); text-align:center; }
+    .unlock-bar h4 { font-family:var(--serif); font-size:16.5px; margin-bottom:4px; }
+    .unlock-bar p { font-size:12px; opacity:.75; margin-bottom:14px; }
+    .unlock-btns { display:grid; gap:8px; }
+    .unlock-btns .btn { padding:13px; font-size:14px; }
+    .u-basic { background:var(--print); color:var(--ink); }
+    .u-all { background:var(--stamp); color:#fff; }
+    .u-note { font-size:11px; opacity:.6; margin-top:10px; }
+
+    .foot { padding:30px 22px 40px; text-align:center; color:var(--faint); font-size:11px; line-height:1.8; border-top:1px solid var(--rule); }
+    .foot a { color:var(--dim); }
+    .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:80; width:max-content;
+      max-width:calc(100vw - 40px); background:var(--ink); color:#fff; border-radius:100px; padding:12px 22px; font-size:13px; box-shadow:0 10px 30px rgba(0,0,0,.35); }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="hd">
+    <div class="hd-in">
+      <a class="logo" href="index.html"><span class="logo-mark">緣</span><span class="logo-text">천기연<small>天機緣</small></span></a>
+      <a href="saju.html" style="font-size:12.5px;font-weight:700;text-decoration:underline">내 사주 보기</a>
+    </div>
+    <nav class="cnav" aria-label="서비스 전환">
+      <a href="index.html" class="cnav-item cnav-home" title="천기연 홈"><span>🏠</span><i>홈</i></a>
+      <a href="saju.html" class="cnav-item"><span>🔮</span>사주</a>
+      <a href="party.html" class="cnav-item"><span>👥</span>모임</a>
+      <a href="cosmos.html" class="cnav-item"><span>🪐</span>하늘</a>
+      <a href="spouse.html" class="cnav-item"><span>💍</span>배우자</a>
+      <a href="career.html" class="cnav-item active" aria-current="page"><span>💼</span>직업</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="paper-head">
+      <span class="nm">天機緣 커리어報</span>
+      <span class="dt" id="paper-date"></span>
+    </div>
+    <h1>언제 취업하고, 언제 옮기고,<br /><em>얼마나 벌게 되는가</em></h1>
+    <p class="lede">타고난 적성(십신)과 앞으로 5년의 세운(歲運)으로 읽는 커리어 정밀 리포트. 맞는 직업군, 이직 판단, 재물 곡선까지 — 당신의 인사발령은 이미 예고되어 있습니다.</p>
+    <div class="tags"><span>적성 십신</span><span>5년 취업 캘린더</span><span>이직 판단</span><span>재물 곡선</span></div>
+  </section>
+
+  <!-- 입력 -->
+  <section id="ca-input">
+    <div class="form-card">
+      <p class="fc-title">인사 기록 카드</p>
+      <p class="fc-sub">생년월일시가 곧 이력서의 첫 줄입니다</p>
+      <div class="frm">
+        <div class="frm-row">
+          <select id="ca-year"></select><select id="ca-month"></select><select id="ca-day"></select>
+        </div>
+        <div class="frm-row2">
+          <select id="ca-hour"></select>
+          <select id="ca-region"></select>
+          <div class="seg">
+            <label><input type="radio" name="cag" id="ca-gm" checked /><span>남</span></label>
+            <label><input type="radio" name="cag" id="ca-gf" /><span>여</span></label>
+          </div>
+        </div>
+        <button class="btn btn-ink" id="ca-run">내 커리어 지도 발행하기</button>
+        <p class="frm-note">입력은 이 기기에만 저장됩니다 · 다른 서비스에서 입력했다면 자동으로 채워져요</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- 결과 -->
+  <section id="ca-result" class="hidden" style="padding-top:0"></section>
+
+  <footer class="foot">
+    본 리포트는 명리학 이론(십신·대운·세운)에 기반한 참고용 콘텐츠이며, 취업·투자 등 의사결정의 유일한 근거로 삼지 마세요.<br />
+    '신녀 연화'는 AI 캐릭터입니다. · <a href="index.html">천기연 홈</a> · <a href="terms.html">이용약관</a> · <a href="privacy.html">개인정보처리방침</a>
+  </footer>
+</div>
+
+<div class="toast hidden" id="toast"></div>
+
+<script src="js/config.js"></script>
+<script src="js/saju.js"></script>
+<script src="js/content.js"></script>
+<script src="js/content2.js"></script>
+<script src="js/coins.js"></script>
+<script src="js/career.js"></script>
+</body>
+</html>

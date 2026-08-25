@@ -156,6 +156,28 @@ function renderSkyNow() {
   $("#sky-rows").innerHTML = rows;
   $("#sky-summary").innerHTML =
     `지금 하늘은 <b>${el.kor}의 기운</b>이 가장 강합니다 — 동양 오행으로 치면 <b>${el.saju}</b>의 흐름. ${el.desc}`;
+  renderStargazing();
+}
+
+/* 오늘 밤 관측 지수 — Open-Meteo 구름량 (무료·키 불필요, 실패 시 조용히 생략) */
+async function renderStargazing() {
+  try {
+    const r = await fetch("https://api.open-meteo.com/v1/forecast?latitude=37.57&longitude=126.98&hourly=cloud_cover&forecast_days=2&timezone=Asia%2FSeoul");
+    const d = await r.json();
+    const hours = d.hourly.time, cover = d.hourly.cloud_cover;
+    const today = new Date();
+    const key = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
+    // 오늘 밤 21시~다음날 01시 평균 구름량
+    const night = hours.map((t, i) => ({ t, c: cover[i] }))
+      .filter(x => (x.t.startsWith(key) && +x.t.slice(11, 13) >= 21) || (!x.t.startsWith(key) && +x.t.slice(11, 13) <= 1));
+    if (!night.length) return;
+    const avg = Math.round(night.reduce((s, x) => s + x.c, 0) / night.length);
+    const grade = avg <= 25 ? ["🌟", "오늘 밤 별 보기 최고의 하늘", "이 화면의 행성들, 오늘 밤 실제로 몇 개는 맨눈으로 보입니다."]
+      : avg <= 60 ? ["🌤", "구름 사이로 별이 드나드는 밤", "참을성 있게 보면 밝은 행성은 만날 수 있어요."]
+      : ["☁️", "오늘 밤은 구름이 하늘을 덮는 날", "하늘이 가려도 행성은 저 위 제자리에 있습니다 — 화면으로 만나세요."];
+    const elSum = $("#sky-summary");
+    elSum.innerHTML += `<br /><span style="display:inline-block;margin-top:8px">${grade[0]} <b>관측 지수</b> — ${grade[1]} <small style="color:var(--faint)">(서울 밤 구름량 ${avg}%)</small><br /><small style="color:var(--faint)">${grade[2]}</small></span>`;
+  } catch (e) { /* 오프라인·차단 시 무시 */ }
 }
 
 /* ================= Three.js 태양계 ================= */
@@ -554,3 +576,6 @@ $("#speed").addEventListener("input", (e) => {
 /* 시작 */
 renderSkyNow();
 buildScene();
+
+/* 6탭 네비: 활성 탭이 화면 안에 보이게 */
+document.querySelector(".cnav-item.active")?.scrollIntoView({ inline: "center", block: "nearest" });

@@ -340,10 +340,81 @@ section { padding: 56px 22px; }
 .report-tag { position: absolute; top: -10px; left: 18px; font-size: 10px; font-weight: 700; letter-spacing: .12em; padding: 4px 12px; border-radius: 100px; }
 .free-tag { background: #e7f0e9; color: #2e6b47; }
 .premium-tag { background: var(--seal-bg); color: var(--seal); }
-.report-body { color: var(--ink); font-size: 14.5px; line-height: 1.85; }
-.report-body p { margin-bottom: 13px; }
+.report-body { color: var(--ink); font-size: 14.5px; line-height: 1.9; }
+.report-body p { margin-bottom: 14px; text-wrap: pretty; }
 .report-body p:last-child { margin-bottom: 0; }
 .report-body .highlight { color: var(--seal); font-weight: 700; }
+.report-body > p > b { color: var(--seal-dark); }  /* 문단마다 핵심 구절이 눈에 걸리게 */
+
+/* ---- 코인 빠른 결제 (결제 모달 상단) ---- */
+.coin-quick { display: flex; align-items: center; gap: 12px; background: #fdf6e0; border: 1px solid #ecd9a8; border-radius: 13px; padding: 13px 15px; margin-bottom: 4px; }
+.coin-quick .cq-l { min-width: 0; flex: 1; }
+.coin-quick b { display: block; font-size: 14px; color: #7a5a12; }
+.coin-quick span { display: block; font-size: 11.5px; color: #a08a4e; margin-top: 2px; }
+.coin-quick button { flex: 0 0 auto; border: 0; cursor: pointer; border-radius: 100px; padding: 10px 16px; font-size: 13px; font-weight: 700; font-family: var(--sans); }
+.coin-quick .cq-go { background: var(--seal); color: #fff; box-shadow: 0 4px 12px rgba(168, 58, 38, .3); }
+.coin-quick .cq-charge { background: #c98a12; color: #fff; }
+.pay-or { text-align: center; font-size: 11px; color: var(--ink-faint); margin: 10px 0 8px; }
+
+/* ---- 리포트 가독 컴포넌트 ---- */
+/* 한눈에 보기 요약 카드 */
+.sum-box { background: var(--paper-deep); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px 12px; margin-bottom: 18px; }
+.sum-title { font-family: var(--serif); font-size: 11px; letter-spacing: .24em; color: var(--seal); font-weight: 700; margin-bottom: 8px; }
+.sum-row { display: flex; gap: 12px; padding: 8px 0; font-size: 13.5px; line-height: 1.6; }
+.sum-row + .sum-row { border-top: 1px dashed var(--hairline); }
+.sum-k { flex: 0 0 34px; color: var(--ink-faint); font-size: 12px; font-weight: 700; padding-top: 2px; }
+.sum-v { min-width: 0; }
+.sum-v b { color: var(--seal); }
+.sum-v i { font-style: normal; color: var(--ink-faint); font-size: 12px; }
+
+/* 일주 노트 (무료 리포트) */
+.ilju-note { display: flex; gap: 13px; background: var(--seal-bg); border-radius: 13px; padding: 15px 16px; margin: 16px 0 14px; }
+.ilju-note .ilju-badge { flex: 0 0 auto; align-self: flex-start; text-align: center; font-family: var(--serif); font-weight: 900; font-size: 17px; line-height: 1.15; color: #fff; background: var(--seal); border-radius: 10px; padding: 9px 10px 7px; letter-spacing: .06em; }
+.ilju-note .ilju-badge small { display: block; font-size: 9px; font-weight: 400; letter-spacing: .18em; opacity: .8; margin-top: 2px; }
+.ilju-note b { display: block; font-family: var(--serif); font-size: 14.5px; margin-bottom: 4px; color: var(--seal-dark); }
+.ilju-note p { font-size: 13.5px; line-height: 1.8; margin: 0; color: var(--ink); }
+
+/* 일주 심층 헤드 */
+.ilju-head { display: flex; align-items: center; gap: 13px; margin-bottom: 14px; }
+.ilju-ganji { font-family: var(--serif); font-size: 19px; font-weight: 900; color: var(--dark-text); background: var(--dark-2); border-radius: 11px; padding: 10px 13px; letter-spacing: .3em; text-indent: .3em; }
+.ilju-head b { display: block; font-family: var(--serif); font-size: 15.5px; }
+.ilju-head small { display: block; color: var(--ink-dim); font-size: 12.5px; margin-top: 1px; }
+
+/* 라벨 행 리스트 (시진·합충·없는 오행) */
+.kv-list { margin-top: 4px; }
+.kv-row { display: flex; gap: 13px; padding: 13px 0; }
+.kv-row + .kv-row { border-top: 1px dashed var(--hairline); }
+.kv-k { flex: 0 0 34px; height: 34px; border-radius: 9px; background: var(--paper-deep); color: var(--seal); display: grid; place-items: center; font-family: var(--serif); font-weight: 700; font-size: 15px; }
+.kv-row > div { min-width: 0; }
+.kv-row b { display: block; font-size: 13.5px; margin-bottom: 3px; }
+.kv-row p { font-size: 13.5px; color: var(--ink-dim); line-height: 1.8; margin: 0 !important; }
+
+/* 신강약 미터 */
+.meter-wrap { margin-bottom: 16px; }
+.meter-scale { display: flex; justify-content: space-between; font-size: 10.5px; color: var(--ink-faint); margin-bottom: 6px; letter-spacing: .04em; }
+.meter-track { position: relative; height: 10px; border-radius: 100px; background: linear-gradient(90deg, #b9c6d8, var(--paper-deep) 45%, #dfb59a); border: 1px solid var(--hairline); }
+.meter-marker { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 19px; height: 19px; border-radius: 50%; background: var(--seal); border: 3px solid #fff; box-shadow: 0 2px 8px rgba(34, 29, 21, .3); }
+.meter-read { text-align: center; font-size: 12.5px; color: var(--ink-dim); margin-top: 9px; }
+.meter-read b { color: var(--seal); font-family: var(--serif); font-size: 14px; }
+
+/* 용신 카드 */
+.yong-card { display: flex; align-items: center; gap: 13px; background: var(--card); border: 1px solid var(--line); border-left: 4px solid var(--seal); border-radius: 12px; padding: 12px 15px; margin: 14px 0; box-shadow: var(--shadow-1); }
+.yong-el { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 11px; display: grid; place-items: center; font-family: var(--serif); font-size: 22px; font-weight: 900; color: #fff; }
+.yong-el.el-wood { background: var(--el-wood); } .yong-el.el-fire { background: var(--el-fire); }
+.yong-el.el-earth { background: var(--el-earth); } .yong-el.el-metal { background: var(--el-metal); }
+.yong-el.el-water { background: var(--el-water); }
+.yong-card b { display: block; font-size: 14px; }
+.yong-card small { display: block; color: var(--ink-faint); font-size: 12px; margin-top: 1px; }
+
+/* 십신 저울 게이지 */
+.god-scale { display: grid; gap: 11px; }
+.god-row { border: 1px solid var(--line); background: var(--card); border-radius: 12px; padding: 12px 14px; }
+.god-head { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; flex-wrap: wrap; }
+.god-name { font-family: var(--serif); font-weight: 700; font-size: 14.5px; }
+.god-dots { color: var(--seal); font-size: 10px; letter-spacing: 3px; padding-top: 1px; }
+.god-cnt { font-size: 11px; color: var(--ink-faint); }
+.god-tag { margin-left: auto; font-size: 11px; color: var(--gold); border: 1px solid rgba(185, 138, 47, .45); border-radius: 100px; padding: 2.5px 9px; font-weight: 700; white-space: nowrap; }
+.god-text { font-size: 13.5px; color: var(--ink-dim); line-height: 1.8; margin: 0 !important; }
 
 /* 공유 */
 .share-sub { font-size: 12.5px; color: var(--ink-dim); margin-bottom: 15px; }

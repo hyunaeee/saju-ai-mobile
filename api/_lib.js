@@ -8,7 +8,18 @@ const sajuEngine = require("../js/saju.js");
 require("../js/content.js");
 
 // 서버가 신뢰하는 가격표 (원). 클라이언트가 보낸 금액을 이 값과 대조.
-const PRICES = { report: 9900, questions: 7900, group: 6900, wish: 4900, allpass: 19900 };
+const PRICES = {
+  report: 9900, questions: 7900, group: 6900, wish: 4900, allpass: 19900,
+  // 코인 충전 패키지 (js/coins.js PACKAGES 와 일치)
+  coin_c5: 4900, coin_c12: 9900, coin_c30: 19900,
+};
+// 패키지별 지급 코인 수
+const COIN_PACKS = { coin_c5: 5, coin_c12: 13, coin_c30: 35 };
+// 콘텐츠별 코인 가격 (js/coins.js PRICE 와 일치)
+const COIN_PRICE = {
+  report: 9, questions: 7, group: 6, wish: 4, allpass: 18,
+  spouse: 5, spouse_detail: 4, career: 5, career_detail: 4,
+};
 
 // 각 상품이 부여하는 권한(products)
 function productsFor(product) {
@@ -81,6 +92,6 @@ async function readBody(req) {
 }
 
 module.exports = {
-  sajuEngine, PRICES, productsFor, signToken, verifyToken,
+  sajuEngine, PRICES, COIN_PACKS, COIN_PRICE, productsFor, signToken, verifyToken,
   grantedProducts, sigOf, sendJson, readBody,
 };
