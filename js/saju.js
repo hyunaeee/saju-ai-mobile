@@ -385,8 +385,9 @@ function calculateSaju(input) {
   const hasTime = input.hour >= 0;
 
   // 진태양시 보정 (시간을 아는 경우만)
+  // 단, 시진(십이지시)을 직접 고른 경우(timeMode === "sijin")는 이미 시주 단위 선택이므로 보정 생략
   let eff = { y, m, d, hour: input.hour, minute: input.minute || 0, corrMin: 0 };
-  if (hasTime) eff = applyTrueSolarTime(y, m, d, input.hour, input.minute || 0, input.regionIdx ?? 17);
+  if (hasTime && input.timeMode !== "sijin") eff = applyTrueSolarTime(y, m, d, input.hour, input.minute || 0, input.regionIdx ?? 17);
 
   const yp = yearPillar(eff.y, eff.m, eff.d);
   const mp = monthPillar(eff.y, eff.m, eff.d, yp.stem);
