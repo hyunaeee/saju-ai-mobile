@@ -54,17 +54,10 @@
       color:var(--stamp); border:1.5px solid var(--stamp); border-radius:4px; padding:2px 7px; transform:rotate(6deg); opacity:.75; }
     .fc-title { font-family:var(--serif); font-weight:700; font-size:16px; margin-bottom:3px; }
     .fc-sub { font-size:12px; color:var(--dim); margin-bottom:16px; }
-    .frm { display:grid; gap:10px; }
-    .frm-row { display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:8px; }
-    .frm-row2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-    select { width:100%; padding:12px 10px; font-size:15px; font-family:var(--sans); background:var(--print);
-      border:1px solid var(--rule); color:var(--ink); outline:none; appearance:none; text-align:center; }
-    select:focus { border-color:var(--ink); }
-    .seg { display:flex; gap:8px; }
-    .seg label { flex:1; }
-    .seg input { display:none; }
-    .seg span { display:block; text-align:center; padding:11px 0; font-size:13.5px; cursor:pointer; background:var(--print); border:1px solid var(--rule); color:var(--dim); }
-    .seg input:checked + span { border-color:var(--ink); color:var(--ink); font-weight:700; background:#fff; }
+    /* 공용 생년월일시 입력(birthinput.js) — 지면 테마로 채색 */
+    #ca-birth .bi { --bi-accent:#17181c; --bi-text:#17181c; --bi-field:#fbfaf6; --bi-line:#cfccc0; --bi-btn-txt:#f4f2ec; }
+    #ca-birth .bi select, #ca-birth .bi-opt span, #ca-birth .bi-go { border-radius:0; }
+    #ca-birth .bi-go { letter-spacing:.06em; }
     .btn { border:0; cursor:pointer; font-family:var(--sans); font-weight:700; text-align:center; transition:transform .12s; -webkit-tap-highlight-color:transparent; }
     .btn:active { transform:scale(.985); }
     .btn-ink { background:var(--ink); color:var(--print); padding:15px; font-size:15px; letter-spacing:.06em; }
@@ -144,21 +137,7 @@
     <div class="form-card">
       <p class="fc-title">인사 기록 카드</p>
       <p class="fc-sub">생년월일시가 곧 이력서의 첫 줄입니다</p>
-      <div class="frm">
-        <div class="frm-row">
-          <select id="ca-year"></select><select id="ca-month"></select><select id="ca-day"></select>
-        </div>
-        <div class="frm-row2">
-          <select id="ca-hour"></select>
-          <select id="ca-region"></select>
-          <div class="seg">
-            <label><input type="radio" name="cag" id="ca-gm" checked /><span>남</span></label>
-            <label><input type="radio" name="cag" id="ca-gf" /><span>여</span></label>
-          </div>
-        </div>
-        <button class="btn btn-ink" id="ca-run">내 커리어 지도 발행하기</button>
-        <p class="frm-note">입력은 이 기기에만 저장됩니다 · 다른 서비스에서 입력했다면 자동으로 채워져요</p>
-      </div>
+      <div id="ca-birth"></div>
     </div>
   </section>
 
@@ -174,7 +153,9 @@
 <div class="toast hidden" id="toast"></div>
 
 <script src="js/config.js"></script>
+<script src="js/lunar.js"></script>
 <script src="js/saju.js"></script>
+<script src="js/birthinput.js"></script>
 <script src="js/content.js"></script>
 <script src="js/content2.js"></script>
 <script src="js/coins.js"></script>

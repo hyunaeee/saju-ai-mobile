@@ -19,29 +19,18 @@
   const today = new Date();
   $("#paper-date").textContent = `${today.getFullYear()}년 ${today.getMonth() + 1}월 ${today.getDate()}일 · 제1판`;
 
-  function fill(sel, from, to, fmt, sel0) {
-    const el = $(sel);
-    el.innerHTML = "";
-    for (let v = from; from < to ? v <= to : v >= to; from < to ? v++ : v--) {
-      const o = document.createElement("option"); o.value = v; o.textContent = fmt(v); el.appendChild(o);
-    }
-    if (sel0 != null) el.value = sel0;
-  }
-  fill("#ca-year", 2010, 1940, y => y + "년", 1995);
-  fill("#ca-month", 1, 12, m => m + "월", 6);
-  fill("#ca-day", 1, 31, d => d + "일", 15);
-  $("#ca-hour").innerHTML = `<option value="-1">태어난 시 모름</option>` +
-    Array.from({ length: 24 }, (_, h) => `<option value="${h}">${h}시</option>`).join("");
-  $("#ca-region").innerHTML = REGIONS.map((r, i) => `<option value="${i}">${r.name}</option>`).join("");
-  $("#ca-region").value = 0;
-  try {
-    const last = JSON.parse(localStorage.getItem(LAST_KEY) || "null");
-    if (last) {
-      $("#ca-year").value = last.y; $("#ca-month").value = last.m; $("#ca-day").value = last.d;
-      $("#ca-hour").value = last.hour ?? -1; $("#ca-region").value = last.regionIdx ?? 0;
-      if (last.gender === "F") $("#ca-gf").checked = true;
-    }
-  } catch (e) {}
+  /* ---------- 공용 생년월일시 입력 (양/음력·분 단위·진태양시 — 사주 페이지와 동일 기준) ---------- */
+  BirthInput.mount("#ca-birth", {
+    idPrefix: "ca",
+    submitLabel: "내 커리어 지도 발행하기",
+    onSubmit(input) {
+      const saju = calculateSaju(input);
+      const rep = buildCareerReport(saju, input);
+      cur = { input, saju, rep };
+      render();
+      setTimeout(() => $("#ca-result").scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+    },
+  });
 
   function sectionHTML(sec, unlocked) {
     const tag = sec.detail ? `<span class="detail-tag">디테일</span>` : "";
@@ -81,7 +70,10 @@
       </div>`;
     }
 
-    $("#ca-result").innerHTML = `
+    const metaLine = typeof BirthInput !== "undefined"
+      ? `<div class="art unlocked" style="padding:12px 16px"><p style="font-size:11.5px;color:var(--dim);line-height:1.7;margin:0;text-align:center">${BirthInput.metaLine(input, cur.saju)}</p></div>` : "";
+
+    $("#ca-result").innerHTML = metaLine + `
       <div class="art unlocked">
         <h3>📌 오늘의 헤드라인</h3>
         <div class="art-body">
@@ -112,20 +104,6 @@
     toast(`🪙 ${cost}코인으로 발행되었습니다`);
     render();
   }
-
-  $("#ca-run").addEventListener("click", () => {
-    const input = {
-      y: +$("#ca-year").value, m: +$("#ca-month").value, d: +$("#ca-day").value,
-      hour: +$("#ca-hour").value, minute: 0, regionIdx: +$("#ca-region").value,
-      gender: $("#ca-gf").checked ? "F" : "M",
-    };
-    localStorage.setItem(LAST_KEY, JSON.stringify(input));
-    const saju = calculateSaju(input);
-    const rep = buildCareerReport(saju, input);
-    cur = { input, saju, rep };
-    render();
-    setTimeout(() => $("#ca-result").scrollIntoView({ behavior: "smooth", block: "start" }), 60);
-  });
 
   Coins.renderPill(".hd-in");
   Coins.onChange(() => { const b = $("#ca-bal"); if (b) b.textContent = Coins.balance(); });

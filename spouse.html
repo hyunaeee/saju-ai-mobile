@@ -57,18 +57,10 @@
     .lc-title { font-family:var(--serif); text-align:center; font-size:17px; font-weight:700; margin-bottom:4px; }
     .lc-sub { text-align:center; font-size:12px; color:var(--dim); margin-bottom:18px; }
 
-    .frm { display:grid; gap:10px; }
-    .frm-row { display:grid; grid-template-columns:1.2fr 1fr 1fr; gap:8px; }
-    .frm-row2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; }
-    select { width:100%; padding:12px 10px; border-radius:4px; font-size:15px; font-family:var(--sans);
-      background:var(--ivory); border:1px solid var(--lace); color:var(--ink); outline:none; appearance:none; text-align:center; }
-    select:focus { border-color:var(--wine); }
-    .seg { display:flex; gap:8px; }
-    .seg label { flex:1; }
-    .seg input { display:none; }
-    .seg span { display:block; text-align:center; padding:11px 0; border-radius:4px; font-size:13.5px; cursor:pointer;
-      background:var(--ivory); border:1px solid var(--lace); color:var(--dim); }
-    .seg input:checked + span { border-color:var(--wine); color:var(--wine); font-weight:700; background:var(--wine-bg); }
+    /* 공용 생년월일시 입력(birthinput.js) — 연서 테마로 채색 */
+    #sp-birth .bi { --bi-accent:#7c2340; --bi-text:#3c2530; --bi-field:#fdfbf6; --bi-line:#e9ddc8; --bi-btn-txt:#fff; }
+    #sp-birth .bi select, #sp-birth .bi-opt span { border-radius:4px; }
+    #sp-birth .bi-go { border-radius:4px; box-shadow:0 8px 22px rgba(124,35,64,.28); letter-spacing:.04em; }
     .btn { border:0; cursor:pointer; font-family:var(--sans); border-radius:4px; font-weight:700; text-align:center;
       transition:transform .15s, background .15s; -webkit-tap-highlight-color:transparent; }
     .btn:active { transform:scale(.985); }
@@ -114,6 +106,63 @@
     .u-all { background:var(--gold); color:#fff; }
     .u-note { font-size:11px; opacity:.7; margin-top:10px; }
 
+    .sp-meta { text-align:center; font-size:11.5px; color:var(--dim); line-height:1.7; background:var(--ivory-2);
+      border:1px solid var(--lace); border-radius:4px; padding:10px 12px; margin-bottom:14px; }
+    .sp-meta b { color:var(--wine); font-family:var(--serif); }
+
+    /* 몽타주 */
+    .mont-card { background:var(--card); border:1px solid var(--lace); border-radius:6px; padding:20px 18px 18px; box-shadow:var(--sh1); text-align:center; position:relative; }
+    .mont-card::before { content:""; position:absolute; inset:7px; border:1px solid var(--lace); border-radius:3px; pointer-events:none; }
+    .mont-card > * { position:relative; }
+    .mont-kick { font-family:var(--serif); font-size:11px; letter-spacing:.32em; color:var(--rose); margin-bottom:12px; }
+    .mont-frame { position:relative; width:206px; margin:0 auto; border-radius:14px; overflow:hidden;
+      box-shadow:0 10px 26px rgba(92,42,64,.18); border:3px solid #fff; outline:1px solid var(--lace); }
+    .mont-frame .face-svg { display:block; width:100%; height:auto; }
+    .mont-frame.veiled .face-svg { filter:blur(9px) saturate(.85); transform:scale(1.06); }
+    .mont-veil { position:absolute; inset:0; display:grid; place-items:center; gap:8px; align-content:center;
+      background:linear-gradient(180deg,rgba(253,251,246,.28),rgba(124,35,64,.34)); }
+    .mont-veil b { font-family:var(--serif); font-size:14px; color:#fff; text-shadow:0 2px 10px rgba(60,20,35,.65); }
+    .mont-veil button { border:0; cursor:pointer; background:#fff; color:var(--wine); border-radius:100px;
+      padding:9px 16px; font-size:12.5px; font-weight:700; font-family:var(--sans); box-shadow:0 6px 16px rgba(92,42,64,.28); }
+    .mont-name { font-family:var(--serif); font-size:15.5px; font-weight:700; margin-top:14px; }
+    .mont-name em { font-style:normal; color:var(--wine); }
+    .mont-traits { display:flex; flex-wrap:wrap; gap:6px; justify-content:center; margin-top:11px; }
+    .mont-traits span { font-size:11.5px; color:var(--dim); background:var(--ivory-2); border-radius:100px; padding:5px 11px; }
+    .mont-note { font-size:10.5px; color:var(--faint); margin-top:12px; line-height:1.7; }
+
+    /* 인연 지수 */
+    .score-card { background:var(--card); border:1px solid var(--lace); border-radius:6px; padding:20px 18px; margin-top:14px;
+      box-shadow:var(--sh1); text-align:center; position:relative; }
+    .score-card::before { content:""; position:absolute; inset:7px; border:1px solid var(--lace); border-radius:3px; pointer-events:none; }
+    .score-card > * { position:relative; }
+    .sc-total { font-family:var(--serif); line-height:1; margin:6px 0 2px; }
+    .sc-total em { font-style:normal; font-size:52px; font-weight:900; color:var(--wine); }
+    .sc-total span { font-size:15px; color:var(--dim); margin-left:3px; }
+    .sc-title { font-family:var(--serif); font-size:15px; font-weight:700; color:var(--gold); margin-bottom:14px; }
+    .sc-axes { text-align:left; }
+    .sc-axis { display:grid; grid-template-columns:64px 1fr 30px; gap:10px; align-items:center; padding:5px 0; font-size:12.5px; }
+    .sc-axis .sa-name { color:var(--dim); font-weight:700; }
+    .sc-axis .sa-track { height:8px; border-radius:100px; background:var(--ivory-2); overflow:hidden; }
+    .sc-axis .sa-track i { display:block; height:100%; border-radius:100px; background:linear-gradient(90deg,#c98a6a,var(--wine)); }
+    .sc-axis b { text-align:right; font-family:var(--serif); color:var(--wine); }
+    .sc-text { font-size:13px; color:var(--dim); line-height:1.85; margin-top:12px; }
+    .sc-axes.veiled .sc-axis { filter:blur(5px); pointer-events:none; user-select:none; opacity:.55; }
+    .sc-lock { text-align:center; margin-top:12px; }
+    .sc-lock button { border:0; cursor:pointer; background:var(--wine); color:#fff; border-radius:100px; padding:10px 18px;
+      font-size:12.5px; font-weight:700; font-family:var(--sans); box-shadow:0 8px 20px rgba(124,35,64,.3); }
+
+    /* 출신 게이지 · 말풍선 · 능력 칩 (섹션 본문용) */
+    .nation-gauge { margin-bottom:12px; }
+    .nation-gauge .ng-head { display:flex; justify-content:space-between; align-items:baseline; font-size:13px; margin-bottom:6px; }
+    .nation-gauge .ng-head b { color:var(--wine); font-family:var(--serif); }
+    .nation-gauge .ng-head em { font-style:normal; font-weight:900; color:var(--rose); }
+    .nation-gauge .ng-track { height:9px; border-radius:100px; background:var(--ivory-2); overflow:hidden; }
+    .nation-gauge .ng-track i { display:block; height:100%; border-radius:100px; background:linear-gradient(90deg,#dcae99,var(--rose)); }
+    .quote-bub { margin-top:10px; background:var(--wine-bg); border-radius:4px 16px 16px 16px; padding:12px 15px;
+      font-family:var(--serif); font-size:13.5px; color:var(--wine-deep); line-height:1.7; }
+    .skill-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+    .skill-chips span { font-size:11.5px; color:var(--wine); background:var(--wine-bg); border-radius:100px; padding:5px 12px; font-weight:700; }
+
     .foot { padding:30px 22px 40px; text-align:center; color:var(--faint); font-size:11px; line-height:1.8; }
     .foot a { color:var(--dim); }
     .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:80; width:max-content;
@@ -150,21 +199,7 @@
     <div class="letter-card">
       <p class="lc-title">초대장의 주인을 알려주세요</p>
       <p class="lc-sub">태어난 날이 곧 인연의 주소입니다</p>
-      <div class="frm">
-        <div class="frm-row">
-          <select id="sp-year"></select><select id="sp-month"></select><select id="sp-day"></select>
-        </div>
-        <div class="frm-row2">
-          <select id="sp-hour"></select>
-          <select id="sp-region"></select>
-          <div class="seg">
-            <label><input type="radio" name="spg" id="sp-gm" checked /><span>남</span></label>
-            <label><input type="radio" name="spg" id="sp-gf" /><span>여</span></label>
-          </div>
-        </div>
-        <button class="btn btn-wine" id="sp-run">내 배우자의 초상 열어보기</button>
-        <p class="frm-note">입력은 이 기기에만 저장됩니다 · 다른 서비스에서 입력했다면 자동으로 채워져요</p>
-      </div>
+      <div id="sp-birth"></div>
     </div>
   </section>
 
@@ -180,8 +215,11 @@
 <div class="toast hidden" id="toast"></div>
 
 <script src="js/config.js"></script>
+<script src="js/lunar.js"></script>
 <script src="js/saju.js"></script>
+<script src="js/birthinput.js"></script>
 <script src="js/content2.js"></script>
+<script src="js/face.js"></script>
 <script src="js/coins.js"></script>
 <script src="js/spouse.js"></script>
 </body>

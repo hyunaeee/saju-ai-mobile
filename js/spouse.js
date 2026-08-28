@@ -16,37 +16,18 @@
 
   function toast(m) { const t = $("#toast"); t.textContent = m; t.classList.remove("hidden"); clearTimeout(toast._t); toast._t = setTimeout(() => t.classList.add("hidden"), 2400); }
 
-  /* ---------- 셀렉트 초기화 ---------- */
-  function fill(sel, from, to, fmt, sel0) {
-    const el = $(sel);
-    el.innerHTML = "";
-    for (let v = from; from < to ? v <= to : v >= to; from < to ? v++ : v--) {
-      const o = document.createElement("option"); o.value = v; o.textContent = fmt(v); el.appendChild(o);
-    }
-    if (sel0 != null) el.value = sel0;
-  }
-  fill("#sp-year", 2010, 1940, y => y + "년", 1995);
-  fill("#sp-month", 1, 12, m => m + "월", 6);
-  fill("#sp-day", 1, 31, d => d + "일", 15);
-  (function () {
-    const el = $("#sp-hour");
-    el.innerHTML = `<option value="-1">태어난 시 모름</option>` +
-      Array.from({ length: 24 }, (_, h) => `<option value="${h}">${h}시</option>`).join("");
-  })();
-  (function () {
-    const el = $("#sp-region");
-    el.innerHTML = REGIONS.map((r, i) => `<option value="${i}">${r.name}</option>`).join("");
-    el.value = 0;
-  })();
-  // 다른 서비스 입력값 자동 채움
-  try {
-    const last = JSON.parse(localStorage.getItem(LAST_KEY) || "null");
-    if (last) {
-      $("#sp-year").value = last.y; $("#sp-month").value = last.m; $("#sp-day").value = last.d;
-      $("#sp-hour").value = last.hour ?? -1; $("#sp-region").value = last.regionIdx ?? 0;
-      if (last.gender === "F") $("#sp-gf").checked = true;
-    }
-  } catch (e) {}
+  /* ---------- 공용 생년월일시 입력 (양/음력·분 단위·진태양시 — 사주 페이지와 동일 기준) ---------- */
+  BirthInput.mount("#sp-birth", {
+    idPrefix: "sp",
+    submitLabel: "내 배우자의 초상 열어보기",
+    onSubmit(input) {
+      const saju = calculateSaju(input);
+      const rep = buildSpouseReport(saju, input);
+      cur = { input, saju, rep };
+      render();
+      setTimeout(() => $("#sp-result").scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+    },
+  });
 
   /* ---------- 렌더 ---------- */
   function sectionHTML(sec, unlocked) {
@@ -63,6 +44,7 @@
 
   function render() {
     const { input, saju, rep } = cur;
+    void saju;
     const sig = sigOf(input);
     const hasBasic = owns("spouse", sig);
     const hasDetail = owns("spouse_detail", sig);
@@ -91,8 +73,43 @@
       </div>`;
     }
 
-    $("#sp-result").innerHTML = `
-      <div class="letter-card">
+    // 몽타주 (기본 리포트 구매 전에는 베일)
+    const face = typeof buildSpouseFace === "function" ? buildSpouseFace(saju, input) : null;
+    const montage = face ? `
+      <div class="mont-card">
+        <p class="mont-kick">豫想 肖像 · 예상 몽타주</p>
+        <div class="mont-frame ${hasBasic ? "" : "veiled"}">
+          ${face.img
+            ? `<img class="face-svg" src="${face.img}" alt="배우자 예상 몽타주" width="420" height="420" />`
+            : face.svg}
+          ${hasBasic ? "" : `<div class="mont-veil"><b>아직 베일에 가려 있습니다</b>
+            <button type="button" data-buy="spouse">🪙 ${Coins.PRICE.spouse}코인으로 얼굴 보기</button></div>`}
+        </div>
+        <p class="mont-name">${input.gender === "M" ? "당신의 <em>아내</em>가 될 사람" : "당신의 <em>남편</em>이 될 사람"}
+          — ${ELEMENTS[face.el].kor}(${ELEMENTS[face.el].han})의 기운</p>
+        <div class="mont-traits">${face.traits.map(t => `<span>${t}</span>`).join("")}</div>
+        <p class="mont-note">사주의 배우자성 오행·음양·배우자궁 십신을 얼굴 특징으로 옮겨 그린 <b>인상 스케치</b>입니다.<br />실존 인물과는 무관하며, 재미로 봐주세요.</p>
+      </div>` : "";
+
+    const metaLine = typeof BirthInput !== "undefined"
+      ? `<p class="sp-meta">${BirthInput.metaLine(input, cur.saju)}</p>` : "";
+
+    // 인연 지수 — 총점은 항상 공개(훅), 5축 상세는 기본 리포트에 포함
+    const sc = rep.score;
+    const scoreCard = sc ? `
+      <div class="score-card">
+        <p class="mont-kick">因緣 指數 · 인연 지수</p>
+        <div class="sc-total"><em>${sc.total}</em><span>점</span></div>
+        <p class="sc-title">${sc.grade.title}</p>
+        <div class="sc-axes ${hasBasic ? "" : "veiled"}">
+          ${sc.axes.map(a => `<div class="sc-axis"><span class="sa-name">${a.name.split(" — ")[0]}</span>
+            <div class="sa-track"><i style="width:${a.val}%"></i></div><b>${a.val}</b></div>`).join("")}
+          ${hasBasic ? `<p class="sc-text">${sc.grade.text}</p>` : `<div class="sc-lock"><button type="button" data-buy="spouse">🪙 ${Coins.PRICE.spouse}코인으로 상세 채점표 보기</button></div>`}
+        </div>
+      </div>` : "";
+
+    $("#sp-result").innerHTML = metaLine + montage + scoreCard + `
+      <div class="letter-card" style="margin-top:14px">
         <div class="portrait-seal">
           <span class="ps-el el-${rep.starEl}">${elK.han}</span>
           <span class="ps-txt"><b>당신의 배우자성 — ${elK.kor}(${elK.han})</b>
@@ -124,21 +141,6 @@
     toast(`🪙 ${cost}코인으로 열었습니다`);
     render();
   }
-
-  /* ---------- 실행 ---------- */
-  $("#sp-run").addEventListener("click", () => {
-    const input = {
-      y: +$("#sp-year").value, m: +$("#sp-month").value, d: +$("#sp-day").value,
-      hour: +$("#sp-hour").value, minute: 0, regionIdx: +$("#sp-region").value,
-      gender: $("#sp-gf").checked ? "F" : "M",
-    };
-    localStorage.setItem(LAST_KEY, JSON.stringify(input));
-    const saju = calculateSaju(input);
-    const rep = buildSpouseReport(saju, input);
-    cur = { input, saju, rep };
-    render();
-    setTimeout(() => $("#sp-result").scrollIntoView({ behavior: "smooth", block: "start" }), 60);
-  });
 
   Coins.renderPill(".hd-in");
   Coins.onChange(() => { const b = $("#sp-bal"); if (b) b.textContent = Coins.balance(); });

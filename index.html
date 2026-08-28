@@ -133,15 +133,45 @@
     @keyframes spin { to { transform:rotate(360deg); } }
 
     /* 4. 미래 배우자 — 연서(아이보리×버건디) */
-    .svc-spouse { background:linear-gradient(115deg,#fdfbf6,#f9e9ee); color:#3c2530; border-color:#e9ddc8; }
+    .svc-spouse { background:linear-gradient(115deg,#fdfbf6 0%,#fbf1f1 58%,#f7e7ea 100%); color:#3c2530; border-color:#e9ddc8; }
     .svc-spouse .svc-tag { color:#7c2340; }
+    .svc-spouse .svc-chips span { background:rgba(124,35,64,.07); color:#7c2340; }
     .svc-spouse .svc-go { background:#7c2340; color:#fff; }
-    .svc-spouse .rings-deco { position:absolute; right:6px; top:50%; transform:translateY(-50%); font-size:84px; opacity:.6; filter:saturate(.9); }
-    /* 5. 직업운 — 지면(신문 모노톤) */
-    .svc-career { background:repeating-linear-gradient(0deg,#f4f2ec,#f4f2ec 26px,#edeae2 27px); color:#17181c; border-color:#cfccc0; }
+    .svc-spouse .svc-in { max-width:60%; }
+    .svc-spouse .cameo { position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:150px; height:150px;
+      object-fit:cover; mix-blend-mode:multiply; animation:cmVeil 5.4s ease-in-out infinite;
+      -webkit-mask-image:radial-gradient(closest-side,#000 62%,transparent 96%); mask-image:radial-gradient(closest-side,#000 62%,transparent 96%); }
+    @keyframes cmVeil { 0%,100% { opacity:.9 } 50% { opacity:1 } }
+    .svc-spouse .cm-hearts { position:absolute; right:2px; top:50%; transform:translateY(-50%); width:150px; height:152px; }
+    .cm-hearts .cm-petal { transform-box:fill-box; transform-origin:center; animation:cmPetal 6.4s ease-in-out infinite; }
+    .cm-hearts .cm-petal.p2 { animation-delay:2.1s; } .cm-hearts .cm-petal.p3 { animation-delay:4.2s; }
+    @keyframes cmPetal { 0% { transform:translateY(8px) scale(.8); opacity:0 } 30% { opacity:.85 } 100% { transform:translateY(-18px) scale(1.05); opacity:0 } }
+    /* 5. 직업운 — 지면(신문 모노톤): 우상향 차트 + 합격 도장 */
+    .svc-career { background:repeating-linear-gradient(0deg,#f4f2ec,#f4f2ec 26px,#eeebe3 27px); color:#17181c; border-color:#cfccc0; }
     .svc-career .svc-tag { color:#c22f2f; }
+    .svc-career .svc-chips span { background:rgba(23,24,28,.06); }
     .svc-career .svc-go { background:#17181c; color:#f4f2ec; }
-    .svc-career .stamp-deco { position:absolute; right:16px; top:22px; font-family:var(--serif); font-weight:900; color:#c22f2f; border:2.5px solid #c22f2f; border-radius:8px; padding:6px 12px; font-size:15px; transform:rotate(9deg); opacity:.7; }
+    .svc-career .chart { position:absolute; right:-6px; top:50%; transform:translateY(-50%); width:146px; height:146px; }
+    .chart .ch-area { animation:chArea 4.6s ease-in-out infinite; }
+    @keyframes chArea { 0%,20% { opacity:0 } 46%,100% { opacity:1 } }
+    .chart .ch-line { stroke-dasharray:190; animation:chDraw 4.6s ease-in-out infinite; }
+    @keyframes chDraw { 0% { stroke-dashoffset:190 } 42%,100% { stroke-dashoffset:0 } }
+    .chart .ch-dot { transform-box:fill-box; transform-origin:center; animation:chDot 4.6s ease-in-out infinite; }
+    .chart .ch-dot.d2 { animation-delay:.5s } .chart .ch-dot.d3 { animation-delay:1s }
+    .chart .ch-dot.d4 { animation-delay:1.5s } .chart .ch-dot.d5 { animation-delay:2s }
+    @keyframes chDot { 0%,100% { transform:scale(1) } 12% { transform:scale(1.5) } }
+    .chart .ch-stamp { transform-box:fill-box; transform-origin:center; animation:chStamp 4.6s cubic-bezier(.3,1.4,.5,1) infinite; }
+    @keyframes chStamp {
+      0%,44% { opacity:.9; transform:rotate(9deg) scale(1) }
+      48% { opacity:.3; transform:rotate(9deg) scale(1.55) }
+      56% { opacity:1; transform:rotate(9deg) scale(.93) }
+      62% { transform:rotate(9deg) scale(1.04) }
+      70%,100% { opacity:.9; transform:rotate(9deg) scale(1) }
+    }
+    @media (prefers-reduced-motion:reduce) {
+      .cameo, .cm-hearts *, .chart *, .mini-graph *, .orbits .ring { animation:none !important; }
+      .chart .ch-line { stroke-dashoffset:0; }
+    }
 
     /* 왜 천기연 */
     .why { background:var(--paper-deep); }
@@ -278,7 +308,12 @@
       </a>
 
       <a class="svc-card svc-spouse" href="spouse.html">
-        <span class="rings-deco" aria-hidden="true">💍</span>
+        <img class="cameo" src="assets/spouse-kiss.webp" alt="" aria-hidden="true" width="420" height="420" />
+        <svg class="cm-hearts" viewBox="0 0 132 134" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path class="cm-petal" d="M13 86 c-2.7-3.1-7.2-.8-7.2 2.7 0 3 3.8 5.6 7.2 8.1 3.4-2.5 7.2-5.1 7.2-8.1 0-3.5-4.5-5.8-7.2-2.7z" fill="#e8536f" opacity=".8" />
+          <path class="cm-petal p2" d="M115 30 c-2.2-2.5-5.9-.7-5.9 2.2 0 2.5 3.1 4.6 5.9 6.6 2.8-2 5.9-4.1 5.9-6.6 0-2.9-3.7-4.7-5.9-2.2z" fill="#c98a6a" opacity=".85" />
+          <path class="cm-petal p3" d="M110 98 c-2-2.3-5.3-.6-5.3 2 0 2.2 2.8 4.1 5.3 6 2.5-1.9 5.3-3.8 5.3-6 0-2.6-3.3-4.3-5.3-2z" fill="#7c2340" opacity=".6" />
+        </svg>
         <div class="svc-in">
           <span class="svc-tag">💌 무료 맛보기 · 🪙 5코인~</span>
           <h3><small>내 짝의 초상을 미리 보는</small>미래 배우자</h3>
@@ -289,7 +324,33 @@
       </a>
 
       <a class="svc-card svc-career" href="career.html">
-        <span class="stamp-deco" aria-hidden="true">合格</span>
+        <svg class="chart" viewBox="0 0 146 146" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <g stroke="#bdb9ab" stroke-width="1" stroke-dasharray="2 4">
+            <line x1="22" y1="46" x2="138" y2="46" /><line x1="22" y1="72" x2="138" y2="72" /><line x1="22" y1="98" x2="138" y2="98" />
+          </g>
+          <polygon class="ch-area" points="30,108 56,90 82,94 108,60 128,38 128,120 30,120" fill="#17181c" opacity=".07" />
+          <g stroke="#17181c" stroke-width="1.8" stroke-linecap="square">
+            <line x1="22" y1="20" x2="22" y2="120" /><line x1="22" y1="120" x2="138" y2="120" />
+          </g>
+          <polyline class="ch-line" points="30,108 56,90 82,94 108,60 128,38" fill="none"
+            stroke="#17181c" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" />
+          <g transform="translate(133,32) rotate(-47)">
+            <path d="M0 -5.5 L10 0 L0 5.5 Z" fill="#c22f2f" />
+          </g>
+          <g fill="#f4f2ec" stroke="#17181c" stroke-width="2.2">
+            <circle class="ch-dot" cx="30" cy="108" r="3.6" />
+            <circle class="ch-dot d2" cx="56" cy="90" r="3.6" />
+            <circle class="ch-dot d3" cx="82" cy="94" r="3.6" />
+            <circle class="ch-dot d4" cx="108" cy="60" r="3.6" />
+            <circle class="ch-dot d5" cx="128" cy="38" r="4.2" fill="#c22f2f" stroke="#c22f2f" />
+          </g>
+          <g transform="translate(70,74)">
+            <g class="ch-stamp">
+              <rect x="-27" y="-17" width="54" height="34" rx="6" fill="#f4f2ec" fill-opacity=".72" stroke="#c22f2f" stroke-width="2.8" />
+              <text x="0" y="7.5" text-anchor="middle" font-size="18" font-weight="900" fill="#c22f2f" font-family="'Noto Serif KR',serif">合格</text>
+            </g>
+          </g>
+        </svg>
         <div class="svc-in">
           <span class="svc-tag">📰 무료 맛보기 · 🪙 5코인~</span>
           <h3><small>언제 취업하고 언제 옮길까</small>직업운 리포트</h3>

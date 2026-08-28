@@ -521,50 +521,14 @@ function highlightMySign(idx) {
   myHalo = spr;
 }
 
-/* ================= 입력 폼 ================= */
-(function initForm() {
-  const ySel = $("#c-year"), mSel = $("#c-month"), dSel = $("#c-day");
-  const nowY = new Date().getFullYear();
-  ySel.innerHTML = `<option value="">연도</option>` + Array.from({ length: nowY - 1929 }, (_, i) => `<option>${nowY - i}</option>`).join("");
-  mSel.innerHTML = `<option value="">월</option>` + Array.from({ length: 12 }, (_, i) => `<option>${i + 1}</option>`).join("");
-  const fillD = () => {
-    const dim = new Date(+ySel.value || 2000, +mSel.value || 1, 0).getDate();
-    const prev = dSel.value;
-    dSel.innerHTML = `<option value="">일</option>` + Array.from({ length: dim }, (_, i) => `<option>${i + 1}</option>`).join("");
-    if (prev && +prev <= dim) dSel.value = prev;
-  };
-  ySel.onchange = mSel.onchange = fillD; fillD();
-  $("#c-hour").innerHTML = `<option value="-1">시간 모름</option>` + Array.from({ length: 24 }, (_, h) => `<option value="${h}">${String(h).padStart(2, "0")}시</option>`).join("");
-  $("#c-region").innerHTML = REGIONS.map((r, i) => `<option value="${i}" ${r.name === "서울" ? "selected" : ""}>${r.name}</option>`).join("");
-
-  // 메인에서 분석했던 정보 프리필
-  try {
-    const last = JSON.parse(localStorage.getItem("cheongiyeon_last_input") || "null");
-    if (last && last.y) {
-      ySel.value = last.y; mSel.value = last.m; fillD(); dSel.value = last.d;
-      $("#c-hour").value = String(last.hour);
-      $("#c-region").value = String(last.regionIdx ?? 0);
-      if (last.gender === "F") $("#c-gf").checked = true;
-    }
-  } catch {}
-})();
-
-$("#c-run").addEventListener("click", () => {
-  const y = +$("#c-year").value, m = +$("#c-month").value, d = +$("#c-day").value;
-  if (!y || !m || !d) {
-    const t = $("#toast"); t.textContent = "생년월일을 선택해주세요"; t.classList.remove("hidden");
-    setTimeout(() => t.classList.add("hidden"), 2200);
-    return;
-  }
-  const input = {
-    name: "나", gender: $("#c-gf").checked ? "F" : "M",
-    y, m, d,
-    hour: +$("#c-hour").value, minute: 0,
-    regionIdx: +$("#c-region").value,
-    concerns: [], loveStatus: "solo", jobStatus: "employee",
-  };
-  localStorage.setItem("cheongiyeon_last_input", JSON.stringify(input));
-  renderMyFortune(input);
+/* ================= 입력 폼 — 공용 컴포넌트(양/음력·분 단위·진태양시) ================= */
+BirthInput.mount("#c-birth", {
+  idPrefix: "cb",
+  submitLabel: "오늘·올해 운세 읽기 🔭",
+  onSubmit(raw) {
+    const input = { name: "나", concerns: [], loveStatus: "solo", jobStatus: "employee", ...raw };
+    renderMyFortune(input);
+  },
 });
 
 /* 속도 슬라이더 */
