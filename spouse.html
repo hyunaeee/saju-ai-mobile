@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <meta name="theme-color" content="#7c2340" />
   <title>미래 배우자 리포트 — 천기연 天機緣</title>
-  <meta name="description" content="내 남편·아내는 어떤 사람일까? 생김새와 분위기, 어디서 언제 만날지, 나이 차, 직업, 성격까지 — 사주 배우자성으로 그리는 미래 배우자의 초상." />
+  <meta name="description" content="내 남편·아내는 어떤 사람일까? 생김새·키·목소리·말투·취미, 어디서 언제 만날지, 나이 차·직업·성격까지 — 사주 배우자성으로 그리는 미래 배우자의 초상." />
   <meta property="og:title" content="미래 배우자 리포트 💍 — 내 짝의 얼굴을 미리 본다" />
   <meta property="og:description" content="생김새·만날 장소·시기·나이차·직업까지, 사주에 적힌 내 배우자의 초상을 읽어드립니다." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -94,7 +94,8 @@
     .locked { position:relative; }
     .locked .lock-cta { position:absolute; left:0; right:0; bottom:14px; display:flex; justify-content:center; }
     .lock-cta button { border:0; cursor:pointer; background:var(--wine); color:#fff; border-radius:100px; padding:10px 20px; font-size:13px; font-weight:700; font-family:var(--sans); box-shadow:0 8px 20px rgba(124,35,64,.3); }
-    .detail-tag { float:right; font-size:10.5px; color:var(--rose); border:1px solid var(--rose); border-radius:100px; padding:2px 9px; font-weight:700; margin-top:2px; }
+    .detail-tag { display:inline-block; font-size:10px; color:var(--rose); border:1px solid var(--rose); border-radius:100px;
+      padding:1px 8px; font-weight:700; font-family:var(--sans); vertical-align:2px; margin-left:6px; }
 
     .unlock-bar { margin-top:18px; background:linear-gradient(150deg,var(--wine),var(--wine-deep)); border-radius:6px;
       padding:20px 18px; color:#fbeef2; text-align:center; }
@@ -138,6 +139,20 @@
     .sc-total { font-family:var(--serif); line-height:1; margin:6px 0 2px; }
     .sc-total em { font-style:normal; font-size:52px; font-weight:900; color:var(--wine); }
     .sc-total span { font-size:15px; color:var(--dim); margin-left:3px; }
+    /* 지수 3종 타일 */
+    .sc-tri { display:grid; grid-template-columns:1fr 1.25fr 1fr; gap:8px; align-items:end; margin:8px 0 10px; }
+    .sc-tile { background:var(--ivory-2); border-radius:10px; padding:12px 6px 10px; }
+    .sc-tile em { display:block; font-style:normal; font-family:var(--serif); font-weight:900; font-size:27px; color:var(--rose); line-height:1.1; }
+    .sc-tile span { font-size:11px; color:var(--dim); font-weight:700; }
+    .sc-tile.main { background:var(--wine-bg); padding:16px 6px 12px; }
+    .sc-tile.main em { font-size:38px; color:var(--wine); }
+    .sc-lines { background:var(--rose-bg); border-radius:6px; padding:11px 13px; margin-bottom:12px; }
+    .sc-lines p { font-size:12.5px; color:var(--ink); line-height:1.75; margin:0 0 6px; }
+    .sc-lines p:last-child { margin-bottom:0; }
+    .sc-lines b { color:var(--wine); }
+    .sc-axhead { font-size:11px; letter-spacing:.14em; color:var(--faint); font-weight:700; margin-bottom:4px; }
+    .sc-note { font-size:10.5px; color:var(--faint); line-height:1.7; margin-top:12px; }
+    .sc-axes.veiled .sc-lines { filter:blur(5px); pointer-events:none; user-select:none; opacity:.55; }
     .sc-title { font-family:var(--serif); font-size:15px; font-weight:700; color:var(--gold); margin-bottom:14px; }
     .sc-axes { text-align:left; }
     .sc-axis { display:grid; grid-template-columns:64px 1fr 30px; gap:10px; align-items:center; padding:5px 0; font-size:12.5px; }
@@ -152,6 +167,11 @@
       font-size:12.5px; font-weight:700; font-family:var(--sans); box-shadow:0 8px 20px rgba(124,35,64,.3); }
 
     /* 출신 게이지 · 말풍선 · 능력 칩 (섹션 본문용) */
+    .kv-pair { display:flex; align-items:baseline; gap:9px; margin:2px 0 6px; }
+    .kv-pair + p { margin-bottom:14px; }
+    .kv-tag { flex:0 0 auto; font-size:10.5px; font-weight:700; letter-spacing:.08em; color:var(--rose);
+      border:1px solid var(--rose); border-radius:100px; padding:2px 9px; }
+    .kv-pair b { font-family:var(--serif); font-size:14.5px; color:var(--wine); }
     .nation-gauge { margin-bottom:12px; }
     .nation-gauge .ng-head { display:flex; justify-content:space-between; align-items:baseline; font-size:13px; margin-bottom:6px; }
     .nation-gauge .ng-head b { color:var(--wine); font-family:var(--serif); }
@@ -190,7 +210,7 @@
     <div class="rings">💍</div>
     <p class="kick">未來 配偶者 · 연서</p>
     <h1>당신의 짝은<br /><em>이미 사주에 그려져 있습니다</em></h1>
-    <p>생김새와 분위기, 어디서 언제 만날지, 나이 차와 직업까지 —<br />배우자성(配偶者星)의 물상으로 미리 그려보는 내 짝의 초상.</p>
+    <p>생김새부터 키·목소리·말투·취미까지,<br />어디서 언제 만날지도 —<br />배우자성(配偶者星)의 물상으로 미리 그려보는 내 짝의 초상.</p>
     <span class="vow">천간합 · 배우자궁 · 재관인연</span>
   </section>
 

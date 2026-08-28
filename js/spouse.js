@@ -31,12 +31,12 @@
 
   /* ---------- 렌더 ---------- */
   function sectionHTML(sec, unlocked) {
-    const tag = sec.detail ? `<span class="detail-tag">디테일</span>` : "";
+    const tag = sec.detail ? ` <span class="detail-tag">디테일</span>` : "";
     if (unlocked) {
-      return `<div class="sec-card">${tag}<h3><span class="ic">${sec.icon}</span>${sec.title}</h3>
+      return `<div class="sec-card"><h3><span class="ic">${sec.icon}</span>${sec.title}${tag}</h3>
         <div class="sec-body">${sec.html}</div></div>`;
     }
-    return `<div class="sec-card locked">${tag}<h3><span class="ic">${sec.icon}</span>${sec.title}</h3>
+    return `<div class="sec-card locked"><h3><span class="ic">${sec.icon}</span>${sec.title}${tag}</h3>
       <p class="tz">${sec.teaser}</p>
       <div class="sec-body">${sec.html}</div>
       <div class="lock-cta"><button type="button" class="open-unlock">🪙 열어보기</button></div></div>`;
@@ -59,9 +59,9 @@
       const btns = [];
       if (!hasBasic && !hasDetail) {
         btns.push(`<button class="btn u-all" data-buy="bundle">🪙 ${BUNDLE}코인 — 전체 리포트 한 번에 (${priceBasic + priceDetail}코인 → ${BUNDLE}코인)</button>`);
-        btns.push(`<button class="btn u-basic" data-buy="spouse">🪙 ${priceBasic}코인 — 기본 리포트 (생김새·성격·장소·시기)</button>`);
+        btns.push(`<button class="btn u-basic" data-buy="spouse">🪙 ${priceBasic}코인 — 기본 리포트 (생김새·키·목소리·말투·장소·시기)</button>`);
       } else if (!hasDetail) {
-        btns.push(`<button class="btn u-all" data-buy="spouse_detail">🪙 ${priceDetail}코인 — 디테일 팩 (나이차·직업·이성기류·짝꿍유형)</button>`);
+        btns.push(`<button class="btn u-all" data-buy="spouse_detail">🪙 ${priceDetail}코인 — 디테일 팩 (나이차·직업·취미·이성기류·짝꿍유형)</button>`);
       } else if (!hasBasic) {
         btns.push(`<button class="btn u-basic" data-buy="spouse">🪙 ${priceBasic}코인 — 기본 리포트 열기</button>`);
       }
@@ -94,18 +94,29 @@
     const metaLine = typeof BirthInput !== "undefined"
       ? `<p class="sp-meta">${BirthInput.metaLine(input, cur.saju)}</p>` : "";
 
-    // 인연 지수 — 총점은 항상 공개(훅), 5축 상세는 기본 리포트에 포함
+    // 運 지수 3종 — 총점 숫자는 항상 공개(훅), 한 줄 총평·5축 상세는 기본 리포트에 포함
     const sc = rep.score;
+    const mateLabel = input.gender === "M" ? "아내운" : "남편운";
     const scoreCard = sc ? `
       <div class="score-card">
-        <p class="mont-kick">因緣 指數 · 인연 지수</p>
-        <div class="sc-total"><em>${sc.total}</em><span>점</span></div>
+        <p class="mont-kick">運 指數 · 세 가지 지수</p>
+        <div class="sc-tri">
+          <div class="sc-tile"><em>${sc.love.val}</em><span>총 연애운</span></div>
+          <div class="sc-tile main"><em>${sc.total}</em><span>인연 지수</span></div>
+          <div class="sc-tile"><em>${sc.mate.val}</em><span>총 ${mateLabel}</span></div>
+        </div>
         <p class="sc-title">${sc.grade.title}</p>
         <div class="sc-axes ${hasBasic ? "" : "veiled"}">
+          <div class="sc-lines">
+            <p><b>연애운 ${sc.love.val}</b> — ${sc.love.line}</p>
+            <p><b>${mateLabel} ${sc.mate.val}</b> — ${sc.mate.line}</p>
+          </div>
+          <p class="sc-axhead">인연 지수 상세 채점표</p>
           ${sc.axes.map(a => `<div class="sc-axis"><span class="sa-name">${a.name.split(" — ")[0]}</span>
             <div class="sa-track"><i style="width:${a.val}%"></i></div><b>${a.val}</b></div>`).join("")}
-          ${hasBasic ? `<p class="sc-text">${sc.grade.text}</p>` : `<div class="sc-lock"><button type="button" data-buy="spouse">🪙 ${Coins.PRICE.spouse}코인으로 상세 채점표 보기</button></div>`}
+          ${hasBasic ? `<p class="sc-text">${sc.grade.text}</p>` : `<div class="sc-lock"><button type="button" data-buy="spouse">🪙 ${Coins.PRICE.spouse}코인으로 세 지수 풀이 보기</button></div>`}
         </div>
+        <p class="sc-note">연애운은 만남이 붙는 힘, ${mateLabel}은 결혼 뒤 배우자가 복이 되는 정도, 인연 지수는 이 인연 자체의 합입니다.</p>
       </div>` : "";
 
     $("#sp-result").innerHTML = metaLine + montage + scoreCard + `

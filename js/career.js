@@ -33,12 +33,14 @@
   });
 
   function sectionHTML(sec, unlocked) {
-    const tag = sec.detail ? `<span class="detail-tag">디테일</span>` : "";
+    // 도장(閱覽必)과 '디테일' 태그가 같은 자리를 두고 겹치지 않게:
+    // 태그는 제목 뒤 인라인, 도장은 태그 없는 섹션에만 찍는다.
+    const tag = sec.detail ? ` <span class="detail-tag">디테일</span>` : "";
     if (unlocked) {
-      return `<div class="art unlocked">${tag}<span class="stamp-mark">閱覽必</span>
-        <h3>${sec.icon} ${sec.title}</h3><div class="art-body">${sec.html}</div></div>`;
+      return `<div class="art unlocked">${sec.detail ? "" : `<span class="stamp-mark">閱覽必</span>`}
+        <h3>${sec.icon} ${sec.title}${tag}</h3><div class="art-body">${sec.html}</div></div>`;
     }
-    return `<div class="art locked">${tag}<h3>${sec.icon} ${sec.title}</h3>
+    return `<div class="art locked"><h3>${sec.icon} ${sec.title}${tag}</h3>
       <p class="tz">${sec.teaser}</p><div class="art-body">${sec.html}</div>
       <div class="lock-cta"><button type="button" class="open-unlock">🪙 기사 전문 읽기</button></div></div>`;
   }

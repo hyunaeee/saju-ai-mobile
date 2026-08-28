@@ -49,10 +49,11 @@ function buildSpouseFace(saju, input) {
   const mood = FACE_MOOD[godRaw] || FACE_MOOD["정관"];
   const dohwa = saju.sinsal.some(s => s.key === "dohwa");
 
+  const yk = `${el}_${yinKey}`;
   const traits = [
-    FACE_SHAPE_LABEL[el],
+    (typeof SPOUSE_BODY !== "undefined" && SPOUSE_BODY[yk]) ? SPOUSE_BODY[yk].label : FACE_SHAPE_LABEL[el],
     partnerYin ? "부드럽고 그윽한 눈매" : "크고 또렷한 눈매",
-    mood,
+    (typeof SPOUSE_VOICE !== "undefined" && SPOUSE_VOICE[yk]) ? SPOUSE_VOICE[yk].label : mood,
     dohwa ? "혈색이 좋고 시선을 끄는 분위기" : "차분하고 단정한 분위기",
   ];
 
