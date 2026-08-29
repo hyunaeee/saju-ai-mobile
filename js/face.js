@@ -35,6 +35,13 @@ const FACE_MOOD = {
  * 배우자 몽타주 선택
  * @returns {{img:string, sex:"M"|"F", el:string, yinKey:string, traits:string[], note:string}}
  */
+/* 배우자궁 십신 → 무드 계열 (이미지 변형 번호)
+ *  1 밝음·사교(식신·편재·비견) / 2 단정·품위(정관·정재·정인)
+ *  3 강렬·카리스마(편관·겁재) / 4 지적·신비(편인·상관)
+ *  → 오행5 × 음양2 × 무드4 = 성별당 40종, 성격 텍스트와 얼굴이 맞아떨어집니다. */
+const MOOD_OF_GOD = { 식신: 1, 편재: 1, 비견: 1, 정관: 2, 정재: 2, 정인: 2, 편관: 3, 겁재: 3, 편인: 4, 상관: 4 };
+const MOOD_NAME = { 1: "밝고 사교적인 계열", 2: "단정하고 품위 있는 계열", 3: "강렬한 카리스마 계열", 4: "지적이고 신비로운 계열" };
+
 function buildSpouseFace(saju, input) {
   const myGender = input.gender === "F" ? "F" : "M";
   const sex = myGender === "M" ? "F" : "M";              // 배우자는 반대 성별
@@ -42,10 +49,10 @@ function buildSpouseFace(saju, input) {
   const el = star.starEl;
   const partnerYin = !saju.dayYin;                        // 짝은 나와 반대 음양이 합
   const yinKey = partnerYin ? "yin" : "yang";
-  const variant = (saju.iljuIdx % 2) + 1;                 // 일주로 2변형 중 결정
+  const godRaw = saju.tenGods.day.branch;
+  const variant = MOOD_OF_GOD[godRaw] || ((saju.iljuIdx % 4) + 1);  // 배우자궁 십신이 무드를 결정
   const img = `assets/faces/${sex === "F" ? "w" : "m"}_${el}_${yinKey}_${variant}.webp`;
 
-  const godRaw = saju.tenGods.day.branch;
   const mood = FACE_MOOD[godRaw] || FACE_MOOD["정관"];
   const dohwa = saju.sinsal.some(s => s.key === "dohwa");
 
@@ -57,12 +64,12 @@ function buildSpouseFace(saju, input) {
     dohwa ? "혈색이 좋고 시선을 끄는 분위기" : "차분하고 단정한 분위기",
   ];
 
-  return { img, sex, el, yinKey, traits, note: mood };
+  return { img, sex, el, yinKey, variant, moodName: MOOD_NAME[variant], traits, note: mood };
 }
 
 /* ---------- Node(서버) 환경 지원 ---------- */
 if (typeof module !== "undefined" && module.exports) {
-  const _F = { buildSpouseFace, FACE_SHAPE_LABEL, FACE_MOOD };
+  const _F = { buildSpouseFace, FACE_SHAPE_LABEL, FACE_MOOD, MOOD_OF_GOD, MOOD_NAME };
   module.exports = _F;
   if (typeof globalThis !== "undefined") Object.assign(globalThis, _F);
 }

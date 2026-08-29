@@ -86,7 +86,7 @@
             <button type="button" data-buy="spouse">🪙 ${Coins.PRICE.spouse}코인으로 얼굴 보기</button></div>`}
         </div>
         <p class="mont-name">${input.gender === "M" ? "당신의 <em>아내</em>가 될 사람" : "당신의 <em>남편</em>이 될 사람"}
-          — ${ELEMENTS[face.el].kor}(${ELEMENTS[face.el].han})의 기운</p>
+          — ${ELEMENTS[face.el].kor}(${ELEMENTS[face.el].han}) · ${face.moodName || ""}</p>
         <div class="mont-traits">${face.traits.map(t => `<span>${t}</span>`).join("")}</div>
         <p class="mont-note">사주의 배우자성 오행·음양·배우자궁 십신을 얼굴 특징으로 옮겨 그린 <b>인상 스케치</b>입니다.<br />실존 인물과는 무관하며, 재미로 봐주세요.</p>
       </div>` : "";
