@@ -47,7 +47,8 @@ function buildSpouseFace(saju, input) {
   const sex = myGender === "M" ? "F" : "M";              // 배우자는 반대 성별
   const star = spouseStarPosition(saju, myGender);
   const el = star.starEl;
-  const partnerYin = !saju.dayYin;                        // 짝은 나와 반대 음양이 합
+  // 원국에 드러난 배우자성 글자의 실제 음양 우선, 미노출 시 반대 음양(합) 규칙
+  const partnerYin = typeof spouseStarYin === "function" ? spouseStarYin(saju, myGender).yin : !saju.dayYin;
   const yinKey = partnerYin ? "yin" : "yang";
   const godRaw = saju.tenGods.day.branch;
   const variant = MOOD_OF_GOD[godRaw] || ((saju.iljuIdx % 4) + 1);  // 배우자궁 십신이 무드를 결정

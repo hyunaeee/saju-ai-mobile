@@ -377,6 +377,25 @@ function spouseStarPosition(saju, gender) {
   return { pos: "day", via: "none", starEl };  // 배우자성 미노출 → 배우자궁(일지)으로 봄
 }
 
+/* 배우자성의 음양 — 원국에 실제로 드러난 배우자성 글자의 음양을 우선 사용.
+ * 천간(월→시→연, 일간 제외) → 지지(월→일→시→연) 순으로 찾고,
+ * 원국에 배우자성이 없으면 '짝은 나와 반대 음양이 합(合)' 규칙으로 폴백.
+ * (지지의 음양: 자인진오신술=양, 축묘사미유해=음 → idx 홀수=음) */
+function spouseStarYin(saju, gender) {
+  const dayEl = saju.dayEl;
+  const starEl = gender === "M" ? CONTROLS[dayEl] : Object.keys(CONTROLS).find(k => CONTROLS[k] === dayEl);
+  const P = saju.pillars;
+  for (const key of ["month", "hour", "year"]) {
+    const p = P[key];
+    if (p && STEMS[p.stem].el === starEl) return { yin: STEMS[p.stem].yin, via: "stem", pos: key, starEl };
+  }
+  for (const key of ["month", "day", "hour", "year"]) {
+    const p = P[key];
+    if (p && BRANCHES[p.branch].el === starEl) return { yin: p.branch % 2 === 1, via: "branch", pos: key, starEl };
+  }
+  return { yin: !saju.dayYin, via: "hap", pos: null, starEl };
+}
+
 /* ---------- 메인 ----------
  * input: { y, m, d, hour(-1=모름), minute, regionIdx, gender("M"|"F") }
  */
@@ -472,7 +491,7 @@ if (typeof module !== "undefined" && module.exports) {
     DOHWA, YEOKMA, HWAGAE, MONTH_OF_BRANCH, HOUR_OF_BRANCH, DIR_OF_BRANCH,
     ELEMENT_MONTHS, dayPillar, sixtyIndex,
     SEASON_OF_BRANCH, assessStrength, pickYongsin, findNatalRelations,
-    yearPillarOf, seunList, spouseStarPosition,
+    yearPillarOf, seunList, spouseStarPosition, spouseStarYin,
   };
   module.exports = _E;
   if (typeof globalThis !== "undefined") Object.assign(globalThis, _E);

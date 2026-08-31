@@ -342,8 +342,13 @@ function buildSpouseReport(saju, input) {
   const ageNow = Math.max(0, nowY - input.y);
   const star = spouseStarPosition(saju, gender);
   const starEl = star.starEl;
-  const partnerYin = !saju.dayYin;                 // 짝은 나와 반대 음양이 합
+  // 배우자 음양: 원국에 드러난 배우자성 글자의 실제 음양 우선, 미노출 시 반대 음양(합) 규칙
+  const starYin = spouseStarYin(saju, gender);
+  const partnerYin = starYin.yin;
   const appearKey = `${starEl}_${partnerYin ? "yin" : "yang"}`;
+  const yinWhy = starYin.via === "stem" ? "원국 천간에 드러난 배우자성의 결"
+    : starYin.via === "branch" ? "원국 지지에 앉은 배우자성의 결"
+    : "합(合)의 이치 — 나와 반대 음양";
   const hasDohwa = saju.sinsal.some(s => s.key === "dohwa");
   const hasYeokma = saju.sinsal.some(s => s.key === "yeokma");
   const mod = hasDohwa ? "dohwa" : hasYeokma ? "yeokma" : "none";
@@ -409,7 +414,7 @@ function buildSpouseReport(saju, input) {
       })() }] : []),
     { icon: "貌", title: "배우자의 생김새 · 분위기", detail: false,
       teaser: `배우자성 ${elK.kor}(${elK.han})의 물상으로 미루어 보는 얼굴과 인상입니다.`,
-      html: `<p>당신의 배우자성은 <b>${elK.kor}(${elK.han}) · ${partnerYin ? "음" : "양"}의 기운</b>입니다. ${appear}</p>` },
+      html: `<p>당신의 배우자성은 <b>${elK.kor}(${elK.han}) · ${partnerYin ? "음" : "양"}의 기운</b>입니다 (${yinWhy}로 읽었습니다). ${appear}</p>` },
     ...(typeof SPOUSE_BODY !== "undefined" ? [{
       icon: "身", title: "키·체형과 목소리", detail: false,
       teaser: "오행의 물상은 몸에도, 오음(五音)은 목소리에도 배어 있습니다.",
