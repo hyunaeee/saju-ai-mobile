@@ -240,6 +240,13 @@ function _firstSent2(s) {
 }
 
 const POS_KOR2 = { year: "연주(집안·오랜 인연의 자리)", month: "월주(사회 활동의 자리)", day: "일주(생활 반경의 자리)", hour: "시주(새로운 판의 자리)" };
+
+/* 키 경향 5단계 (1=아담 … 5=훤칠) — SPOUSE_BODY 서술과 정합 */
+const HEIGHT_LEVEL = {
+  wood_yang: 5, wood_yin: 4, fire_yang: 3.5, fire_yin: 1.5,
+  earth_yang: 4, earth_yin: 2.5, metal_yang: 4, metal_yin: 1.5,
+  water_yang: 4.5, water_yin: 2,
+};
 const AGEGAP_KOR = { older2: "연상 5살 이상", older1: "연상 1~4살", same: "동갑 ~ 한두 살 차이", younger1: "연하 1~4살", younger2: "연하 5살 이상" };
 
 /* ===== 총 연애운 · 배우자운 밴드 총평 ===== */
@@ -408,7 +415,17 @@ function buildSpouseReport(saju, input) {
       teaser: "오행의 물상은 몸에도, 오음(五音)은 목소리에도 배어 있습니다.",
       html: (() => {
         const b = SPOUSE_BODY[appearKey], v = SPOUSE_VOICE[appearKey];
-        return `<div class="kv-pair"><span class="kv-tag">키·체형</span><b>${b.label}</b></div><p>${b.text}</p>
+        const sexKey = gender === "M" ? "w" : "m";           // 배우자는 반대 성별
+        const hv = HEIGHT_LEVEL[appearKey] || 3;
+        const figure = `<div class="body-figure">
+          <img class="bf-img" src="assets/bodies/${sexKey}_${appearKey}.webp" alt="배우자 예상 체형 일러스트" width="200" height="300" />
+          <div class="bf-info">
+            <b class="bf-label">${b.label}</b>
+            <div class="bf-gauge"><span>아담</span><div class="bf-track"><i style="left:${((hv - 1) / 4 * 100).toFixed(0)}%"></i></div><span>훤칠</span></div>
+            <p class="bf-hint">키 경향 ${hv}/5 · 오행 물상으로 그린 체형 스케치</p>
+          </div>
+        </div>`;
+        return `${figure}<div class="kv-pair"><span class="kv-tag">키·체형</span><b>${b.label}</b></div><p>${b.text}</p>
           <div class="kv-pair"><span class="kv-tag">목소리</span><b>${v.label}</b></div><p>${v.text}</p>`;
       })() }] : []),
     { icon: "心", title: "배우자의 성격", detail: false,

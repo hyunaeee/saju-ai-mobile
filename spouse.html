@@ -167,6 +167,16 @@
       font-size:12.5px; font-weight:700; font-family:var(--sans); box-shadow:0 8px 20px rgba(124,35,64,.3); }
 
     /* 출신 게이지 · 말풍선 · 능력 칩 (섹션 본문용) */
+    /* 체형 일러스트 + 키 게이지 */
+    .body-figure { display:flex; gap:14px; align-items:center; background:var(--ivory-2); border-radius:8px; padding:12px; margin-bottom:16px; }
+    .bf-img { width:112px; height:auto; border-radius:8px; border:2px solid #fff; box-shadow:0 6px 16px rgba(92,42,64,.14); flex:0 0 auto; }
+    .bf-info { min-width:0; flex:1; }
+    .bf-label { font-family:var(--serif); font-size:14px; color:var(--wine); display:block; margin-bottom:10px; line-height:1.5; }
+    .bf-gauge { display:flex; align-items:center; gap:8px; font-size:10.5px; color:var(--faint); }
+    .bf-track { position:relative; flex:1; height:7px; border-radius:100px; background:linear-gradient(90deg,#f3e2d3,#dfb59a); }
+    .bf-track i { position:absolute; top:50%; transform:translate(-50%,-50%); width:15px; height:15px; border-radius:50%;
+      background:var(--wine); border:2.5px solid #fff; box-shadow:0 2px 6px rgba(92,42,64,.3); }
+    .bf-hint { font-size:10.5px; color:var(--faint); margin-top:8px; line-height:1.6; }
     .kv-pair { display:flex; align-items:baseline; gap:9px; margin:2px 0 6px; }
     .kv-pair + p { margin-bottom:14px; }
     .kv-tag { flex:0 0 auto; font-size:10.5px; font-weight:700; letter-spacing:.08em; color:var(--rose);
