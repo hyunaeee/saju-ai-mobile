@@ -211,7 +211,7 @@
   const css = document.createElement("style");
   css.textContent = `
   /* 테마 훅: 페이지에서 --bi-* 를 덮어쓰면 그 페이지 색으로 입혀집니다 */
-  .bi { --bi-accent:currentColor; --bi-text:#2a2028; --bi-field:rgba(255,255,255,.75);
+  .bi { --bi-accent:#4a4452; --bi-text:#2a2028; --bi-field:rgba(255,255,255,.75);
         --bi-line:rgba(120,110,100,.3); --bi-btn-txt:#fff;
         display:grid; gap:9px; }
   .bi-row { display:grid; gap:8px; }
