@@ -231,6 +231,41 @@ const OVERCOME_TEXT = {
   LL: { title: "스스로 여는 인연의 문", text: "두 지수가 함께 낮다는 것은 인연이 없다는 선고가 아니라, 가만히 두면 관계가 저절로 굴러가지 않으니 손수 끌고 가야 한다는 신호에 가깝습니다. 먼저 바꿀 습관은 두 가지인데, 서운함을 쌓아 두었다가 터뜨리는 대신 그때그때 짧게 말로 꺼내는 표현 연습과, 아닌 것은 아니라고 부드럽게 밝히는 경계 세우기입니다. 동시에 일과 취미, 규칙적인 생활로 자기 삶의 밀도를 높여 두면 결핍에서 사람을 찾지 않게 되고, 그렇게 <b>스스로 차오른 사람 곁에 인연이 고이는 법</b>입니다. 운이 트이는 길목까지 이 습관과 밀도를 쌓아 두신다면, 낮게 시작한 판을 뒤집는 주인공은 결국 당신입니다." },
 };
 
+/* ---------- (자동 생성) 커플 검증 뱅크: 관계 역학 · 총평 · 시기 ---------- */
+const COUPLE_DYN = {
+  cheonganhap: { label: "배필의 천간합", text: "두 사람의 일간이 천간합을 이루고 있습니다. 각자에게 없는 기운을 상대가 정확히 지니고 있어, <b>만나는 순간 서로를 반쪽으로 알아보는 배필의 합</b>이라 부릅니다. 함께 있을 때 이유 없이 편안한 까닭은 상대의 존재 자체가 내 사주의 빈 곳을 메워 주기 때문이니, 그 편안함을 당연하게 여기지 말고 오래 아껴 주십시오." },
+  yukhap: { label: "생활이 맞물리는 육합", text: "두 사람은 부부궁에 해당하는 일지끼리 육합으로 이어져 있습니다. 육합은 뜨거운 불꽃보다 잠드는 시간, 밥상 앞의 습관 같은 <b>생활의 잔잔한 리듬이 조용히 맞물리는 짝꿍의 합</b>입니다. 연애 시절보다 살림을 합친 뒤에 진가가 드러나는 인연이라, 평범한 하루가 쌓일수록 두 사람 사이는 점점 더 단단해집니다." },
+  samhap: { label: "뜻을 모으는 삼합", text: "일지끼리 삼합을 맺은 두 사람은 처음부터 같은 곳을 바라보도록 놓인 동지형 부부입니다. 삼합은 서로 다른 기운이 하나의 목적을 향해 뭉치는 힘이라, 내 집 마련이나 사업, 육아처럼 <b>공동의 목표가 생기는 순간 추진력이 몇 배로 커지는</b> 궁합입니다. 큰일을 하나 이루면 다음 목표를 곧바로 함께 정해 두는 것이 이 힘을 오래 쓰는 요령입니다." },
+  jichung: { label: "부부궁이 부딪히는 충", text: "두 사람의 부부궁은 정면으로 부딪히는 충의 자리에 놓여 있습니다. 잠버릇이나 돈 쓰는 방식, 명절의 본가 문제처럼 사소한 지점에서 같은 다툼이 되풀이되기 쉽습니다. 다만 충은 다스리면 서로를 깨우는 자극이 되니, <b>갈등이 생긴 그날 밤을 넘기지 말고 십 분이라도 마주 앉아 푸는 부부 규칙</b> 하나만 지켜도 이 부딪힘은 관계를 흔들지 못합니다." },
+  keMe: { label: "내가 쥔 관계의 키", text: "오행으로 보면 당신의 일간이 그 사람의 기운을 극하는 위치에 있습니다. 관계의 방향타를 당신이 쥐고 상대는 거기에 맞춰 자신을 다듬어 가는 구도라, 결정은 빨라도 상대의 양보가 그만큼 쌓여 갑니다. <b>극하는 쪽이 고마움을 소리 내어 표현하는 일</b>은 예의가 아니라 이 궁합의 필수 조건이니, 상대가 물러서 준 순간들을 그냥 지나치지 마십시오." },
+  keYou: { label: "울타리가 되는 극", text: "이 궁합은 그 사람의 오행이 당신의 일간을 극하는 배치입니다. 상대는 당신을 누르려는 것이 아니라 바람을 막는 담장처럼 삶의 테두리를 세워 주는 역할인데, 가까이서 들으면 그 보살핌이 잔소리로만 느껴지기 쉽습니다. 상대의 말에서 명령이 아니라 <b>걱정의 온도를 읽어 내는 연습</b>을 하면, 같은 말이 간섭이 아닌 든든한 보호막으로 들리기 시작합니다." },
+  bigyeop: { label: "주도권의 줄다리기", text: "두 사람 모두 사주에 비겁이 강해 스스로 판을 이끌려는 기질이 셉니다. 자존심과 자존심이 맞서면 사소한 선택도 승부가 되어, 이긴 쪽조차 마음에 생채기가 남기 마련입니다. 옳고 그름을 가리기보다 <b>이번엔 네 뜻, 다음엔 내 뜻으로 결정권을 번갈아 넘기는 규칙</b>을 세우면, 안에서 겨루던 그 기세가 바깥일을 함께 돌파하는 힘으로 모입니다." },
+  boBoth: { label: "서로가 서로의 용신", text: "당신의 사주가 가장 목말라하는 기운을 그 사람이 지니고 있고, 그 사람에게 모자란 기운은 당신이 넉넉히 품고 있습니다. 명리에서 부부 궁합의 으뜸으로 치는 <b>서로의 용신을 주고받는 상생의 구도</b>로, 함께 지내는 것만으로 서로의 운을 두텁게 만들어 줍니다. 힘든 시기일수록 곁에 있는 일 자체가 약이 되니, 멀리서 답을 찾기보다 서로에게 기대는 편이 빠릅니다." },
+  boOne: { label: "한쪽으로 기운 상생", text: "그 사람에게 꼭 필요한 용신의 기운을 당신이 채워 주고 있는 관계입니다. 상대는 당신 곁에서 운이 풀리고 마음이 놓이지만, 주는 쪽인 당신에게는 이따금 허전함이 스치기도 합니다. 다만 상대도 시간과 정성이라는 그만의 무게로 답하고 있을 테니, <b>서로 다른 방식의 기여를 같은 값으로 인정하는 것</b>이 이 인연의 균형추가 됩니다." },
+  plain: { label: "담백한 무해무득", text: "두 사람 사이에는 뚜렷한 합도 충도 보이지 않습니다. 인연이 얕다는 뜻이 아니라, 거센 끌림도 거친 마찰도 없이 백지 위에서 시작하는 담백한 무해무득의 사이라는 뜻입니다. 이런 부부는 <b>타고난 운보다 함께 쌓아 온 시간이 그대로 궁합이 되는 관계</b>라, 오늘 나눈 대화 한 마디, 같이 보낸 계절 하나가 두 사람만의 합으로 차곡차곡 새겨집니다." },
+};
+const COUPLE_GRADE = {
+  match: {
+    "90": { title: "운명이 미리 그려둔 얼굴", text: "당신의 사주가 오래전부터 그려온 배우자상이 그 사람의 실제 사주와 거의 겹칩니다. <b>운명이 미리 예습해 둔 만남</b>이라 불러도 좋을 만큼, 처음부터 낯설지 않고 오래 알아온 듯한 편안함이 흐르는 인연입니다. 이미 준비된 자리에 서로 들어선 셈이니 그 자연스러움을 믿고 걸어가시면 됩니다." },
+    "80": { title: "예감이 맞아떨어진 인연", text: "그 사람은 당신의 사주가 예고해 온 배우자상과 상당 부분 일치합니다. 타고난 성정도 인연의 방향도 <b>사주의 예감대로 맞아떨어진 만남</b>이어서, 함께 있을 때 무리하게 애쓰지 않아도 손발이 맞습니다. 몇 군데 어긋나는 지점은 오히려 서로를 새롭게 알아가게 하는 여백으로 남겨 두시면 됩니다." },
+    "70": { title: "함께 칠해가는 밑그림", text: "당신의 사주가 그려둔 배우자상과 그 사람의 실제 모습은 절반 넘게 포개집니다. 나머지 절반은 두 사람이 만나 부대끼며 직접 채워 넣은 부분이니, <b>타고난 밑그림 위에 함께 색을 칠해가는 인연</b>입니다. 밑바탕이 이미 든든하게 깔려 있으니 그 위에 덧칠하는 재미가 오래도록 이어질 것입니다." },
+    "60": { title: "각본 밖에서 잡은 손", text: "당신의 사주가 미리 그려둔 배우자상과 그 사람은 닮은 점보다 다른 점이 많습니다. 다만 이것은 어긋남이 아니라, <b>정해진 각본 밖에서 당신이 직접 골라낸 인연</b>이라는 표시입니다. 운명이 시켜서 한 만남이 아니기에, 두 사람 사이에 쌓인 정은 전부 스스로의 의지로 세운 값진 재산입니다." },
+    "50": { title: "운명보다 강한 선택", text: "그 사람은 당신의 사주 어디에도 미리 적혀 있지 않던 인연입니다. 예언을 벗어난 만남은 그만큼 <b>운명이 아니라 당신의 의지로 쌓아 올린 관계</b>라는 증거이니, 일치율이 낮다고 궁합이 나쁜 것은 결코 아닙니다. 하늘이 짚어주지 않은 길을 함께 걷기로 한 그 선택 자체가 어떤 예언보다 힘이 셉니다." },
+  },
+  couple: {
+    "90": { title: "톱니처럼 맞물린 궁합", text: "두 사람의 오행이 서로 모자란 곳을 채우고 넘치는 곳을 덜어주는, 보기 드문 상생의 구조입니다. <b>톱니바퀴처럼 맞물려 도는 궁합</b>이라 큰 다툼 없이도 세월이 관계를 깊게 만들어 줍니다. 이 좋은 판을 지키는 비결은 단 하나, 지금처럼 서로를 귀하게 여기는 마음을 잊지 않는 것입니다." },
+    "80": { title: "서로를 키우는 만남", text: "두 사람의 사주는 함께 있을 때 각자 혼자일 때보다 운이 커지는 배합입니다. 그 사람의 기운이 당신의 부족한 오행을 북돋우고 당신 역시 그 사람의 빈자리를 메워주니, <b>서로를 자라게 하는 궁합</b>입니다. 가끔 목소리가 커지는 날이 있어도 뿌리가 튼튼해 금세 제자리를 찾는 관계입니다." },
+    "70": { title: "다듬을수록 빛나는 원석", text: "두 사람의 궁합은 단단한 토대 위에 몇 개의 엉킨 매듭이 얹혀 있는 모양입니다. 평소에는 순탄하다가도 특정 지점에서 반복해 삐걱대기 쉬운데, 그 매듭이 어디인지 아는 것만으로 반은 풀립니다. <b>다듬을수록 윤이 나는 원석 같은 궁합</b>이니 서두르지 말고 하나씩 매만져 가시면 됩니다." },
+    "60": { title: "손수 내는 사랑의 물길", text: "두 사람의 오행은 알아서 어우러지는 성질이 아니라, 놓아두면 각자 제 방향으로 흐르기 쉬운 구도입니다. 그러나 <b>손수 물길을 내어주면 오히려 오래가는 궁합</b>이니 실망할 일이 아닙니다. 대화 시간을 미리 정해두고 서운함은 그날 안에 푸는 습관만 들여도 이 관계는 눈에 띄게 순해집니다." },
+    "50": { title: "가꾼 만큼 피는 사이", text: "타고난 기질만 보면 두 사람은 온도가 다른 지점이 적지 않은 조합입니다. 물론 저절로 굴러가는 관계는 아니지만, 정성을 들인 만큼 정직하게 보답하는 궁합이기도 합니다. 서로의 다름을 고치려 들지 말고 역할을 나누어 존중하는 약속을 정하면, <b>공들여 가꾼 정원처럼 늦게 피어 오래 향기로운 사이</b>가 됩니다." },
+  },
+};
+const COUPLE_CRISIS = [
+  { key: "one", text: "그 해에는 한 사람의 부부궁이 세운과 충을 이루어, 그 사람의 마음이 평소보다 쉽게 긁히고 예민해질 수 있습니다. 이사나 목돈, 양가 문제처럼 무게 있는 결정은 잠시 미뤄 두고, <b>당신이 곁에서 바람막이가 되어 주는 해</b>로 삼으면 무탈하게 지나갑니다." },
+  { key: "both", text: "이 해에는 두 사람의 부부궁이 나란히 세운과 충을 맞아, 부부가 동시에 흔들리기 쉬운 고비의 해입니다. 큰 결정은 이듬해로 미루고 일주일에 한 번 둘만의 시간을 못 박아 두는 규칙만 지키면, <b>고비를 미리 아는 부부는 반드시 넘어섭니다</b>." },
+  { key: "good", text: "부부궁에 육합이 드는 이 해는 두 사람의 정이 자연스레 무르익는 시기입니다. 내 집 마련이나 아이 소식, 재계약 같은 <b>큰 걸음을 내딛기에 더없이 좋은 해</b>이니 미뤄둔 계획이 있다면 바로 이때를 쓰시기 바랍니다." },
+];
+
 /* ---------- 리포트 빌더 ---------- */
 
 function _firstSent2(s) {
@@ -607,9 +642,103 @@ function buildCareerReport(saju, input) {
   };
 }
 
+/* ===== 배우자 검증 — 내 사주의 배우자상 vs 실제 그 사람 + 두 사주 궁합·시기 ===== */
+function buildCoupleVerify(s1, in1, s2, in2) {
+  const g1 = in1.gender === "F" ? "F" : "M";
+  const _band = (v) => v >= 90 ? "90" : v >= 80 ? "80" : v >= 70 ? "70" : v >= 60 ? "60" : "50";
+  const jit = (i) => ((s1.iljuIdx * 5 + s2.iljuIdx * 7 + i * 11) % 7) - 3;
+
+  /* ---------- ① 일치율: 예언과 실제의 대조 ---------- */
+  const palaceEl = BRANCHES[s1.pillars.day.branch].el;
+  const palaceYin = s1.pillars.day.branch % 2 === 1;
+  const star = spouseStarPosition(s1, g1);
+  const pK = ELEMENTS[palaceEl], aK = ELEMENTS[s2.dayEl];
+  const axes = [];
+
+  let elScore, elNote;
+  if (s2.dayEl === palaceEl) { elScore = 100; elNote = `궁이 그린 ${pK.kor}의 사람 — 그 사람의 일간이 정확히 ${aK.kor}입니다`; }
+  else if (s2.dayEl === star.starEl) { elScore = 85; elNote = `배우자 별(${ELEMENTS[star.starEl].kor})과 일치 — 관계의 결로 이어진 인연입니다`; }
+  else if (GENERATES[palaceEl] === s2.dayEl || GENERATES[s2.dayEl] === palaceEl) { elScore = 70; elNote = `궁의 ${pK.kor}과 상생으로 이어지는 ${aK.kor}의 사람입니다`; }
+  else { elScore = 42; elNote = `예언(${pK.kor})과 실제(${aK.kor})의 결이 다른 — 사주 밖에서 온 인연입니다`; }
+  axes.push({ name: "오행", score: elScore, note: elNote });
+
+  const yinMatch = s2.dayYin === palaceYin;
+  axes.push({ name: "음양", score: yinMatch ? 100 : 35,
+    note: yinMatch ? `예측한 ${palaceYin ? "음" : "양"}의 결 그대로입니다` : "예측과 반대의 결 — 반전 매력으로 온 사람입니다" });
+
+  const predH = HEIGHT_LEVEL[`${palaceEl}_${palaceYin ? "yin" : "yang"}`] || 3;
+  const actH = HEIGHT_LEVEL[`${s2.dayEl}_${s2.dayYin ? "yin" : "yang"}`] || 3;
+  const hd = Math.abs(predH - actH);
+  axes.push({ name: "체형", score: hd <= 0.5 ? 100 : hd <= 1.5 ? 70 : 42,
+    note: `예측 키 경향 ${predH}/5 · 그 사람 사주의 키 경향 ${actH}/5` });
+
+  if (typeof MOOD_OF_GOD !== "undefined") {
+    const pm = MOOD_OF_GOD[s1.tenGods.day.branch] || 2;
+    const am = MOOD_OF_GOD[tenGodOfBranch(s2.dayStem, s2.pillars.day.branch)] || 2;
+    axes.push({ name: "분위기", score: pm === am ? 100 : 60,
+      note: pm === am ? `예측한 '${MOOD_NAME[pm]}' 그대로입니다` : `예측은 ${MOOD_NAME[pm]}, 실제는 ${MOOD_NAME[am]}` });
+  }
+
+  const hasDohwa = s1.sinsal.some(x => x.key === "dohwa"), hasYeokma = s1.sinsal.some(x => x.key === "yeokma");
+  const gapKey = star.via === "none" ? "same" : star.pos === "year" ? "older2" : star.pos === "month" ? "older1"
+    : star.pos === "day" ? "same" : (hasDohwa || hasYeokma) ? "younger2" : "younger1";
+  const gap = in1.y - in2.y;  // 양수 = 상대가 연상
+  const inBand = gapKey === "older2" ? gap >= 5 : gapKey === "older1" ? (gap >= 1 && gap <= 4)
+    : gapKey === "same" ? Math.abs(gap) <= 1 : gapKey === "younger1" ? (gap <= -1 && gap >= -4) : gap <= -5;
+  axes.push({ name: "나이차", score: inBand ? 100 : 45,
+    note: `예측 ${AGEGAP_KOR[gapKey]} · 실제 ${gap > 0 ? "연상 " + gap + "살" : gap < 0 ? "연하 " + (-gap) + "살" : "동갑"}` });
+
+  const matchScore = Math.max(30, Math.min(99, Math.round(axes.reduce((s, a) => s + a.score, 0) / axes.length) + jit(1)));
+
+  /* ---------- ② 궁합: 두 사주를 실제로 겹치기 ---------- */
+  const b1 = s1.pillars.day.branch, b2 = s2.pillars.day.branch;
+  const dyn = [];
+  const push = (key) => { if (typeof COUPLE_DYN !== "undefined" && COUPLE_DYN[key]) dyn.push({ key, ...COUPLE_DYN[key] }); };
+  const hap = hapStem(s1.dayStem) === s2.dayStem;
+  const yuk = YUKHAP[b1] === b2;
+  const sam = b1 !== b2 && SAMHAP_GROUP[b1] === SAMHAP_GROUP[b2];
+  const chung = chungBranch(b1) === b2;
+  const boMe = (s2.counts[s1.yongsin.el] || 0) > 0;   // 상대가 내 용신을 지님
+  const boYou = (s1.counts[s2.yongsin.el] || 0) > 0;
+  const keMe = CONTROLS[s1.dayEl] === s2.dayEl, keYou = CONTROLS[s2.dayEl] === s1.dayEl;
+  const bigyeop = s1.godCounts["비겁"] >= 2 && s2.godCounts["비겁"] >= 2;
+  if (hap) push("cheonganhap");
+  if (yuk) push("yukhap"); else if (sam) push("samhap");
+  if (chung) push("jichung");
+  if (boMe && boYou) push("boBoth"); else if (boMe || boYou) push("boOne");
+  if (keMe) push("keMe"); else if (keYou) push("keYou");
+  if (bigyeop) push("bigyeop");
+  if (!dyn.length) push("plain");
+
+  const coupleScore = Math.max(35, Math.min(99, 58 + (hap ? 15 : 0) + (yuk ? 13 : 0) + (sam ? 8 : 0)
+    + (boMe ? 8 : 0) + (boYou ? 8 : 0) - (chung ? 15 : 0) - (bigyeop ? 6 : 0) + (keYou ? 2 : 0) + jit(2)));
+
+  /* ---------- ③ 시기: 부부궁이 흔들리는 해 · 정 다지는 해 ---------- */
+  const nowY = new Date().getFullYear();
+  const years = [];
+  for (let y = nowY; y <= nowY + 7; y++) {
+    const br = yearPillarOf(y).branch;
+    const r1 = br === chungBranch(b1), r2 = br === chungBranch(b2);
+    const good = YUKHAP[b1] === br || YUKHAP[b2] === br;
+    if (r1 && r2) years.push({ y, kind: "both" });
+    else if (r1 || r2) years.push({ y, kind: "one", who: r1 ? "me" : "you" });
+    else if (good) years.push({ y, kind: "good" });
+  }
+
+  const G = typeof COUPLE_GRADE !== "undefined" ? COUPLE_GRADE : null;
+  return {
+    matchScore, matchGrade: G ? G.match[_band(matchScore)] : null,
+    axes,
+    coupleScore, coupleGrade: G ? G.couple[_band(coupleScore)] : null,
+    dyn, years,
+    crisis: typeof COUPLE_CRISIS !== "undefined" ? COUPLE_CRISIS : null,
+    partner: { el: s2.dayEl, yin: s2.dayYin, ganji: s2.ganjiText.day },
+  };
+}
+
 /* ---------- Node(서버) 환경 지원 ---------- */
 if (typeof module !== "undefined" && module.exports) {
-  const _C2 = { buildSpouseReport, buildCareerReport };
+  const _C2 = { buildSpouseReport, buildCareerReport, buildCoupleVerify };
   try { _C2.SPOUSE_DEEP = SPOUSE_DEEP; _C2.CAREER_DEEP = CAREER_DEEP; } catch (e) {}
   module.exports = _C2;
   if (typeof globalThis !== "undefined") Object.assign(globalThis, _C2);

@@ -13,7 +13,7 @@
   /* 콘텐츠 가격 (코인) — api/_lib.js COIN_PRICE 와 반드시 일치 */
   const PRICE = {
     report: 9, questions: 7, group: 6, wish: 4, allpass: 18,
-    spouse: 5, spouse_detail: 4, career: 5, career_detail: 4,
+    spouse: 5, spouse_detail: 4, career: 5, career_detail: 4, verify: 5,
   };
   /* 충전 패키지 — api/_lib.js PRICES(coin_*) 와 반드시 일치 */
   const PACKAGES = [

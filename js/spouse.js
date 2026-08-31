@@ -153,6 +153,77 @@
     render();
   }
 
+  /* ---------- 우리 궁합 검증 (배우자 실제 사주와 대조) ---------- */
+  let vf = null; // { vin, s2, v }
+
+  BirthInput.mount("#vf-birth", {
+    idPrefix: "vf",
+    submitLabel: "궁합 검증하기",
+    noSave: true,  // 상대 정보가 내 기본값을 덮어쓰지 않게
+    onSubmit(vin) {
+      if (!cur) {
+        toast("먼저 위에서 내 리포트를 열어주세요 — 대조할 배우자상이 필요해요");
+        $("#sp-birth").scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
+      const s2 = calculateSaju(vin);
+      vf = { vin, s2, v: buildCoupleVerify(cur.saju, cur.input, s2, vin) };
+      renderVerify();
+      setTimeout(() => $("#vf-result").scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+    },
+  });
+
+  function renderVerify() {
+    if (!vf) return;
+    const { vin, s2, v } = vf;
+    const sig = sigOf(cur.input);
+    const hasV = owns("verify", sig);
+    const scCls = (s) => s >= 85 ? "hi" : s >= 60 ? "mid" : "lo";
+
+    const axesHtml = v.axes.map(a => `<div class="vf-axis">
+      <span class="va-n">${a.name}</span><span class="va-s ${scCls(a.score)}">${a.score}</span><p>${a.note}</p></div>`).join("");
+    const dynHtml = v.dyn.map(d => `<div class="vd"><b>${d.label}</b> — ${d.text}</div>`).join("");
+    const yearsHtml = v.years.length
+      ? `<div class="vf-years">${v.years.map(x => `<span class="yr-${x.kind}">${x.y}${x.kind === "both" ? " ⚠︎ 함께 주의" : x.kind === "one" ? " 주의" : " 길년"}</span>`).join("")}</div>`
+        + (v.crisis ? `<div class="vf-crisis">${["both", "one", "good"].filter(k => v.years.some(x => x.kind === k))
+          .map(k => `<p>${v.crisis.find(c => c.key === k)?.text || ""}</p>`).join("")}</div>` : "")
+      : `<p class="vf-crisis">앞으로 8년 안에 부부궁을 흔드는 충의 해가 없습니다 — 시기 걱정 없이 관계 자체에 집중하면 되는 구간입니다.</p>`;
+
+    const body = `
+      ${v.matchGrade ? `<p class="sc-title" style="margin-top:2px">${v.matchGrade.title}</p>` : ""}
+      <div class="vf-axes">${axesHtml}</div>
+      ${v.matchGrade ? `<p class="vf-crisis">${v.matchGrade.text}</p>` : ""}
+      <p class="lc-title" style="font-size:15px;margin-top:18px">두 사주를 겹쳐 본 궁합</p>
+      ${v.coupleGrade ? `<p class="sc-title" style="margin-top:2px">${v.coupleGrade.title}</p>` : ""}
+      <div class="vf-dyn">${dynHtml}</div>
+      ${v.coupleGrade ? `<p class="vf-crisis">${v.coupleGrade.text}</p>` : ""}
+      <p class="lc-title" style="font-size:15px;margin-top:18px">흔들리기 쉬운 해 · 정 다지는 해</p>
+      ${yearsHtml}`;
+
+    $("#vf-result").innerHTML = `
+      <div class="letter-card" style="margin-top:14px">
+        <p class="sp-meta" style="margin:0 0 12px">${BirthInput.metaLine(vin, s2)} <br /><b>그 사람: ${s2.ganjiText.day}일주 · ${ELEMENTS[s2.dayEl].kor}(${ELEMENTS[s2.dayEl].han})의 ${s2.dayYin ? "음" : "양"}</b></p>
+        <div class="vf-duo">
+          <div class="vf-score"><em>${v.matchScore}</em><span>배우자상 일치율</span>${v.matchGrade ? `<small>${v.matchGrade.title}</small>` : ""}</div>
+          <div class="vf-score"><em>${v.coupleScore}</em><span>궁합 점수</span>${v.coupleGrade ? `<small>${v.coupleGrade.title}</small>` : ""}</div>
+        </div>
+        <div class="${hasV ? "" : "vf-locked"}">
+          <div class="vf-body">${body}</div>
+          ${hasV ? "" : `<div class="vf-cta"><button type="button" id="vf-buy">🪙 ${Coins.PRICE.verify}코인 — 검증 전체 보기</button></div>`}
+        </div>
+        <p class="mont-note" style="margin-top:14px">두 분의 생일은 이 기기에서만 계산되며 저장·전송되지 않습니다. 참고용 콘텐츠입니다.</p>
+      </div>`;
+    $("#vf-result").classList.remove("hidden");
+    $("#vf-buy")?.addEventListener("click", () => {
+      const cost = Coins.PRICE.verify;
+      if (Coins.balance() < cost) { Coins.openShop(`궁합 검증에 🪙 ${cost}코인이 필요해요 (지금 ${Coins.balance()}개)`); return; }
+      if (!Coins.spend(cost, "궁합 검증")) return;
+      grant("verify", sigOf(cur.input));
+      toast(`🪙 ${cost}코인으로 검증이 열렸습니다`);
+      renderVerify();
+    });
+  }
+
   Coins.renderPill(".hd-in");
   Coins.onChange(() => { const b = $("#sp-bal"); if (b) b.textContent = Coins.balance(); });
   document.querySelector(".cnav-item.active")?.scrollIntoView({ inline: "center", block: "nearest" });

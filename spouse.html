@@ -193,6 +193,32 @@
     .skill-chips { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
     .skill-chips span { font-size:11.5px; color:var(--wine); background:var(--wine-bg); border-radius:100px; padding:5px 12px; font-weight:700; }
 
+    /* 배우자 검증 */
+    .vf-badge { font-size:10px; color:#fff; background:var(--rose); border-radius:100px; padding:2px 9px; vertical-align:3px; margin-left:6px; font-family:var(--sans); font-weight:700; letter-spacing:.06em; }
+    .vf-duo { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:12px; }
+    .vf-score { background:var(--ivory-2); border-radius:10px; padding:14px 8px 12px; text-align:center; }
+    .vf-score em { display:block; font-style:normal; font-family:var(--serif); font-weight:900; font-size:34px; color:var(--wine); line-height:1.1; }
+    .vf-score span { font-size:11px; color:var(--dim); font-weight:700; }
+    .vf-score small { display:block; font-size:11px; color:var(--gold); font-family:var(--serif); margin-top:4px; }
+    .vf-axes { display:grid; gap:7px; margin:12px 0; }
+    .vf-axis { display:grid; grid-template-columns:52px 34px 1fr; gap:9px; align-items:baseline; font-size:12.5px; }
+    .vf-axis .va-n { color:var(--dim); font-weight:700; }
+    .vf-axis .va-s { font-family:var(--serif); font-weight:900; }
+    .vf-axis .va-s.hi { color:#3d7a5c; } .vf-axis .va-s.mid { color:var(--gold); } .vf-axis .va-s.lo { color:var(--rose); }
+    .vf-axis p { margin:0; color:var(--dim); line-height:1.6; font-size:12px; }
+    .vf-dyn { display:grid; gap:10px; margin:12px 0; }
+    .vf-dyn .vd { background:var(--rose-bg); border-radius:6px; padding:12px 14px; font-size:13px; line-height:1.8; }
+    .vf-dyn .vd b { color:var(--wine); }
+    .vf-years { display:flex; flex-wrap:wrap; gap:7px; margin:12px 0 6px; }
+    .vf-years span { font-size:12px; font-weight:700; border-radius:100px; padding:5px 12px; border:1px solid; }
+    .vf-years .yr-both { color:#fff; background:var(--wine); border-color:var(--wine); }
+    .vf-years .yr-one { color:var(--wine); background:var(--wine-bg); border-color:var(--wine); }
+    .vf-years .yr-good { color:#2c5c42; background:#eaf3ec; border-color:#9cc4aa; }
+    .vf-crisis { font-size:12.5px; color:var(--dim); line-height:1.8; }
+    .vf-locked { position:relative; }
+    .vf-locked .vf-body { filter:blur(6px); user-select:none; pointer-events:none; opacity:.55; max-height:150px; overflow:hidden; }
+    .vf-locked .vf-cta { position:absolute; left:0; right:0; bottom:16px; display:flex; justify-content:center; }
+    .vf-cta button { border:0; cursor:pointer; background:var(--wine); color:#fff; border-radius:100px; padding:11px 22px; font-size:13.5px; font-weight:700; font-family:var(--sans); box-shadow:0 8px 20px rgba(124,35,64,.3); }
     .foot { padding:30px 22px 40px; text-align:center; color:var(--faint); font-size:11px; line-height:1.8; }
     .foot a { color:var(--dim); }
     .toast { position:fixed; bottom:24px; left:50%; transform:translateX(-50%); z-index:80; width:max-content;
@@ -235,6 +261,16 @@
 
   <!-- 결과 -->
   <section id="sp-result" class="hidden" style="padding-top:0"></section>
+
+  <!-- 배우자 검증 — 예비 배우자·배우자의 사주와 대조 -->
+  <section id="vf-section" style="padding-top:0">
+    <div class="letter-card">
+      <p class="lc-title">우리 궁합 검증 <span class="vf-badge">부부·커플</span></p>
+      <p class="lc-sub">예비 배우자·배우자의 생년월일을 넣으면 — 사주에 적힌 배우자상과 실제 그 사람을 대조하고,<br />두 사주를 겹쳐 궁합과 흔들리기 쉬운 해까지 봅니다</p>
+      <div id="vf-birth"></div>
+    </div>
+    <div id="vf-result" class="hidden"></div>
+  </section>
 
   <footer class="foot">
     본 리포트는 명리학 이론(배우자성·배우자궁·합)에 기반한 참고용 콘텐츠이며, 실제 인물·미래를 보증하지 않습니다.<br />

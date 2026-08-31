@@ -130,7 +130,7 @@
       $(`#${id}-go`).addEventListener("click", () => {
         const input = api.read(host, id);
         if (!input) return;
-        try { localStorage.setItem(LAST_KEY, JSON.stringify(input)); } catch (e) {}
+        if (!o.noSave) { try { localStorage.setItem(LAST_KEY, JSON.stringify(input)); } catch (e) {} }
         o.onSubmit(input);
       });
       return host;
