@@ -45,10 +45,9 @@ const MOOD_NAME = { 1: "밝고 사교적인 계열", 2: "단정하고 품위 있
 function buildSpouseFace(saju, input) {
   const myGender = input.gender === "F" ? "F" : "M";
   const sex = myGender === "M" ? "F" : "M";              // 배우자는 반대 성별
-  const star = spouseStarPosition(saju, myGender);
-  const el = star.starEl;
-  // 원국에 드러난 배우자성 글자의 실제 음양 우선, 미노출 시 반대 음양(합) 규칙
-  const partnerYin = typeof spouseStarYin === "function" ? spouseStarYin(saju, myGender).yin : !saju.dayYin;
+  // 사람의 결은 배우자궁(일지)을 따른다 — 궁의 오행·음양이 얼굴을 그림
+  const el = BRANCHES[saju.pillars.day.branch].el;
+  const partnerYin = saju.pillars.day.branch % 2 === 1;  // 축묘사미유해=음
   const yinKey = partnerYin ? "yin" : "yang";
   const godRaw = saju.tenGods.day.branch;
   const variant = MOOD_OF_GOD[godRaw] || ((saju.iljuIdx % 4) + 1);  // 배우자궁 십신이 무드를 결정

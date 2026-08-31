@@ -88,7 +88,7 @@
         <p class="mont-name">${input.gender === "M" ? "당신의 <em>아내</em>가 될 사람" : "당신의 <em>남편</em>이 될 사람"}
           — ${ELEMENTS[face.el].kor}(${ELEMENTS[face.el].han}) · ${face.moodName || ""}</p>
         <div class="mont-traits">${face.traits.map(t => `<span>${t}</span>`).join("")}</div>
-        <p class="mont-note">사주의 배우자성 오행·음양·배우자궁 십신을 얼굴 특징으로 옮겨 그린 <b>인상 스케치</b>입니다.<br />실존 인물과는 무관하며, 재미로 봐주세요.</p>
+        <p class="mont-note">배우자궁(일지)의 오행·음양·십신을 얼굴 특징으로 옮겨 그린 <b>인상 스케치</b>입니다.<br />실존 인물과는 무관하며, 재미로 봐주세요.</p>
       </div>` : "";
 
     const metaLine = typeof BirthInput !== "undefined"
@@ -122,9 +122,9 @@
     $("#sp-result").innerHTML = metaLine + montage + scoreCard + `
       <div class="letter-card" style="margin-top:14px">
         <div class="portrait-seal">
-          <span class="ps-el el-${rep.starEl}">${elK.han}</span>
-          <span class="ps-txt"><b>당신의 배우자성 — ${elK.kor}(${elK.han})</b>
-          <small>${input.gender === "M" ? "재성(내가 품는 기운)" : "관성(나를 이끄는 기운)"} · ${rep.appearKey.endsWith("yin") ? "음" : "양"}의 결</small></span>
+          <span class="ps-el el-${rep.palaceEl}">${ELEMENTS[rep.palaceEl].han}</span>
+          <span class="ps-txt"><b>배우자궁의 기운 — ${ELEMENTS[rep.palaceEl].kor}(${ELEMENTS[rep.palaceEl].han}) · ${rep.appearKey.endsWith("yin") ? "음" : "양"}</b>
+          <small>사람의 결은 궁(宮)을 따릅니다 · 관계의 별(${input.gender === "M" ? "재성" : "관성"})은 ${elK.kor}(${elK.han})</small></span>
         </div>
         <p class="free-line">${rep.freeLine}</p>
         <p class="meet-chip">인연의 창 — <b>${rep.meetLine}</b> <small>(자세한 해와 달은 아래에)</small></p>

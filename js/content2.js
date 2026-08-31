@@ -240,6 +240,7 @@ function _firstSent2(s) {
 }
 
 const POS_KOR2 = { year: "연주(집안·오랜 인연의 자리)", month: "월주(사회 활동의 자리)", day: "일주(생활 반경의 자리)", hour: "시주(새로운 판의 자리)" };
+const SEASON_KOR2 = { spring: "봄", summer: "여름", autumn: "가을", winter: "겨울" };
 
 /* 키 경향 5단계 (1=아담 … 5=훤칠) — SPOUSE_BODY 서술과 정합 */
 const HEIGHT_LEVEL = {
@@ -342,13 +343,14 @@ function buildSpouseReport(saju, input) {
   const ageNow = Math.max(0, nowY - input.y);
   const star = spouseStarPosition(saju, gender);
   const starEl = star.starEl;
-  // 배우자 음양: 원국에 드러난 배우자성 글자의 실제 음양 우선, 미노출 시 반대 음양(합) 규칙
-  const starYin = spouseStarYin(saju, gender);
-  const partnerYin = starYin.yin;
-  const appearKey = `${starEl}_${partnerYin ? "yin" : "yang"}`;
-  const yinWhy = starYin.via === "stem" ? "원국 천간에 드러난 배우자성의 결"
-    : starYin.via === "branch" ? "원국 지지에 앉은 배우자성의 결"
-    : "합(合)의 이치 — 나와 반대 음양";
+  /* 두 갈래 읽기:
+   *  · 배우자 별(재성/관성) = 관계가 작동하는 결 → 만남 장소·시기·나이차·출신·기류
+   *  · 배우자궁(일지) = 실제 그 사람의 체감 기운 → 외모·체형·목소리·취미·건강·말투·직업 */
+  const palaceEl = BRANCHES[saju.pillars.day.branch].el;
+  const palaceYin = saju.pillars.day.branch % 2 === 1;   // 자인진오신술=양, 축묘사미유해=음
+  const partnerYin = palaceYin;
+  const appearKey = `${palaceEl}_${palaceYin ? "yin" : "yang"}`;
+  const pK = ELEMENTS[palaceEl];
   const hasDohwa = saju.sinsal.some(s => s.key === "dohwa");
   const hasYeokma = saju.sinsal.some(s => s.key === "yeokma");
   const mod = hasDohwa ? "dohwa" : hasYeokma ? "yeokma" : "none";
@@ -413,8 +415,24 @@ function buildSpouseReport(saju, input) {
           <p>${o.text}</p>${extra.map(e => `<p>${e}</p>`).join("")}`;
       })() }] : []),
     { icon: "貌", title: "배우자의 생김새 · 분위기", detail: false,
-      teaser: `배우자성 ${elK.kor}(${elK.han})의 물상으로 미루어 보는 얼굴과 인상입니다.`,
-      html: `<p>당신의 배우자성은 <b>${elK.kor}(${elK.han}) · ${partnerYin ? "음" : "양"}의 기운</b>입니다 (${yinWhy}로 읽었습니다). ${appear}</p>` },
+      teaser: `배우자궁 ${pK.kor}(${pK.han})의 물상으로 미루어 보는 얼굴과 인상입니다.`,
+      html: `<p>당신의 배우자 별(${gender === "M" ? "재성" : "관성"})은 <b>${elK.kor}(${elK.han})</b>, 배우자궁(일지)에는 <b>${pK.kor}(${pK.han}) · ${palaceYin ? "음" : "양"}</b>의 기운이 앉아 있습니다. ${starEl === palaceEl
+        ? "별과 궁이 같은 기운이라 그 결이 더욱 또렷하게 드러납니다."
+        : "명리에서 사람의 겉모습과 생활의 결은 궁(宮)을 따르고, 관계가 작동하는 방식은 별(星)을 따릅니다."} ${appear}</p>` },
+    { icon: "引", title: "끌리는 기운 vs 결혼하는 기운", detail: false,
+      teaser: "연애가 향하는 곳과 혼인이 앉는 자리는 다를 수 있습니다.",
+      html: (() => {
+        const yEl2 = ELEMENTS[saju.yongsin.el];
+        const domK = ELEMENTS[saju.dominant];
+        const sameAsPalace = saju.yongsin.el === palaceEl;
+        const why2 = saju.yongsin.method === "조후"
+          ? `계절의 결핍이 곧 끌림이 됩니다 — ${SEASON_KOR2[saju.season]}에 태어난 사주는 저도 모르게 그 온도를 채워주는 사람에게 마음이 갑니다.`
+          : `사주에 ${domK.kor} 기운이 넉넉한 사람은 이미 가진 기운에는 좀처럼 끌리지 않고, 판을 고르게 해줄 기운에 마음이 갑니다.`;
+        return `<p>당신이 본능적으로 끌리는 기운은 용신 <b>${yEl2.kor}(${yEl2.han})</b>입니다 — ${saju.yongsin.reason}이기 때문입니다. ${why2}</p>
+        <p>한편 혼인의 자리는 별(${elK.kor})과 궁(${pK.kor})이 쥐고 있습니다. ${sameAsPalace
+          ? `끌리는 기운과 배우자궁의 기운이 <b>${pK.kor}으로 같아</b> — 마음 가는 대로 고른 사람이 곧 배필이 되는, 연애와 혼인이 한길로 오는 구조입니다.`
+          : `끌림(${yEl2.kor})과 혼인(${pK.kor})의 기운이 달라 — <b>늘 만나던 타입과 결혼할 사람이 다르게 오는 구조</b>입니다. 어긋남이 아니라, 연애는 내 결핍을 채우러 가고 혼인은 내 삶에 앉을 사람을 고르는 것뿐입니다.`}</p>`;
+      })() },
     ...(typeof SPOUSE_BODY !== "undefined" ? [{
       icon: "身", title: "키·체형과 목소리", detail: false,
       teaser: "오행의 물상은 몸에도, 오음(五音)은 목소리에도 배어 있습니다.",
@@ -465,8 +483,8 @@ function buildSpouseReport(saju, input) {
       teaser: "배우자성이 놓인 궁의 위치로 나이 차의 결을 봅니다.",
       html: `<p>명리에서는 배우자성이 놓인 자리로 나이 차의 결을 봅니다. 당신은 <b>${AGEGAP_KOR[gapKey]}</b> 쪽으로 기웁니다. ${SPOUSE_DEEP.agegap[gapKey] || ""}</p>` },
     { icon: "業", title: "배우자의 예상 직업", detail: true,
-      teaser: `배우자성 ${elK.kor} 기운이 이끄는 일의 결입니다.`,
-      html: `<p>${SPOUSE_DEEP.job[starEl] || ""}</p>` },
+      teaser: `배우자궁 ${pK.kor} 기운이 이끄는 일의 결입니다.`,
+      html: `<p>${SPOUSE_DEEP.job[palaceEl] || ""}</p>` },
     { icon: "桃", title: "이성 기류 · 신뢰 지수", detail: true,
       teaser: "도화와 배우자궁의 합충으로 보는 관계의 기류입니다.",
       html: `<p>${SPOUSE_DEEP.fidelity[fidKey] || ""}</p>
@@ -505,8 +523,8 @@ function buildSpouseReport(saju, input) {
   ];
 
   return {
-    starEl, gender, appearKey,
-    freeLine: `당신의 배우자성은 ${elK.kor}(${elK.han}) — ${_firstSent2(appear)}`,
+    starEl, palaceEl, gender, appearKey,
+    freeLine: `배우자궁에 앉은 기운은 ${pK.kor}(${pK.han}) — ${_firstSent2(appear)}`,
     meetLine: win ? `${Math.max(18, ageNow, win.fromAge)}~${win.toAge}세` : "앞으로 3~4년",
     score: sc,
     sections,
