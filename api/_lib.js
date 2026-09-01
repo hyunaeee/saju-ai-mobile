@@ -18,13 +18,13 @@ const COIN_PACKS = { coin_c5: 5, coin_c12: 13, coin_c30: 35 };
 // 콘텐츠별 코인 가격 (js/coins.js PRICE 와 일치)
 const COIN_PRICE = {
   report: 9, questions: 7, group: 6, wish: 4, allpass: 18,
-  spouse: 5, spouse_detail: 4, career: 5, career_detail: 4, verify: 5,
+  spouse: 8, career: 8, verify: 5,
 };
 
-// 각 상품이 부여하는 권한(products)
+// 각 상품이 부여하는 권한(products) — allpass는 전 서비스 패스
 function productsFor(product) {
   return product === "allpass"
-    ? ["report", "questions", "group", "wish"]
+    ? ["report", "questions", "group", "wish", "spouse", "spouse_detail", "career", "career_detail", "verify"]
     : [product];
 }
 

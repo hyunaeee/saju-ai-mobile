@@ -7,18 +7,18 @@ const KAKAO_JS_KEY = ""; // TODO
 
 const PRICES = { report: 9900, questions: 7900, group: 6900, wish: 4900, allpass: 19900 };
 const PRODUCT_NAMES = {
-  report: "심층 풀이 (13개 섹션)",
+  report: "심층 풀이 (17개 섹션)",
   questions: "연화에게 질문 5개",
   group: "모임 궁합 (최대 10명)",
   wish: "소원부적 · 기도올리기",
-  allpass: "자유이용권 — 모든 기능",
+  allpass: "전 서비스 패스 — 천기연 전체",
 };
 const PRODUCT_DESCS = {
   report: "배우자·궁합·조심할 시기·귀인 포함 전체 열람",
   questions: "내 사주를 근거로 한 맞춤 답변",
   group: "귀인·앙숙·중재자 관계 지도",
   wish: "연화의 축원 + 디지털 부적",
-  allpass: "단품 합계 29,600원 → 33% 할인",
+  allpass: "심층·질문·부적·모임 + 배우자·직업 리포트 + 궁합 검증까지 전부",
 };
 
 const $ = (sel) => document.querySelector(sel);

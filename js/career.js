@@ -1,16 +1,17 @@
 /* =====================================================================
  * career.js — 직업운 리포트 (지면 테마)
  *  saju.js·content.js·content2.js·coins.js 전역을 사용합니다.
- *  가격: 기본 career(5코인) · 디테일 career_detail(+4코인) · 묶음 8코인
+ *  가격: 직업운 리포트 전체 career(8코인) · 전 서비스 패스 allpass(18코인)
  * ===================================================================== */
 (function () {
   const $ = (s) => document.querySelector(s);
   const LAST_KEY = "cheongiyeon_last_input";
   const sigOf = (i) => `${i.y}-${i.m}-${i.d}_${i.hour}_${i.minute || 0}_${i.gender}`;
   const ownKey = (p, sig) => `cgy_own_${p}_${sig}`;
-  const owns = (p, sig) => localStorage.getItem(ownKey(p, sig)) === "1";
+  const hasPass = (sig) => { try { return JSON.parse(localStorage.getItem(`cheongiyeon_own_${sig}`) || "{}").allpass === true; } catch (e) { return false; } };
+  const owns = (p, sig) => hasPass(sig) || localStorage.getItem(ownKey(p, sig)) === "1";
   const grant = (p, sig) => localStorage.setItem(ownKey(p, sig), "1");
-  const BUNDLE = 8;
+  const grantPass = (sig) => { try { const k = `cheongiyeon_own_${sig}`; const o = JSON.parse(localStorage.getItem(k) || "{}"); o.allpass = true; localStorage.setItem(k, JSON.stringify(o)); } catch (e) {} };
 
   let cur = null;
 
@@ -48,26 +49,19 @@
   function render() {
     const { input, rep } = cur;
     const sig = sigOf(input);
-    const hasBasic = owns("career", sig);
-    const hasDetail = owns("career_detail", sig);
+    const hasBasic = owns("career", sig) || owns("career_detail", sig);
+    const hasDetail = hasBasic;   // 단일 상품: 열면 전체가 열립니다
     const secs = rep.sections.map(sec => sectionHTML(sec, sec.detail ? hasDetail : hasBasic)).join("");
 
-    const pB = Coins.PRICE.career, pD = Coins.PRICE.career_detail;
     let unlockBar = "";
-    if (!hasBasic || !hasDetail) {
-      const btns = [];
-      if (!hasBasic && !hasDetail) {
-        btns.push(`<button class="btn u-all" data-buy="bundle">🪙 ${BUNDLE}코인 — 전 지면 한 번에 (${pB + pD}코인 → ${BUNDLE}코인)</button>`);
-        btns.push(`<button class="btn u-basic" data-buy="career">🪙 ${pB}코인 — 기본 리포트 (적성·분야·캘린더·이직)</button>`);
-      } else if (!hasDetail) {
-        btns.push(`<button class="btn u-all" data-buy="career_detail">🪙 ${pD}코인 — 디테일 팩 (재물 곡선·10년 지도)</button>`);
-      } else if (!hasBasic) {
-        btns.push(`<button class="btn u-basic" data-buy="career">🪙 ${pB}코인 — 기본 리포트 열기</button>`);
-      }
+    if (!hasBasic) {
       unlockBar = `<div class="unlock-bar">
         <h4>기사 전문을 발행해 드립니다</h4>
         <p>내 코인 🪙 <b id="ca-bal">${Coins.balance()}</b>개 · 광고를 보면 +1코인</p>
-        <div class="unlock-btns">${btns.join("")}</div>
+        <div class="unlock-btns">
+          <button class="btn u-basic" data-buy="career">🪙 ${Coins.PRICE.career}코인 — 직업운 리포트 전체 (적성·캘린더·이직·재물 곡선·10년 지도)</button>
+          <button class="btn u-all" data-buy="pass">🪙 ${Coins.PRICE.allpass}코인 — 전 서비스 패스 (사주·배우자·검증까지 전부)</button>
+        </div>
         <p class="u-note">코인이 모자라면 충전 창이 열립니다 · 열람 후에는 환불되지 않습니다</p>
       </div>`;
     }
@@ -95,15 +89,14 @@
 
   function buy(what) {
     const sig = sigOf(cur.input);
-    const cost = what === "bundle" ? BUNDLE : Coins.PRICE[what];
+    const cost = what === "pass" ? Coins.PRICE.allpass : Coins.PRICE[what];
     if (Coins.balance() < cost) {
       Coins.openShop(`이 리포트를 열려면 🪙 ${cost}코인이 필요해요 (지금 ${Coins.balance()}개)`);
       return;
     }
-    if (!Coins.spend(cost, what === "bundle" ? "직업 리포트(전체)" : what === "career" ? "직업 리포트(기본)" : "직업 디테일 팩")) return;
-    if (what === "bundle") { grant("career", sig); grant("career_detail", sig); }
-    else grant(what, sig);
-    toast(`🪙 ${cost}코인으로 발행되었습니다`);
+    if (!Coins.spend(cost, what === "pass" ? "전 서비스 패스" : "직업운 리포트")) return;
+    if (what === "pass") { grantPass(sig); toast(`🪙 전 서비스 패스가 열렸습니다 — 사주·배우자·검증까지 전부`); }
+    else { grant("career", sig); grant("career_detail", sig); toast(`🪙 ${cost}코인으로 발행되었습니다`); }
     render();
   }
 

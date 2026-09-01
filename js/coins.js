@@ -10,10 +10,11 @@
   const KEY = "cgy_wallet_v1";
   const AD_LIMIT = 3;
 
-  /* 콘텐츠 가격 (코인) — api/_lib.js COIN_PRICE 와 반드시 일치 */
+  /* 콘텐츠 가격 (코인) — api/_lib.js COIN_PRICE 와 반드시 일치
+   * allpass = 전 서비스 패스 (사주 심층·질문·부적·모임 + 배우자·직업 리포트 + 궁합 검증) */
   const PRICE = {
     report: 9, questions: 7, group: 6, wish: 4, allpass: 18,
-    spouse: 5, spouse_detail: 4, career: 5, career_detail: 4, verify: 5,
+    spouse: 8, career: 8, verify: 5,
   };
   /* 충전 패키지 — api/_lib.js PRICES(coin_*) 와 반드시 일치 */
   const PACKAGES = [

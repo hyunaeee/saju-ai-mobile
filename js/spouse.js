@@ -1,16 +1,18 @@
 /* =====================================================================
  * spouse.js — 미래 배우자 리포트 (연서 테마)
  *  saju.js·content2.js·coins.js 전역을 사용합니다.
- *  가격: 기본 리포트 spouse(5코인) · 디테일 팩 spouse_detail(+4코인) · 묶음 8코인
+ *  가격: 배우자 리포트 전체 spouse(8코인) · 전 서비스 패스 allpass(18코인)
  * ===================================================================== */
 (function () {
   const $ = (s) => document.querySelector(s);
   const LAST_KEY = "cheongiyeon_last_input";
   const sigOf = (i) => `${i.y}-${i.m}-${i.d}_${i.hour}_${i.minute || 0}_${i.gender}`;
   const ownKey = (p, sig) => `cgy_own_${p}_${sig}`;
-  const owns = (p, sig) => localStorage.getItem(ownKey(p, sig)) === "1";
+  // 전 서비스 패스(allpass, 사주 페이지 스토어)도 인정
+  const hasPass = (sig) => { try { return JSON.parse(localStorage.getItem(`cheongiyeon_own_${sig}`) || "{}").allpass === true; } catch (e) { return false; } };
+  const owns = (p, sig) => hasPass(sig) || localStorage.getItem(ownKey(p, sig)) === "1";
   const grant = (p, sig) => localStorage.setItem(ownKey(p, sig), "1");
-  const BUNDLE = 8; // spouse(5) + detail(4) 묶음가
+  const grantPass = (sig) => { try { const k = `cheongiyeon_own_${sig}`; const o = JSON.parse(localStorage.getItem(k) || "{}"); o.allpass = true; localStorage.setItem(k, JSON.stringify(o)); } catch (e) {} };
 
   let cur = null; // { input, saju, rep }
 
@@ -46,29 +48,22 @@
     const { input, saju, rep } = cur;
     void saju;
     const sig = sigOf(input);
-    const hasBasic = owns("spouse", sig);
-    const hasDetail = owns("spouse_detail", sig);
+    const hasBasic = owns("spouse", sig) || owns("spouse_detail", sig);
+    const hasDetail = hasBasic;   // 단일 상품: 열면 전체가 열립니다
     const elK = ELEMENTS[rep.starEl];
 
     const secs = rep.sections.map(sec =>
       sectionHTML(sec, sec.detail ? hasDetail : hasBasic)).join("");
 
-    const priceBasic = Coins.PRICE.spouse, priceDetail = Coins.PRICE.spouse_detail;
     let unlockBar = "";
-    if (!hasBasic || !hasDetail) {
-      const btns = [];
-      if (!hasBasic && !hasDetail) {
-        btns.push(`<button class="btn u-all" data-buy="bundle">🪙 ${BUNDLE}코인 — 전체 리포트 한 번에 (${priceBasic + priceDetail}코인 → ${BUNDLE}코인)</button>`);
-        btns.push(`<button class="btn u-basic" data-buy="spouse">🪙 ${priceBasic}코인 — 기본 리포트 (생김새·키·목소리·말투·장소·시기)</button>`);
-      } else if (!hasDetail) {
-        btns.push(`<button class="btn u-all" data-buy="spouse_detail">🪙 ${priceDetail}코인 — 디테일 팩 (나이차·직업·취미·이성기류·짝꿍유형)</button>`);
-      } else if (!hasBasic) {
-        btns.push(`<button class="btn u-basic" data-buy="spouse">🪙 ${priceBasic}코인 — 기본 리포트 열기</button>`);
-      }
+    if (!hasBasic) {
       unlockBar = `<div class="unlock-bar">
         <h4>초상화의 나머지를 열어보세요</h4>
         <p>내 코인 🪙 <b id="sp-bal">${Coins.balance()}</b>개 · 광고를 보면 +1코인</p>
-        <div class="unlock-btns">${btns.join("")}</div>
+        <div class="unlock-btns">
+          <button class="btn u-basic" data-buy="spouse">🪙 ${Coins.PRICE.spouse}코인 — 배우자 리포트 전체 (${rep.sections.length}개 섹션)</button>
+          <button class="btn u-all" data-buy="pass">🪙 ${Coins.PRICE.allpass}코인 — 전 서비스 패스 <small>사주 심층·질문·부적·모임·직업·궁합 검증까지 전부</small></button>
+        </div>
         <p class="u-note">코인이 모자라면 충전 창이 열립니다 · 열람 후에는 환불되지 않습니다</p>
       </div>`;
     }
@@ -141,16 +136,16 @@
 
   function buy(what) {
     const sig = sigOf(cur.input);
-    const cost = what === "bundle" ? BUNDLE : Coins.PRICE[what];
+    const cost = what === "pass" ? Coins.PRICE.allpass : Coins.PRICE[what];
     if (Coins.balance() < cost) {
       Coins.openShop(`이 리포트를 열려면 🪙 ${cost}코인이 필요해요 (지금 ${Coins.balance()}개)`);
       return;
     }
-    if (!Coins.spend(cost, what === "bundle" ? "배우자 리포트(전체)" : what === "spouse" ? "배우자 리포트(기본)" : "배우자 디테일 팩")) return;
-    if (what === "bundle") { grant("spouse", sig); grant("spouse_detail", sig); }
-    else grant(what, sig);
-    toast(`🪙 ${cost}코인으로 열었습니다`);
+    if (!Coins.spend(cost, what === "pass" ? "전 서비스 패스" : "배우자 리포트")) return;
+    if (what === "pass") { grantPass(sig); toast(`🪙 전 서비스 패스가 열렸습니다 — 사주·직업·검증까지 전부`); }
+    else { grant("spouse", sig); grant("spouse_detail", sig); toast(`🪙 ${cost}코인으로 열었습니다`); }
     render();
+    if (vf) renderVerify();
   }
 
   /* ---------- 우리 궁합 검증 (배우자 실제 사주와 대조) ---------- */
