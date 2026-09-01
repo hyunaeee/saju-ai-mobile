@@ -473,6 +473,7 @@ function renderMyFortune(input) {
   const tdp = dayPillar(today.getFullYear(), today.getMonth() + 1, today.getDate());
   const todayGanji = STEMS[tdp.stem].kor + BRANCHES[tdp.branch].kor;
   const relGroup = tenGodGroup(tenGodOfStem(saju.dayStem, tdp.stem));
+  const todayEl = BRANCHES[tdp.branch].el;
   const myDayBranch = saju.pillars.day.branch;
   const chungToday = chungBranch(myDayBranch) === tdp.branch;
   const hapToday = YUKHAP[myDayBranch] === tdp.branch;
@@ -480,14 +481,67 @@ function renderMyFortune(input) {
   const sjLines = [];
   const regionName = REGIONS[input.regionIdx]?.name || "한국";
   const corr = saju.solarTime ? saju.solarTime.corrMin : null;
-  sjLines.push(`당신은 지구 위 <b>${regionName}</b>${corr != null ? ` (표준시보다 태양이 ${Math.abs(corr)}분 ${corr < 0 ? "늦게" : "빠르게"} 뜨는 경도)` : ""}에서, <b>${saju.ganjiText.day}일주</b>의 시각에 태어났습니다. 일간은 ${DAY_MASTER_TEXT[saju.dayStem].title.split(" — ")[0]}.`);
-  sjLines.push(`오늘은 <b>${todayGanji}일</b> — 당신에게 <b>${relGroup}의 날</b>입니다. ${TODAY_BANK[relGroup]}`);
-  if (chungToday) sjLines.push(`⚠️ 다만 오늘 일진이 당신의 일지와 <b>충(沖)</b>을 이룹니다. 큰 계약·수술·언쟁은 하루만 미루는 게 좋습니다.`);
-  if (hapToday) sjLines.push(`오늘 일진이 당신의 일지와 <b>합(合)</b>을 이룹니다 — 인연과 부탁이 순하게 풀리는 날입니다.`);
+  sjLines.push(`당신은 지구 위 <b>${regionName}</b>${corr != null && corr !== 0 ? ` (표준시보다 태양이 ${Math.abs(corr)}분 ${corr < 0 ? "늦게" : "빠르게"} 뜨는 경도)` : ""}에서, <b>${saju.ganjiText.day}일주</b>의 시각에 태어났습니다. 일간은 ${DAY_MASTER_TEXT[saju.dayStem].title.split(" — ")[0]}.`);
+
+  // 상세 뱅크가 있으면 분야별 카드, 없으면 기존 한 줄
+  const td = (typeof TODAY_DETAIL !== "undefined") ? TODAY_DETAIL[`${relGroup}_${todayEl}`] : null;
+  let todayBody;
+  if (td) {
+    sjLines.push(`오늘은 <b>${todayGanji}일</b> — 당신에게 <b>${relGroup}의 날</b>이자 ${ELEMENTS[todayEl].kor}(${ELEMENTS[todayEl].han})의 기운이 도는 날입니다.`);
+    todayBody = `${sjLines.map(l => `<p>${l}</p>`).join("")}
+      <p class="td-head">“${td.headline}”</p>
+      <div class="td-grid">
+        <div class="td-item"><span class="td-ic">業</span><div><b>일·업무</b><p>${td.work}</p></div></div>
+        <div class="td-item"><span class="td-ic">財</span><div><b>돈</b><p>${td.money}</p></div></div>
+        <div class="td-item"><span class="td-ic">緣</span><div><b>관계·애정</b><p>${td.love}</p></div></div>
+        <div class="td-item warn"><span class="td-ic">忌</span><div><b>오늘 조심할 것</b><p>${td.caution}</p></div></div>
+      </div>`;
+  } else {
+    sjLines.push(`오늘은 <b>${todayGanji}일</b> — 당신에게 <b>${relGroup}의 날</b>입니다. ${TODAY_BANK[relGroup]}`);
+    todayBody = sjLines.map(l => `<p>${l}</p>`).join("");
+  }
+  const extra = [];
+  if (chungToday) extra.push(`<p class="td-alert">⚠️ 오늘 일진이 당신의 일지와 <b>충(沖)</b>을 이룹니다. 큰 계약·수술·언쟁은 하루만 미루는 게 좋습니다.</p>`);
+  if (hapToday) extra.push(`<p class="td-good">🤝 오늘 일진이 당신의 일지와 <b>합(合)</b>을 이룹니다 — 인연과 부탁이 순하게 풀리는 날입니다.</p>`);
+  todayBody += extra.join("");
+
+  // ---- 오늘의 시간대별 흐름 (지금 시각 강조) ----
+  let hourHtml = "";
+  if (typeof HOUR_FLOW !== "undefined") {
+    const nowBranch = Math.floor(((today.getHours() + 1) % 24) / 2);
+    hourHtml = `<div class="cos-card">
+      <h3>⏱ 오늘의 시간대별 흐름</h3>
+      <div class="hf-list">${HOUR_FLOW.map((h, i) => `
+        <div class="hf-row${i === nowBranch ? " now" : ""}">
+          <span class="hf-t">${BRANCHES[i].kor}시<small>${HOUR_OF_BRANCH[i]}</small></span>
+          <div><b>${h.label}${i === nowBranch ? " · 지금" : ""}</b><p>${h.text}</p></div>
+        </div>`).join("")}</div>
+    </div>`;
+  }
 
   // ---- 올해 ----
-  const rel2026 = tenGodRelation(saju.dayEl, "fire");
-  const yearLine = YEAR2026_TEXT[rel2026];
+  const yearNum = today.getFullYear();
+  const yp = yearPillarOf(yearNum);
+  const yearGanji = STEMS[yp.stem].kor + BRANCHES[yp.branch].kor;
+  const yearGod = tenGodGroup(tenGodOfStem(saju.dayStem, yp.stem));
+  const yd = (typeof YEAR_DETAIL !== "undefined") ? YEAR_DETAIL[yearGod] : null;
+  let yearBody;
+  if (yd) {
+    yearBody = `
+      <p class="td-head">“${yd.overview.title}”</p>
+      <p>${yd.overview.text}</p>
+      <div class="yr-half">
+        <div class="yh"><b>상반기 · ${yd.first.title}</b><p>${yd.first.text}</p></div>
+        <div class="yh"><b>하반기 · ${yd.second.title}</b><p>${yd.second.text}</p></div>
+      </div>
+      <div class="yr-peak"><b>🎯 올해의 승부처 — ${yd.peak.title}</b><p>${yd.peak.text}</p></div>
+      <div class="td-grid">
+        <div class="td-item"><span class="td-ic">行</span><div><b>올해 꼭 할 일</b><p>${yd.overview.todo}</p></div></div>
+        <div class="td-item warn"><span class="td-ic">止</span><div><b>올해 피할 일</b><p>${yd.overview.avoid}</p></div></div>
+      </div>`;
+  } else {
+    yearBody = `<p>${YEAR2026_TEXT[tenGodRelation(saju.dayEl, "fire")]}</p>`;
+  }
 
   $("#my-result").innerHTML = `
     <div class="cos-card">
@@ -496,11 +550,12 @@ function renderMyFortune(input) {
     </div>
     <div class="cos-card">
       <h3>📅 사주로 본 오늘 — ${today.getMonth() + 1}월 ${today.getDate()}일 (${todayGanji}일)</h3>
-      ${sjLines.map(l => `<p>${l}</p>`).join("")}
+      ${todayBody}
     </div>
+    ${hourHtml}
     <div class="cos-card">
-      <h3>🐎 사주로 본 올해 — 2026 병오년</h3>
-      <p>${yearLine}</p>
+      <h3>🐎 사주로 본 올해 — ${yearNum} ${yearGanji}년 <small style="font-weight:400;color:var(--faint)">· 나에게는 ${yearGod}운</small></h3>
+      ${yearBody}
       <a class="cos-more" href="saju.html">배우자·재물·대운까지 — 전체 심층 풀이 보러 가기 →</a>
     </div>`;
   $("#my-result").classList.remove("hidden");

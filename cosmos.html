@@ -73,6 +73,37 @@
     #c-birth .bi-go { border-radius:12px; background:linear-gradient(150deg,#e8c07a,var(--amber)); box-shadow:0 6px 20px rgba(232,183,106,.25); }
     #c-birth .bi-note { color:var(--faint); opacity:1; }
 
+    /* 오늘·올해 상세 운세 */
+    .td-head { font-family:var(--serif); font-size:16.5px; color:var(--amber); text-align:center;
+      margin:14px 0 12px; line-height:1.5; }
+    .td-grid { display:grid; gap:9px; margin-top:6px; }
+    .td-item { display:flex; gap:11px; background:var(--space-2); border:1px solid var(--line); border-radius:12px; padding:12px 14px; }
+    .td-item.warn { border-color:rgba(198,90,65,.4); background:rgba(198,90,65,.09); }
+    .td-ic { flex:0 0 30px; height:30px; border-radius:8px; display:grid; place-items:center;
+      font-family:var(--serif); font-size:15px; font-weight:700; color:var(--amber); background:rgba(232,183,106,.12); }
+    .td-item.warn .td-ic { color:#e8917a; background:rgba(232,145,122,.14); }
+    .td-item b { display:block; font-size:13px; color:#f2edda; margin-bottom:3px; }
+    .td-item p { font-size:13px; color:var(--dim); line-height:1.75; margin:0; }
+    .td-alert { margin-top:12px; background:rgba(198,90,65,.13); border-radius:10px; padding:11px 14px; font-size:13px; }
+    .td-good { margin-top:12px; background:rgba(120,190,150,.12); border-radius:10px; padding:11px 14px; font-size:13px; }
+    /* 시간대 흐름 */
+    .hf-list { display:grid; gap:2px; }
+    .hf-row { display:grid; grid-template-columns:74px 1fr; gap:11px; padding:10px 10px; border-radius:10px; }
+    .hf-row.now { background:rgba(232,183,106,.13); box-shadow:inset 0 0 0 1px rgba(232,183,106,.35); }
+    .hf-t { font-family:var(--serif); font-size:13.5px; color:var(--gold); }
+    .hf-t small { display:block; font-size:10px; color:var(--faint); font-family:var(--sans); }
+    .hf-row b { display:block; font-size:13px; color:#f2edda; margin-bottom:2px; }
+    .hf-row.now b { color:var(--amber); }
+    .hf-row p { font-size:12.5px; color:var(--dim); line-height:1.7; margin:0; }
+    /* 올해 */
+    .yr-half { display:grid; gap:9px; margin:12px 0; }
+    .yh { background:var(--space-2); border-left:3px solid var(--amber); border-radius:0 10px 10px 0; padding:11px 14px; }
+    .yh b { display:block; font-size:13px; color:#f2edda; margin-bottom:3px; }
+    .yh p { font-size:12.5px; color:var(--dim); line-height:1.75; margin:0; }
+    .yr-peak { background:linear-gradient(135deg,rgba(232,183,106,.16),rgba(232,183,106,.06));
+      border:1px solid rgba(232,183,106,.3); border-radius:12px; padding:13px 15px; margin-bottom:12px; }
+    .yr-peak b { display:block; font-size:13.5px; color:var(--amber); margin-bottom:4px; }
+    .yr-peak p { font-size:13px; color:var(--dim); line-height:1.75; margin:0; }
     .foot { padding:26px 22px 40px; text-align:center; color:var(--faint); font-size:11px; line-height:1.8; }
     .foot a { color:var(--dim); }
 
@@ -143,6 +174,7 @@
 <script src="js/saju.js"></script>
 <script src="js/birthinput.js"></script>
 <script src="js/content.js"></script>
+<script src="js/cosmos-fortune.js"></script>
 <script src="js/cosmos.js"></script>
 </body>
 </html>
